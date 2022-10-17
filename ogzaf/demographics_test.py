@@ -1,6 +1,6 @@
 """
 ------------------------------------------------------------------------
-Functions for generating demographic objects necessary for the OG-ZAF
+Functions for generating demographic objects necessary for the OG-USA
 model
 ------------------------------------------------------------------------
 """
@@ -31,59 +31,13 @@ Define functions
 """
 
 
-def get_un_data(variable_code, country_id='710', start_year=2022,
-                end_year=2022):
-    """
-    This function retrieves data from the United Nations Data Portal API
-    for UN population data (see
-    https://population.un.org/dataportal/about/dataapi)
-
-    Args:
-        variable_code (str): variable code for UN data
-        country_id (str): country id for UN data
-        start_year (int): start year for UN data
-        end_year (int): end year for UN data
-
-    Returns:
-        df (Pandas DataFrame): DataFrame of UN data
-    """
-    target = (
-        "https://population.un.org/dataportalapi/api/v1/data/indicators/" +
-        variable_code + "/locations/" + country_id + "/start/"
-        + str(start_year) + "/end/" + str(end_year)
-    )
-
-    # get data from url
-    response = requests.get(target)
-    # Converts call into JSON
-    j = response.json()
-    # Convert JSON into a pandas DataFrame.
-    # pd.json_normalize flattens the JSON to accomodate nested lists
-    # within the JSON structure
-    df = pd.json_normalize(j['data'])
-    # Loop until there are new pages with data
-    while j['nextPage'] is not None:
-        # Reset the target to the next page
-        target = j['nextPage']
-        # call the API for the next page
-        response = requests.get(target)
-        # Convert response to JSON format
-        j = response.json()
-        # Store the next page in a data frame
-        df_temp = pd.json_normalize(j['data'])
-        # Append next page to the data frame
-        df = df.append(df_temp)
-
-    return df
-
-
 def get_fert(totpers, min_yr, max_yr, graph=False):
     """
     This function generates a vector of fertility rates by model period
     age that corresponds to the fertility rate data by age in years
     using data from the UN: 
     https://population.un.org/wpp/Download/Files/1_Indicators%20(Standard)/CSV_FILES/WPP2019_Fertility_by_Age.csv
-    Transformed and cleaned in stata, saved as: birthrates_2022.csv
+    Transformed and cleaned in stata, saved as: /Users/mlafleur/Projects/OG-USA/run_angola/angola_data/birthrates.csv
     Args:
         totpers (int): total number of agent life periods (E+S), >= 3
         min_yr (int): age in years at which agents are born, >= 0
@@ -242,23 +196,21 @@ def pop_rebin(curr_pop_dist, totpers_new):
     """
     # Number of periods in original data
     assert totpers_new >= 3
-    # Number of periods in original data
     totpers_orig = len(curr_pop_dist)
     if int(totpers_new) == totpers_orig:
         curr_pop_new = curr_pop_dist
     elif int(totpers_new) < totpers_orig:
         num_sub_bins = float(10000)
-        curr_pop_sub = np.repeat(np.float64(curr_pop_dist) /
-                                 num_sub_bins, num_sub_bins)
-        len_subbins = ((np.float64(totpers_orig*num_sub_bins)) /
-                       totpers_new)
+        curr_pop_sub = np.repeat(
+            np.float64(curr_pop_dist) / num_sub_bins, num_sub_bins
+        )
+        len_subbins = (np.float64(totpers_orig * num_sub_bins)) / totpers_new
         curr_pop_new = np.zeros(totpers_new, dtype=np.float64)
         end_sub_bin = 0
         for i in range(totpers_new):
             beg_sub_bin = int(end_sub_bin)
             end_sub_bin = int(np.rint((i + 1) * len_subbins))
-            curr_pop_new[i] = \
-                curr_pop_sub[beg_sub_bin:end_sub_bin].sum()
+            curr_pop_new[i] = curr_pop_sub[beg_sub_bin:end_sub_bin].sum()
         # Return curr_pop_new to single precision float (float32)
         # datatype
         curr_pop_new = np.float32(curr_pop_new)
@@ -689,5 +641,7 @@ def get_pop_objs(E, S, T, min_yr, max_yr, curr_year, GraphDiag=False):
         "imm_rates": imm_rates_mat.T,
         "omega_S_preTP": omega_S_preTP,
     }
+    #print(pop_dict)
+    print(pop_dict.keys())    
 
     return pop_dict
