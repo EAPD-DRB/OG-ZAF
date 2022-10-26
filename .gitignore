@@ -41,5 +41,5 @@ envs/
 docs/book/_build/*
 docs/build*
 examples/OG-ZAF_example_plots/*
-examples/ogzaf_example_output.csv
+*ogzaf_example_output.csv
 examples/OG-ZAF-Example/*
