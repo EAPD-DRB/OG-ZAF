@@ -45,5 +45,4 @@ examples/ogzaf_example_output.csv
 examples/OG-ZAF-Example/*
 data_inputs/*
 test.py
-environment.yml
 
