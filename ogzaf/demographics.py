@@ -50,11 +50,29 @@ def get_un_data(variable_code, country_id='710', start_year=2022,
     target = (
         "https://population.un.org/dataportalapi/api/v1/data/indicators/" +
         variable_code + "/locations/" + country_id + "/start/"
-        + str(start_year) + "/end/" + str(end_year) + "?format=csv"
+        + str(start_year) + "/end/" + str(end_year)
     )
 
-    # get data from url using csv method
-    df = pd.read_csv(target, sep='|',  skiprows=[0], float_precision='round_trip')
+    # get data from url
+    response = requests.get(target)
+    # Converts call into JSON
+    j = response.json()
+    # Convert JSON into a pandas DataFrame.
+    # pd.json_normalize flattens the JSON to accomodate nested lists
+    # within the JSON structure
+    df = pd.json_normalize(j['data'])
+    # Loop until there are new pages with data
+    while j['nextPage'] is not None:
+        # Reset the target to the next page
+        target = j['nextPage']
+        # call the API for the next page
+        response = requests.get(target)
+        # Convert response to JSON format
+        j = response.json()
+        # Store the next page in a data frame
+        df_temp = pd.json_normalize(j['data'])
+        # Append next page to the data frame
+        df = df.append(df_temp)
 
     return df
 
@@ -78,15 +96,18 @@ def get_fert(totpers, min_yr, max_yr, graph=False):
             of life
 
     """
-    # Read raw data from UN (indicator 69=fertility)
-    un_file = get_un_data(variable_code=69, country_id='710', start_year=2021, end_year=2021) 
-    fert_data = un_file.loc[:, ['AgeLabel','Value']] #keep only variables of interest
-    fert_data.rename(columns = {'AgeLabel':'Age', 'Value':'Births per 1000'}, inplace = True) #Rename variables
-    #Save the file in case it is needed later
-    pop_file = utils.read_file(CUR_PATH, os.path.join('data', 'demographic', 'birthrates_2021.csv'))
-    fert_data.to_csv(pop_file, index = False, header=True)
-
-    #from here using old method from OG-USA
+    # Read raw data from UN
+    pop_file = utils.read_file(
+        CUR_PATH, os.path.join('data', 'demographic',
+                               'birthrates_2022.csv'))
+    fert_data = pd.read_csv(pop_file, encoding='utf-8')
+    fert_data.rename(
+        columns={
+            "age": "Age",
+            "birthrate": "Births per 1000",
+        },
+        inplace=True,
+    )
     fert_rates_all = np.append(
         np.append(
             np.zeros(int(fert_data.Age.min()) - min_yr),
@@ -144,19 +165,23 @@ def get_mort(totpers, min_yr, max_yr, graph=False):
     """
     # Get mortality rate by age data
     infmort_rate = 0.0322  # taken from https://data.unicef.org/country/zaf/
-
-    # Read raw data from UN (indicator 78 and 82=lives and mortality)
-    un_file = get_un_data(variable_code='78,82', country_id='710', start_year=2021, end_year=2021) 
-    mort_data = un_file.loc[:, ['IndicatorId', 'Indicator', 'SexId', 'Sex', 'AgeStart', 'Value']] #keep only variables of interest
-    mort_data = mort_data[mort_data.SexId == 3]  #Both sexes
-    mort_data=mort_data.pivot(index='AgeStart', columns='IndicatorId', values='Value')  #from long to wide
-    mort_data.reset_index(inplace=True)
-    mort_data.rename(columns = {'AgeStart':'Age', 78:'Num. Lives', 82:'Mort. Rate'}, inplace = True) #Prepare names
-    #Save the file in case it is needed later
-    pop_file = utils.read_file(CUR_PATH, os.path.join('data', 'demographic', 'deathrates_2021.csv'))
-    mort_data.to_csv(pop_file, index = False, header=True)
-
-    #from here using old method from OG-USA    
+    #mortality data taken from UN: 
+    #https://population.un.org/wpp/Download/Files/1_Indicators%20(Standard)/CSV_FILES/WPP2022_Life_Table_Complete_Medium_Both_2022-2100.zip
+    pop_file = utils.read_file(
+        CUR_PATH, os.path.join('data', 'demographic',
+                               'deathrates_2022.csv'))
+    mort_data = pd.read_csv(pop_file, encoding='utf-8', thousands=",")
+    mort_data.rename(
+        columns={
+            "age": "Age",
+            "qx": "Mort. Rate",
+            "lx": "Num. Lives",
+        },
+        inplace=True,
+    )
+    
+    #up to here processed in stata
+    #mort_data = raw_data[raw_data["Year"] == 2015]
     age_year_all = mort_data["Age"].values + 1
     mort_rates_all = (
         ((mort_data["Mort. Rate"] * mort_data["Num. Lives"]))
@@ -262,19 +287,20 @@ def get_imm_resid(totpers, min_yr, max_yr):
             each period of life, length E+S
 
     """
-
-    # Read raw data from UN (indicator 47=population by age)
-    un_file = get_un_data(variable_code=47, country_id='710', start_year=2018, end_year=2021) 
-    pop_data = pop_file.loc[:, ['TimeLabel', 'SexId', 'Sex', 'AgeStart', 'Value']] #keep only variables of interest
-    pop_data = pop_data[pop_data.SexId == 3] #Keep only total population
-    pop_data=pop_data.pivot(index='AgeStart', columns='TimeLabel', values='Value') #reshape from long to wide
-    pop_data.reset_index(inplace=True) 
-    pop_data.rename(columns = {'AgeStart':'Age'}, inplace = True) 
-    #Save the file in case it is needed later
-    pop_file = utils.read_file(CUR_PATH, os.path.join('data', 'demographic', 'population_2018-2021.csv'))
-    pop_data.to_csv(pop_file, index = False, header=True)
-
-
+    pop_file = utils.read_file(
+        CUR_PATH, os.path.join('data', 'demographic',
+                               'population_2018-2021.csv'))
+    pop_data = pd.read_csv(pop_file, encoding='utf-8')
+    pop_data.rename(
+        columns={
+            "age": "Age",
+            "pop2018": "2018",
+            "pop2019": "2019",
+            "pop2020": "2020",
+            "pop2021": "2021",
+        },
+        inplace=True,
+    )
     pop_data_samp = pop_data[
         (pop_data["Age"] >= min_yr - 1) & (pop_data["Age"] <= max_yr - 1)
     ]
@@ -419,9 +445,18 @@ def get_pop_objs(E, S, T, min_yr, max_yr, curr_year, GraphDiag=False):
     omega_path_lev = np.zeros((E + S, T + S))
     pop_file = utils.read_file(
         CUR_PATH, os.path.join('data', 'demographic',
-                               'population_2018-2021.csv')) #file created in the function get_imm_resid()
-    pop_data = pd.read_csv(pop_file, encoding='utf-8')  
-    
+                               'population_2018-2021.csv'))
+    pop_data = pd.read_csv(pop_file, encoding='utf-8')
+    pop_data.rename(
+        columns={
+            "age": "Age",
+            "pop2018": "2018",
+            "pop2019": "2019",
+            "pop2020": "2020",
+            "pop2021": "2021",
+        },
+        inplace=True,
+    )
     pop_data_samp = pop_data[
         (pop_data["Age"] >= min_yr - 1) & (pop_data["Age"] <= max_yr - 1)
     ]
