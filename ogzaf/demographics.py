@@ -646,7 +646,7 @@ def get_pop_objs(E, S, T, min_yr, max_yr, curr_year, GraphDiag=False):
     # mort_rates_S, and g_n_path
     pop_dict = {
         "omega": omega_path_S.T,
-        "g_n_SS": g_n_SS,
+        "g_n_ss": g_n_SS,
         "omega_SS": omega_SSfx[-S:] / omega_SSfx[-S:].sum(),
         "surv_rate": 1 - mort_rates_S,
         "rho": mort_rates_S,
