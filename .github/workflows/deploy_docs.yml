@@ -2,7 +2,7 @@ name: Build and Deploy Jupyter Book documentation
 on:
   push:
     branches:
-      - master
+      - main
 jobs:
   build-and-deploy:
     if: github.repository == 'EAPD-DRB/OG-ZAF'
