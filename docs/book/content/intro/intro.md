@@ -1,7 +1,7 @@
 (Chap_Intro)=
 # OG-ZAF
 
-`OG-ZAF` is a package that provides code and data to calibrate an overlapping-generations (OG) model to the economy of South Africa (ZAF). `OG-ZAF` uses as a dependency the [`OG-Core`](https://pslmodels.github.io/OG-Core/) package, which contains the core theory and logic of a general OG model. The `OG-ZAF` calibration package and the `OG-Core` theory and logic make the model that allows for dynamic general equilibrium analysis of federal fiscal policy in South Africa. The model output focuses on changes in macroeconomic aggregates (GDP, investment, consumption), wages, interest rates, and the stream of tax revenues over time. This documentation of the `OG-ZAF` package contains the following major sections, which are regularly updated.
+[`OG-ZAF`](https://github.com/EAPD-DRB/OG-ZAF) is a package that provides code and data to calibrate an overlapping-generations (OG) model to the economy of South Africa (ZAF), the code of which is hosted on GitHub at https://github.com/EAPD-DRB/OG-ZAF. `OG-ZAF` uses as a dependency the [`OG-Core`](https://pslmodels.github.io/OG-Core/) package, which contains the core theory and logic of a general OG model. The `OG-ZAF` calibration package and the `OG-Core` theory and logic make the model that allows for dynamic general equilibrium analysis of federal fiscal policy in South Africa. The model output focuses on changes in macroeconomic aggregates (GDP, investment, consumption), wages, interest rates, and the stream of tax revenues over time. This documentation of the `OG-ZAF` package contains the following major sections, which are regularly updated.
 
 * Contributing to `OG-ZAF`
 * `OG-ZAF` API
