@@ -40,7 +40,7 @@ Once the package is installed, one can adjust parameters in the OG-Core `Specifi
 
 ```
 from ogcore.parameters import Specifications
-from ogind.calibrate import Calibration
+from ogzaf.calibrate import Calibration
 p = Specifications()
 c = Calibration(p)
 updated_params = c.get_dict()
