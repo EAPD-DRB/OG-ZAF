@@ -1,2 +1,0 @@
-# OG-ZAF gh-pages branch for Jupyter Book documentation and deployment to GitHub Pages site
-This `gh-pages` branch of the `OG-ZAF` model repository contains the files for the Jupyter Book documentation, which is deployed from this branch to the GitHub Pages site for the documentation. The deployment of the files in this branch is governed by the GitHub Action in [`deploy_docs.yml`](https://github.com/EAPD-DRB/OG-ZAF/blob/gh-pages/.github/workflows/deploy_docs.yml) in the `main` branch of the repository.
