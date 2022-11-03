@@ -1,28 +1,23 @@
 """
-------------------------------------------------------------------------
-Functions for generating demographic objects necessary for the OG-ZAF
-model
-------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+Functions for generating demographic objects necessary for the OG-ZAF model
+-------------------------------------------------------------------------------
 """
 # Import packages
-from lib2to3.pgen2.pgen import DFAState
 import os
-import requests
-import json
 import numpy as np
-import scipy.optimize as opt
 import pandas as pd
+import scipy.optimize as opt
 import scipy.interpolate as si
-from ogcore import utils
 from ogcore import parameter_plots as pp
-
+import matplotlib.pyplot as plt
 
 # create output director for figures
 CUR_PATH = os.path.split(os.path.abspath(__file__))[0]
+DATA_DIR = os.path.join(CUR_PATH, "data", "demographic")
 OUTPUT_DIR = os.path.join(CUR_PATH, "OUTPUT", "Demographics")
 if os.access(OUTPUT_DIR, os.F_OK) is False:
     os.makedirs(OUTPUT_DIR)
-
 
 """
 ------------------------------------------------------------------------
@@ -31,56 +26,320 @@ Define functions
 """
 
 
-def get_un_data(
-    variable_code, country_id="710", start_year=2022, end_year=2022
-):
+def get_un_fert_data(
+    country_id: str = "710",
+    start_year: int = 2021,
+    end_year: int = None,
+    download: bool = True,
+) -> pd.DataFrame:
     """
-    This function retrieves data from the United Nations Data Portal API
-    for UN population data (see
+    Get UN fertility rate data for a country for some range of years (at least
+    one year) and by age. The country_id=710 is for South Africa. These data
+    come from the United Nations Data Portal API for UN population data (see
     https://population.un.org/dataportal/about/dataapi)
 
     Args:
-        variable_code (str): variable code for UN data
-        country_id (str): country id for UN data
-        start_year (int): start year for UN data
-        end_year (int): end year for UN data
+        country_id (str): 3-digit country id (numerical)
+        start_year (int): beginning year of the data
+        end_year (int): end year of the data
+        download (bool): whether to download the data from the UN Data Portal.
+            If False, a path must be specified in the path_folder argument.
+        path_folder (None or str): string path to folder where data are stored
 
     Returns:
-        df (Pandas DataFrame): DataFrame of UN data
+        fert_rates_df (DataFrame): dataset with fertility rates by age
     """
-    target = (
-        "https://population.un.org/dataportalapi/api/v1/data/indicators/"
-        + variable_code
-        + "/locations/"
-        + country_id
-        + "/start/"
-        + str(start_year)
-        + "/end/"
-        + str(end_year)
+    if end_year is None:
+        end_year = start_year
+    # UN variable code for Population by 1-year age groups and sex
+    pop_code = "47"
+    # UN variable code for Fertility rates by age of mother (1-year)
+    fert_code = "68"
+
+    if download:
+        pop_target = (
+            "https://population.un.org/dataportalapi/api/v1/data/indicators/"
+            + pop_code
+            + "/locations/"
+            + country_id
+            + "/start/"
+            + str(start_year)
+            + "/end/"
+            + str(end_year)
+            + "?format=csv"
+        )
+        fert_target = (
+            "https://population.un.org/dataportalapi/api/v1/data/indicators/"
+            + fert_code
+            + "/locations/"
+            + country_id
+            + "/start/"
+            + str(start_year)
+            + "/end/"
+            + str(end_year)
+            + "?format=csv"
+        )
+    else:
+        pop_target = os.path.join(DATA_DIR, "un_zaf_pop.csv")
+        fert_target = os.path.join(DATA_DIR, "un_zaf_fert.csv")
+
+    # Convert .csv file to Pandas DataFrame
+    pop_df = pd.read_csv(
+        pop_target,
+        sep="|",
+        header=1,
+        usecols=["TimeLabel", "SexId", "Sex", "AgeMid", "Value"],
+        float_precision="round_trip",
+    )
+    fert_rates_df = pd.read_csv(
+        fert_target,
+        sep="|",
+        header=1,
+        usecols=["TimeLabel", "AgeMid", "Value"],
+        float_precision="round_trip",
     )
 
-    # get data from url
-    response = requests.get(target)
-    # Converts call into JSON
-    j = response.json()
-    # Convert JSON into a pandas DataFrame.
-    # pd.json_normalize flattens the JSON to accomodate nested lists
-    # within the JSON structure
-    df = pd.json_normalize(j["data"])
-    # Loop until there are new pages with data
-    while j["nextPage"] is not None:
-        # Reset the target to the next page
-        target = j["nextPage"]
-        # call the API for the next page
-        response = requests.get(target)
-        # Convert response to JSON format
-        j = response.json()
-        # Store the next page in a data frame
-        df_temp = pd.json_normalize(j["data"])
-        # Append next page to the data frame
-        df = df.append(df_temp)
+    # Rename variables in the population and fertility rates data
+    pop_df.rename(
+        columns={
+            "TimeLabel": "year",
+            "SexId": "sex_num",
+            "Sex": "sex_str",
+            "AgeMid": "age",
+            "Value": "pop",
+        },
+        inplace=True,
+    )
+    fert_rates_df.rename(
+        columns={
+            "TimeLabel": "year",
+            "AgeMid": "age",
+            "Value": "births_p_1000f",
+        },
+        inplace=True,
+    )
 
-    return df
+    # Clean the data
+    # I don't know why in the pop_df population data by age and sex and year
+    # there are 10 different population numbers for each sex and age and year
+    # and all the other variables are equal. I just average them here.
+    pop_df = (
+        pop_df.groupby(["year", "sex_num", "sex_str", "age"])
+        .mean()
+        .reset_index()
+    )
+
+    # Merge in the male and female population by age data
+    fert_rates_df = fert_rates_df.merge(
+        pop_df[["year", "age", "pop"]][pop_df["sex_num"] == 1],
+        how="left",
+        on=["year", "age"],
+    )
+    fert_rates_df.rename(columns={"pop": "pop_male"}, inplace=True)
+    fert_rates_df = fert_rates_df.merge(
+        pop_df[["year", "age", "pop"]][pop_df["sex_num"] == 2],
+        how="left",
+        on=["year", "age"],
+    )
+    fert_rates_df.rename(columns={"pop": "pop_female"}, inplace=True)
+    fert_rates_df["fert_rate"] = fert_rates_df["births_p_1000f"] / (
+        1000 * (1 + (fert_rates_df["pop_male"] / fert_rates_df["pop_female"]))
+    )
+    fert_rates_df = fert_rates_df[
+        (
+            (fert_rates_df["year"] >= start_year)
+            & (fert_rates_df["year"] <= end_year)
+        )
+    ]
+
+    return fert_rates_df
+
+
+def get_un_mort_data(
+    country_id: str = "356",
+    start_year: int = 2021,
+    end_year: int = None,
+    download: bool = True,
+) -> pd.DataFrame:
+    """
+    Get UN mortality rate data for a country for some range of years (at least
+    one year) and by age, and get infant mortality rate data. These data come
+    from the United Nations Data Portal API for UN population data (see
+    https://population.un.org/dataportal/about/dataapi)
+
+    Args:
+        country_id (str): 3-digit country id (numerical)
+        start_year (int): beginning year of the data
+        end_year (int): end year of the data
+        download (bool): whether to download the data from the UN Data Portal.
+            If False, a path must be specified in the path_folder argument.
+        path_folder (None or str): string path to folder where data are stored
+
+    Returns:
+        fert_rates_df (DataFrame): dataset with fertility rates by age
+    """
+    if end_year is None:
+        end_year = start_year
+    # UN variable code for Age specific mortality rate
+    mort_code = "80"
+    # UN variable code for Age specific mortality rate
+    infmort_code = "22"
+
+    if download:
+        infmort_target = (
+            "https://population.un.org/dataportalapi/api/v1/data/indicators/"
+            + infmort_code
+            + "/locations/"
+            + country_id
+            + "/start/"
+            + str(start_year)
+            + "/end/"
+            + str(end_year)
+            + "?format=csv"
+        )
+        mort_target = (
+            "https://population.un.org/dataportalapi/api/v1/data/indicators/"
+            + mort_code
+            + "/locations/"
+            + country_id
+            + "/start/"
+            + str(start_year)
+            + "/end/"
+            + str(end_year)
+            + "?format=csv"
+        )
+    else:
+        infmort_target = os.path.join(DATA_DIR, "un_ind_infmort.csv")
+        mort_target = os.path.join(DATA_DIR, "un_ind_mort.csv")
+
+    # Convert .csv file to Pandas DataFrame
+    infmort_rate_df = pd.read_csv(
+        infmort_target,
+        sep="|",
+        header=1,
+        usecols=["TimeLabel", "SexId", "Sex", "Value"],
+        float_precision="round_trip",
+    )
+    mort_rates_df = pd.read_csv(
+        mort_target,
+        sep="|",
+        header=1,
+        usecols=["TimeLabel", "SexId", "Sex", "AgeStart", "Value"],
+        float_precision="round_trip",
+    )
+
+    # Rename variables in the population and fertility rates data
+    infmort_rate_df.rename(
+        columns={
+            "TimeLabel": "year",
+            "SexId": "sex_num",
+            "Sex": "sex_str",
+            "Value": "inf_deaths_p_1000",
+        },
+        inplace=True,
+    )
+    mort_rates_df.rename(
+        columns={
+            "TimeLabel": "year",
+            "SexId": "sex_num",
+            "Sex": "sex_str",
+            "AgeStart": "age",
+            "Value": "mort_rate",
+        },
+        inplace=True,
+    )
+
+    # Clean the data
+    infmort_rate_df["infmort_rate"] = (
+        infmort_rate_df["inf_deaths_p_1000"] / 1000
+    )
+
+    infmort_rate_df = infmort_rate_df[
+        (
+            (infmort_rate_df["year"] >= start_year)
+            & (infmort_rate_df["year"] <= end_year)
+        )
+    ]
+    mort_rates_df = mort_rates_df[
+        (
+            (mort_rates_df["year"] >= start_year)
+            & (mort_rates_df["year"] <= end_year)
+        )
+    ]
+
+    return infmort_rate_df, mort_rates_df
+
+
+def get_un_pop_data(
+    country_id: str = "356",
+    start_year: int = 2021,
+    end_year: int = None,
+    download: bool = True,
+) -> pd.DataFrame:
+    """
+    Get UN population data for a country for some range of years (at least
+    one year) and by age. These data come from the United Nations Data Portal
+    API for UN population data (see
+    https://population.un.org/dataportal/about/dataapi)
+
+    Args:
+        country_id (str): 3-digit country id (numerical)
+        start_year (int): beginning year of the data
+        end_year (int): end year of the data
+        download (bool): whether to download the data from the UN Data Portal.
+            If False, a path must be specified in the path_folder argument.
+        path_folder (None or str): string path to folder where data are stored
+
+    Returns:
+        fert_rates_df (DataFrame): dataset with fertility rates by age
+    """
+    if end_year is None:
+        end_year = start_year
+    # UN variable code for Population by 1-year age groups and sex
+    pop_code = "47"
+
+    if download:
+        pop_target = (
+            "https://population.un.org/dataportalapi/api/v1/data/indicators/"
+            + pop_code
+            + "/locations/"
+            + country_id
+            + "/start/"
+            + str(start_year)
+            + "/end/"
+            + str(end_year)
+            + "?format=csv"
+        )
+    else:
+        pop_target = os.path.join(DATA_DIR, "un_ind_pop.csv")
+
+    # Convert .csv file to Pandas DataFrame
+    pop_df = pd.read_csv(
+        pop_target,
+        sep="|",
+        header=1,
+        usecols=["TimeLabel", "SexId", "Sex", "AgeStart", "Value"],
+        float_precision="round_trip",
+    )
+
+    # Rename variables in the population and fertility rates data
+    pop_df.rename(
+        columns={
+            "TimeLabel": "year",
+            "SexId": "sex_num",
+            "Sex": "sex_str",
+            "AgeStart": "age",
+            "Value": "pop",
+        },
+        inplace=True,
+    )
+
+    # Clean the data
+    pop_df = pop_df[
+        ((pop_df["year"] >= start_year) & (pop_df["year"] <= end_year))
+    ]
+
+    return pop_df
 
 
 def get_fert(totpers, min_yr, max_yr, graph=False):
