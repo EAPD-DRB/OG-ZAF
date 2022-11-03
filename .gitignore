@@ -39,7 +39,6 @@ envs/
 .ipynb_checkpoints*
 */__pycache__/*
 docs/book/_build/*
-docs/build*
-examples/OG-ZAF_example_plots/*
+*/OG-ZAF_example_plots/*
 *ogzaf_example_output.csv
-examples/OG-ZAF-Example/*
+*/OG-ZAF-Example/*
