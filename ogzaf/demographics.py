@@ -412,8 +412,7 @@ def get_fert(totpers, min_yr, max_yr, graph=False):
 def get_mort(totpers, min_yr, max_yr, graph=False):
     """
     This function generates a vector of mortality rates by model period
-    age.
-    Source: Census of India, 2011
+    age. Source: UN Population Data portal.
 
     Args:
         totpers (int): total number of agent life periods (E+S), >= 3
@@ -428,111 +427,48 @@ def get_mort(totpers, min_yr, max_yr, graph=False):
         infmort_rate (scalar): infant mortality rate
 
     """
-    # Get current population data (2011) for weighting
-    pop_file = utils.read_file(
-        CUR_PATH, os.path.join("data", "demographic", "india_pop_data.csv")
+    # Get UN infant mortality and mortality rate data by age
+    infmort_rate_df, mort_rates_df = get_un_mort_data(
+        start_year=2021, download=False
     )
-    pop_data = pd.read_csv(pop_file, encoding="utf-8")
-    pop_data_samp = pop_data[
-        (pop_data["Age"] >= min_yr - 1) & (pop_data["Age"] <= max_yr - 1)
-    ]
-    age_year_all = pop_data_samp["Age"] + 1
-    curr_pop = np.array(pop_data_samp["2011"], dtype="f")
-    curr_pop_pct = curr_pop / curr_pop.sum()
-    # Get mortality rate by age data
-    infmort_rate = 0.0482
-    # Get fertility rate by age-bin data
-    mort_data = (
-        np.array(
-            [
-                2.9,
-                1.0,
-                0.7,
-                1.3,
-                1.6,
-                1.8,
-                2.3,
-                2.7,
-                4.0,
-                5.5,
-                8.3,
-                12.2,
-                20.1,
-                33.2,
-                49.9,
-                73.6,
-                104.8,
-                167.6,
-            ]
-        )
-        / 1000
-    )
-    age_midp = np.array(
-        [
-            2.5,
-            7,
-            12,
-            17,
-            22,
-            27,
-            32,
-            37,
-            42,
-            47,
-            52,
-            57,
-            62,
-            67,
-            72,
-            77,
-            82,
-            100,
+    infmort_rate = infmort_rate_df["infmort_rate"][
+        infmort_rate_df["sex_num"] == 3
+    ].to_numpy()[0]
+    mort_rates = (
+        mort_rates_df["mort_rate"][
+            ((mort_rates_df["sex_num"] == 3) & (mort_rates_df["age"] < 100))
         ]
+        .to_numpy()
+        .flatten()
     )
-    # Generate interpolation functions for fertility rates
-    mort_func = si.interp1d(age_midp, mort_data, kind="cubic")
-    # Calculate average fertility rate in each age bin using trapezoid
-    # method with a large number of points in each bin.
-    binsize = (max_yr - min_yr + 1) / totpers
-    num_sub_bins = float(10000)
-    len_subbins = (np.float64(100 * num_sub_bins)) / totpers
-    age_sub = (
-        np.linspace(
-            np.float64(binsize) / num_sub_bins,
-            np.float64(max_yr),
-            int(num_sub_bins * max_yr),
-        )
-        - 0.5 * np.float64(binsize) / num_sub_bins
-    )
-    curr_pop_sub = np.repeat(
-        np.float64(curr_pop_pct) / num_sub_bins, num_sub_bins
-    )
-    mort_rates_sub = np.zeros(curr_pop_sub.shape)
-    pred_ind = (age_sub > age_midp[0]) * (age_sub < age_midp[-1])
-    age_pred = age_sub[pred_ind]
-    mort_rates_sub[pred_ind] = np.float64(mort_func(age_pred))
-    mort_rates = np.zeros(totpers)
-    end_sub_bin = 0
-    for i in range(totpers):
-        beg_sub_bin = int(end_sub_bin)
-        end_sub_bin = int(np.rint((i + 1) * len_subbins))
-        mort_rates[i] = (
-            curr_pop_sub[beg_sub_bin:end_sub_bin]
-            * mort_rates_sub[beg_sub_bin:end_sub_bin]
-        ).sum() / curr_pop_sub[beg_sub_bin:end_sub_bin].sum()
-    mort_rates[-1] = 1  # Mortality rate in last period is set to 1
 
     if graph:
-        pp.plot_mort_rates_data(
-            totpers,
-            min_yr,
-            max_yr,
-            age_year_all,
-            mort_rates_all,
+        ages_all = np.arange(0, 101)
+        mort_rates_all = np.hstack((infmort_rate, mort_rates))
+        plt.plot(ages_all, mort_rates_all, label="Data")
+        plt.scatter(
+            0,
             infmort_rate,
-            mort_rates,
-            output_dir=OUTPUT_DIR,
+            c="blue",
+            marker="d",
+            label="Infant mortality rate",
         )
+        plt.scatter(
+            100, 1.0, c="red", marker="d", label="Artificial mortality limit"
+        )
+        plt.xlabel(r"Age $s$")
+        plt.ylabel(r"Mortality rate $\rho_{s}$")
+        plt.legend(loc="upper left")
+        plt.text(
+            -5,
+            -0.23,
+            "Source: UN Population Data",
+            fontsize=9,
+        )
+        plt.tight_layout(rect=(0, 0.035, 1, 1))
+        output_path = os.path.join(OUTPUT_DIR, "mort_rates")
+        plt.savefig(output_path)
+        plt.close()
 
     return mort_rates, infmort_rate
 
