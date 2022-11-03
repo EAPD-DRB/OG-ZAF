@@ -48,6 +48,10 @@ def main():
             )
         )
     )
+    # Update parameters from calibrate.py Calibration class
+    c = Calibration(p)
+    updated_params = c.get_dict()
+    p.update_specifications(updated_params)
 
     # Run model
     start_time = time.time()
