@@ -72,9 +72,12 @@ def get_macro_params():
 
     # print(fred_data.loc(str(baseline_date)))
     # find initial_debt_ratio
-    macro_parameters["initial_debt_ratio"] = pd.Series(
-        fred_data_a["Outstanding Domestic Public Debt to GDP"]
-    ).loc[baseline_date2] / 100
+    macro_parameters["initial_debt_ratio"] = (
+        pd.Series(fred_data_a["Outstanding Domestic Public Debt to GDP"]).loc[
+            baseline_date2
+        ]
+        / 100
+    )
 
     # # find alpha_T
     # macro_parameters["alpha_T"] = pd.Series(
