@@ -272,15 +272,15 @@ def get_un_mort_data(
 
 
 def get_un_pop_data(
-    country_id: str = "356",
+    country_id: str = "710",
     start_year: int = 2021,
     end_year: int = None,
     download: bool = True,
 ) -> pd.DataFrame:
     """
     Get UN population data for a country for some range of years (at least
-    one year) and by age. These data come from the United Nations Data Portal
-    API for UN population data (see
+    one year) and by age. The country_id=710 is for South Africa. These data
+    come from the United Nations Data Portal API for UN population data (see
     https://population.un.org/dataportal/about/dataapi)
 
     Args:
@@ -312,7 +312,7 @@ def get_un_pop_data(
             + "?format=csv"
         )
     else:
-        pop_target = os.path.join(DATA_DIR, "un_ind_pop.csv")
+        pop_target = os.path.join(DATA_DIR, "un_zaf_pop.csv")
 
     # Convert .csv file to Pandas DataFrame
     pop_df = pd.read_csv(
@@ -347,10 +347,6 @@ def get_fert(totpers, min_yr, max_yr, graph=False):
     """
     This function generates a vector of fertility rates by model period
     age that corresponds to the fertility rate data by age in years.
-    (Source: Office of the Registrar General & Census Commissioner: See
-    Statement [Table] 19 of
-    http://www.censusindia.gov.in/vital_statistics/SRS_Report_2016/
-    7.Chap_3-Fertility_Indicators-2016.pdf)
 
     Args:
         totpers (int): total number of agent life periods (E+S), >= 3
@@ -364,74 +360,51 @@ def get_fert(totpers, min_yr, max_yr, graph=False):
             of life
 
     """
-    # Read raw data
-    pop_file = utils.read_file(
-        CUR_PATH, os.path.join("data", "demographic", "india_pop_data.csv")
+    # Get UN fertility rates for India for ages 15-49
+    ages_15_49 = np.arange(15, 50)
+    fert_rates_15_49 = (
+        get_un_fert_data(download=False)["fert_rate"].to_numpy().flatten()
     )
-    pop_data = pd.read_csv(pop_file, encoding="utf-8")
-    pop_data_samp = pop_data[
-        (pop_data["Age"] >= min_yr - 1) & (pop_data["Age"] <= max_yr - 1)
-    ]
-    age_year_all = pop_data_samp["Age"] + 1
-    curr_pop = np.array(pop_data_samp["2011"], dtype="f")
-    curr_pop_pct = curr_pop / curr_pop.sum()
-    # divide by 2000 because fertility rates per woman and we want per
-    # household
-    fert_data = (
-        np.array(
-            [
-                0.0,
-                1.0,
-                3.0,
-                10.7,
-                135.4,
-                166.0,
-                91.7,
-                32.7,
-                11.3,
-                4.1,
-                1.0,
-                0.0,
-            ]
-        )
-        / 2000
-    )
-    age_midp = np.array([9, 12, 15, 17, 22, 27, 32, 37, 42, 47, 52, 57])
-    # Generate interpolation functions for fertility rates
-    fert_func = si.interp1d(age_midp, fert_data, kind="cubic")
-    # Calculate average fertility rate in each age bin using trapezoid
-    # method with a large number of points in each bin.
-    binsize = (max_yr - min_yr + 1) / totpers
-    num_sub_bins = float(10000)
-    len_subbins = (np.float64(100 * num_sub_bins)) / totpers
-    age_sub = (
-        np.linspace(
-            np.float64(binsize) / num_sub_bins,
-            np.float64(max_yr),
-            int(num_sub_bins * max_yr),
-        )
-        - 0.5 * np.float64(binsize) / num_sub_bins
-    )
-    curr_pop_sub = np.repeat(
-        np.float64(curr_pop_pct) / num_sub_bins, num_sub_bins
-    )
-    fert_rates_sub = np.zeros(curr_pop_sub.shape)
-    pred_ind = (age_sub > age_midp[0]) * (age_sub < age_midp[-1])
-    age_pred = age_sub[pred_ind]
-    fert_rates_sub[pred_ind] = np.float64(fert_func(age_pred))
-    fert_rates = np.zeros(totpers)
-    end_sub_bin = 0
-    for i in range(totpers):
-        beg_sub_bin = int(end_sub_bin)
-        end_sub_bin = int(np.rint((i + 1) * len_subbins))
-        fert_rates[i] = (
-            curr_pop_sub[beg_sub_bin:end_sub_bin]
-            * fert_rates_sub[beg_sub_bin:end_sub_bin]
-        ).sum() / curr_pop_sub[beg_sub_bin:end_sub_bin].sum()
 
-    # if graph:  # need to fix plot function for new data output
-    #     pp.plot_fert_rates(fert_rates, age_midp, totpers, min_yr, max_yr,
-    #                        fert_data, fert_rates, output_dir=OUTPUT_DIR)
+    # Extrapolate fertility rates for ages 1-14 and 50-100 using exponential
+    # function
+    ages_1_14 = np.arange(1, 15)
+    slope_15 = (fert_rates_15_49[1] - fert_rates_15_49[0]) / (
+        ages_15_49[1] - ages_15_49[0]
+    )
+    fert_rates_1_14 = extrap_exp_3(
+        ages_1_14, (15, fert_rates_15_49[0]), slope_15, (9, 0.0001), low=True
+    )
+    ages_50_100 = np.arange(50, 101)
+    slope_49 = (fert_rates_15_49[-1] - fert_rates_15_49[-2]) / (
+        ages_15_49[-1] - ages_15_49[-2]
+    )
+    fert_rates_50_100 = extrap_exp_3(
+        ages_50_100,
+        (49, fert_rates_15_49[-1]),
+        slope_49,
+        (57, 0.0001),
+        low=False,
+    )
+    fert_rates = np.hstack(
+        (fert_rates_1_14, fert_rates_15_49, fert_rates_50_100)
+    )
+    ages = np.arange(1, 101)
+
+    if graph:  # Plot fertility rates
+        plt.plot(ages, fert_rates)
+        plt.xlabel(r"Age $s$")
+        plt.ylabel(r"Fertility rate $f_{s}$")
+        plt.text(
+            -5,
+            -0.023,
+            "Source: UN Population Data",
+            fontsize=9,
+        )
+        plt.tight_layout(rect=(0, 0.035, 1, 1))
+        output_path = os.path.join(OUTPUT_DIR, "fert_rates")
+        plt.savefig(output_path)
+        plt.close()
 
     return fert_rates
 
@@ -1004,3 +977,254 @@ def get_pop_objs(E, S, T, min_yr, max_yr, curr_year, GraphDiag=False):
     }
 
     return pop_dict
+
+
+def extrap_exp_3(
+    x_vals, con_val: tuple, con_slope: float, eps_val: tuple, low: bool = True
+):
+    """
+    This function fits a smooth exponential extrapolation to either the low end
+    of data or the high end of data, both of which are monotonically
+    asymptoting to zero. For the exponential function extrapolation on both
+    ends of the distribution, we use the function:
+
+    f(x) = e ** (a * (x ** 2) + b * x + c)
+    s.t.    (i) f(x_con) = y_con
+           (ii) f'(x_con) = con_slope
+          (iii) f'(x_eps) = eps_low (>0) or eps_high (<0)
+
+    Args:
+        x_vals (array_like): array of x values to be extrapolated
+        con_val (tuple): (x, y) coordinate at which the function must connect
+            to the data
+        con_slope (float): slope of the data at the connecting value
+        eps_val (tuple): (x, y) coordinate at which the function must be close
+            to zero
+        low (bool): If True, the function is fit to the low end of the data.
+            If False, the function is fit to the high end of the data.
+
+    Returns:
+        y_vals (array_like): extrapolated y values corresponding to x values
+    """
+    if low:
+        if con_slope <= 0:
+            err_msg = (
+                "ERROR extrap_exp_3: con_slope must be positive if "
+                + "extrapolating to the low end of the data."
+            )
+            raise ValueError(err_msg)
+    else:
+        if con_slope >= 0:
+            err_msg = (
+                "ERROR extrap_exp_3: con_slope must be negative if "
+                + "extrapolating to the high end of the data."
+            )
+            raise ValueError(err_msg)
+
+    eps_slope_low = 0.0001
+    eps_slope_high = -eps_slope_low
+
+    # Unpack the coordinates
+    x_con, y_con = con_val
+    x_eps, y_eps = eps_val
+
+    # check if linear extrapolation intersects zero beyond x_eps
+    lin_y_intercept = y_con - con_slope * x_con
+    x_intercept = -lin_y_intercept / con_slope
+    if low:
+        lin_extrap_overshoot = x_intercept < x_eps
+    else:
+        lin_extrap_overshoot = x_intercept > x_eps
+    if lin_extrap_overshoot:
+        # Estimate an arctangent function to fit the data
+        print(
+            "WARNING: extrap_exp_3: Linear extrapolation overshoots "
+            + "furthest value. Using arctangent function instead."
+        )
+        y_vals = extrap_arctan_3(x_vals, con_slope, x_con, y_con, x_eps, low)
+    else:
+        # Estimate an exponential function to fit the data
+        if low:
+            params = [con_slope, x_con, y_con, x_eps, eps_slope_low]
+        else:
+            params = [con_slope, x_con, y_con, x_eps, eps_slope_high]
+        a_guess = 0.1
+        b_guess = 0.1
+        ab_guess = np.array([a_guess, b_guess])
+        solution = opt.root(
+            ab_zero_eqs_exp_func, ab_guess, args=params, method="lm"
+        )
+        if not solution.success:
+            err_msg = (
+                "ERROR extrap_exp_3: Root finder failed in "
+                + "ab_zero_eqs_exp_func."
+            )
+            raise ValueError(err_msg)
+        a, b = solution.x
+        if low:
+            # a = np.log(con_slope / eps_low) / (x_con - x_eps)
+            y_pos_ind = x_vals >= x_eps
+        else:
+            # a = np.log(con_slope / eps_high) / (x_con - x_eps)
+            y_pos_ind = x_vals <= x_eps
+        # b = np.log(con_slope / (a * np.exp(a * x_con)))
+        # c = y_con - np.exp(a * x_con + b)
+        c = np.log(y_con) - a * (x_con**2) - b * x_con
+
+        len_x_vals = len(x_vals)
+        len_y_pos_ind = y_pos_ind.sum()
+        if low:
+            y_vals = np.hstack(
+                (
+                    np.zeros(len_x_vals - len_y_pos_ind),
+                    np.exp(
+                        a * (x_vals[y_pos_ind] ** 2)
+                        + b * x_vals[y_pos_ind]
+                        + c
+                    ),
+                )
+            )
+        else:
+            y_vals = np.hstack(
+                (
+                    np.exp(
+                        a * (x_vals[y_pos_ind] ** 2)
+                        + b * x_vals[y_pos_ind]
+                        + c
+                    ),
+                    np.zeros(len_x_vals - len_y_pos_ind),
+                )
+            )
+
+    return y_vals
+
+
+def extrap_arctan_3(
+    x_vals, con_slope: float, x_con, y_con, x_eps, low: bool = True
+):
+    """
+    This function fits an arctangent function to extrapolate data that
+    monotonically decrease to zero and start with small absolute slope, then
+    absolute slope increases, then absolute slope decreases to zero. The
+    arctangent function is the following with the three following identifying
+    conditions:
+
+    if extrapolating to the low end of the data:
+    f(x) = (a / pi) * arctan(b * x + c) + (a / 2) s.t. a, b > 0
+    where f'(x) =  (a * b) / (pi * (1 + (b * x + c)^2))
+
+    if extrapolating to the high end of the data:
+    f(x) = (-a / pi) * arctan(b * x + c) + (a / 2) s.t. a, b > 0
+    where f'(x) =  (-a * b) / (pi * (1 + (b * x + c)^2))
+
+    s.t.   (i) f(x_con) = y_con
+    and   (ii) f'(x_con) = con_slope
+    and  (iii) b * (2/3 * x_con + 1/3 * x_eps) + c = 0
+
+    The solution to this problem can be reduced to finding the root of a
+    univariate equation in the parameter b.
+
+    Args:
+        x_vals (array_like): array of x values to be extrapolated
+        con_slope (float): slope of the data at the connecting value
+        x_con (float): x value at which the function must connect to the data
+        y_con (float): y value at which the function must connect to the data
+        x_eps (float): x value at which the function must be close to zero
+        low (bool): If True, the function is fit to the low end of the data.
+            If False, the function is fit to the high end of the data.
+
+    Returns:
+        y_vals (array_like): extrapolated y values corresponding to x values
+    """
+    y_vals = np.zeros_like(x_vals)
+
+    # Solve for the parameter b
+    params = [con_slope, x_con, y_con, x_eps, low]
+    b_guess = 20.0
+    solution = opt.root(b_zero_eq_arctan_func, b_guess, args=params)
+    if not solution.success:
+        err_msg = (
+            "ERROR extrap_arctan_3: Root finder failed in "
+            + "b_zero_eq_arctan_func."
+        )
+        raise ValueError(err_msg)
+    b = solution.x
+
+    len_x_vals = len(x_vals)
+
+    if low:
+        a = y_con / (
+            (1 / np.pi) * np.arctan((b / 3) * (x_con - x_eps)) + (1 / 2)
+        )
+        c = -b * ((2 / 3) * x_con + (1 / 3) * x_eps)
+        y_pos_ind = x_vals >= x_eps
+        len_y_pos_ind = y_pos_ind.sum()
+        y_vals = np.hstack(
+            (
+                np.zeros(len_x_vals - len_y_pos_ind),
+                (a / np.pi) * np.arctan(b * x_vals[y_pos_ind] + c) + (a / 2),
+            )
+        )
+    else:
+        a = y_con / (
+            (-1 / np.pi) * np.arctan((b / 3) * (x_con - x_eps)) + (1 / 2)
+        )
+        c = -b * ((2 / 3) * x_con + (1 / 3) * x_eps)
+        y_pos_ind = x_vals <= x_eps
+        len_y_pos_ind = y_pos_ind.sum()
+        y_vals = np.hstack(
+            (
+                (-a / np.pi) * np.arctan(b * x_vals[y_pos_ind] + c) + (a / 2),
+                np.zeros(len_x_vals - len_y_pos_ind),
+            )
+        )
+
+    return y_vals
+
+
+def ab_zero_eqs_exp_func(ab_vals, params):
+    """ "
+    This function returns a vector of error values for the two zero equations
+    in terms of parameters a and b for given values of a and b.
+    """
+    con_slope, x_con, y_con, x_eps, eps = params
+    a, b = ab_vals
+
+    c = np.log(y_con) - a * (x_con**2) - b * x_con
+    error_1 = (2 * a * x_con + b) * np.exp(
+        a * (x_con**2) + b * x_con + c
+    ) - con_slope
+    error_2 = (2 * a * x_eps + b) * np.exp(
+        a * (x_eps**2) + b * x_eps + c
+    ) - eps
+
+    error_vec = np.array([error_1, error_2])
+
+    return error_vec
+
+
+def b_zero_eq_arctan_func(b, params):
+    """ "
+    This function returns a scalar error value of the univariate error function
+    in parameter b for given values of b.
+    """
+    con_slope, x_con, y_con, x_eps, low = params
+
+    if low:
+        a = y_con / (
+            (1 / np.pi) * np.arctan((b / 3) * (x_con - x_eps)) + (1 / 2)
+        )
+        a_other = (
+            con_slope * np.pi * (1 + ((b / 3) ** 2) * ((x_con - x_eps) ** 2))
+        ) / b
+        error_val = a_other - a
+    else:
+        a = y_con / (
+            (-1 / np.pi) * np.arctan((b / 3) * (x_con - x_eps)) + (1 / 2)
+        )
+        a_other = (
+            -con_slope * np.pi * (1 + ((b / 3) ** 2) * ((x_con - x_eps) ** 2))
+        ) / b
+        error_val = a_other - a
+
+    return error_val
