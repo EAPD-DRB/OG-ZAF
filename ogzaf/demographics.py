@@ -515,13 +515,12 @@ def pop_rebin(curr_pop_dist, totpers_new):
     return curr_pop_new
 
 
-def get_imm_resid(totpers, min_yr, max_yr):
+def get_imm_resid(totpers, min_yr, max_yr, graph=False):
     """
-    Calculate immigration rates by age as a residual given population
-    levels in different periods, then output average calculated
-    immigration rate. We have to replace the first mortality rate in
-    this function in order to adjust the first implied immigration rate
-    Source: India Census, 2001 and 2011
+    Calculate immigration rates by age as a residual given population levels in
+    different periods, then output average calculated immigration rate. We have
+    to replace the first mortality rate in this function in order to adjust the
+    first implied immigration rate. Source: UN Population Data portal.
 
     Args:
         totpers (int): total number of agent life periods (E+S), >= 3
@@ -535,44 +534,68 @@ def get_imm_resid(totpers, min_yr, max_yr):
             each period of life, length E+S
 
     """
-    pop_file = utils.read_file(
-        CUR_PATH, os.path.join("data", "demographic", "india_pop_data.csv")
+    pop_df = get_un_pop_data(start_year=2019, end_year=2021, download=False)
+    pop_2019 = (
+        pop_df["pop"][
+            (
+                (pop_df["sex_num"] == 3)
+                & (pop_df["year"] == 2019)
+                & (pop_df["age"] < 100)
+            )
+        ]
+        .to_numpy()
+        .flatten()
     )
-    pop_data = pd.read_csv(pop_file, encoding="utf-8")
-    pop_data_samp = pop_data[
-        (pop_data["Age"] >= min_yr - 1) & (pop_data["Age"] <= max_yr - 1)
-    ]
-    age_year_all = pop_data_samp["Age"] + 1
-    pop_2001, pop_2011 = (
-        np.array(pop_data_samp["2001"], dtype="f"),
-        np.array(pop_data_samp["2011"], dtype="f"),
+    pop_2020 = (
+        pop_df["pop"][
+            (
+                (pop_df["sex_num"] == 3)
+                & (pop_df["year"] == 2020)
+                & (pop_df["age"] < 100)
+            )
+        ]
+        .to_numpy()
+        .flatten()
     )
-    pop_2001_EpS = pop_rebin(pop_2001, totpers)
-    pop_2011_EpS = pop_rebin(pop_2011, totpers)
-    # Create three years of estimated immigration rates for youngest age
-    # individuals
-    imm_mat = np.zeros((2, totpers))
-    fert_rates = get_fert(totpers, min_yr, max_yr, False)
-    mort_rates, infmort_rate = get_mort(totpers, min_yr, max_yr, False)
-    newbornvec = np.dot(fert_rates, pop_2001_EpS).T
-    # imm_mat[:, 0] = ((pop_2011_EpS[0] - (1 - infmort_rate) * newbornvec)
-    #                  / pop_2001_EpS[0])
-    imm_mat[:, 0] = 0
-    # Estimate immigration rates for all other-aged
-    # individuals
-    mort_rate10 = np.zeros_like(mort_rates[:-10])  # 10-year mort rate
-    for i in range(10):
-        mort_rate10 = mort_rates[i : -10 + i] + mort_rate10
-    mort_rate10[mort_rate10 > 1.0] = 1.0
-    imm_mat[:, 10:] = (
-        pop_2011_EpS[10:] - (1 - mort_rate10) * pop_2001_EpS[:-10]
-    ) / pop_2001_EpS[10:]
-    # Final estimated immigration rates are the averages over years
-    imm_rates = imm_mat.mean(axis=0)
-    neg_rates = imm_rates < 0
-    # For India, data were 10 years apart, so make annual rate
-    imm_rates = ((1 + np.absolute(imm_rates)) ** (1 / 10)) - 1
-    imm_rates[neg_rates] = -1 * imm_rates[neg_rates]
+    pop_2021 = (
+        pop_df["pop"][
+            (
+                (pop_df["sex_num"] == 3)
+                & (pop_df["year"] == 2021)
+                & (pop_df["age"] < 100)
+            )
+        ]
+        .to_numpy()
+        .flatten()
+    )
+    fert_rates = get_fert(totpers, min_yr, max_yr)
+    mort_rates, infmort_rate = get_mort(totpers, min_yr, max_yr)
+
+    # Create two years of estimated immigration rates, then take average
+    imm_rate_1_2020 = (
+        pop_2021[0] - (1 - infmort_rate) * (fert_rates * pop_2020).sum()
+    ) / pop_2020[0]
+    imm_rate_1_2019 = (
+        pop_2021[0] - (1 - infmort_rate) * (fert_rates * pop_2020).sum()
+    ) / pop_2020[0]
+    imm_rate_1 = (imm_rate_1_2020 + imm_rate_1_2019) / 2
+
+    imm_rates_s_2020 = (
+        pop_2021[1:] - (1 - mort_rates[:-1]) * pop_2020[:-1]
+    ) / pop_2020[1:]
+    imm_rates_s_2019 = (
+        pop_2020[1:] - (1 - mort_rates[:-1]) * pop_2019[:-1]
+    ) / pop_2019[1:]
+    imm_rates_s = (imm_rates_s_2020 + imm_rates_s_2019) / 2
+    imm_rates = np.hstack((imm_rate_1, imm_rates_s))
+    if graph:
+        ages = np.arange(min_yr, max_yr + 1)
+        plt.plot(ages, imm_rates, label="Residual data")
+        plt.xlabel(r"Age $s$")
+        plt.ylabel(r"immigration rates $\i_s$")
+        output_path = os.path.join(OUTPUT_DIR, "imm_rates")
+        plt.savefig(output_path)
+        plt.close()
 
     return imm_rates
 
@@ -591,14 +614,14 @@ def immsolve(imm_rates, *args):
         imm_rates (Numpy array):immigration rates that correspond to
             each period of life, length E+S
         args (tuple): (fert_rates, mort_rates, infmort_rate, omega_cur,
-            g_n_SS)
+            g_n_ss)
 
     Returns:
         omega_errs (Numpy array): difference between omega_new and
             omega_cur_pct, length E+S
 
     """
-    fert_rates, mort_rates, infmort_rate, omega_cur_lev, g_n_SS = args
+    fert_rates, mort_rates, infmort_rate, omega_cur_lev, g_n_ss = args
     omega_cur_pct = omega_cur_lev / omega_cur_lev.sum()
     totpers = len(fert_rates)
     OMEGA = np.zeros((totpers, totpers))
@@ -607,7 +630,7 @@ def immsolve(imm_rates, *args):
     )
     OMEGA[1:, :-1] += np.diag(1 - mort_rates[:-1])
     OMEGA[1:, 1:] += np.diag(imm_rates[1:])
-    omega_new = np.dot(OMEGA, omega_cur_pct) / (1 + g_n_SS)
+    omega_new = np.dot(OMEGA, omega_cur_pct) / (1 + g_n_ss)
     omega_errs = omega_new - omega_cur_pct
 
     return omega_errs
@@ -615,8 +638,8 @@ def immsolve(imm_rates, *args):
 
 def get_pop_objs(E, S, T, min_yr, max_yr, curr_year, GraphDiag=False):
     """
-    This function produces the demographics objects to be used in the
-    OG-ZAF model package.
+    This function produces the demographics objects to be used in the OG-ZAF
+    model package.
 
     Args:
         E (int): number of model periods in which agent is not
@@ -637,7 +660,7 @@ def get_pop_objs(E, S, T, min_yr, max_yr, curr_year, GraphDiag=False):
             omega_path_S (Numpy array), time path of the population
                 distribution from the current state to the steady-state,
                 size T+S x S
-            g_n_SS (scalar): steady-state population growth rate
+            g_n_ss (scalar): steady-state population growth rate
             omega_SS (Numpy array): normalized steady-state population
                 distribution, length S
             surv_rates (Numpy array): survival rates that correspond to
@@ -648,8 +671,7 @@ def get_pop_objs(E, S, T, min_yr, max_yr, curr_year, GraphDiag=False):
                 path, length T + S
 
     """
-    assert curr_year >= 2011
-    # age_per = np.linspace(min_yr, max_yr, E+S)
+    assert curr_year >= 2021
     fert_rates = get_fert(E + S, min_yr, max_yr, graph=False)
     mort_rates, infmort_rate = get_mort(E + S, min_yr, max_yr, graph=False)
     mort_rates_S = mort_rates[-S:]
@@ -665,7 +687,7 @@ def get_pop_objs(E, S, T, min_yr, max_yr, curr_year, GraphDiag=False):
     # population distribution by age using eigenvalue and eigenvector
     # decomposition
     eigvalues, eigvectors = np.linalg.eig(OMEGA_orig)
-    g_n_SS = (eigvalues[np.isreal(eigvalues)].real).max() - 1
+    g_n_ss = (eigvalues[np.isreal(eigvalues)].real).max() - 1
     eigvec_raw = eigvectors[
         :, (eigvalues[np.isreal(eigvalues)].real).argmax()
     ].real
@@ -673,38 +695,52 @@ def get_pop_objs(E, S, T, min_yr, max_yr, curr_year, GraphDiag=False):
 
     # Generate time path of the nonstationary population distribution
     omega_path_lev = np.zeros((E + S, T + S))
-    pop_file = utils.read_file(
-        CUR_PATH, os.path.join("data", "demographic", "india_pop_data.csv")
+    pop_df = get_un_pop_data(start_year=2019, end_year=2021, download=False)
+    pop_2020 = (
+        pop_df["pop"][
+            (
+                (pop_df["sex_num"] == 3)
+                & (pop_df["year"] == 2020)
+                & (pop_df["age"] < 100)
+            )
+        ]
+        .to_numpy()
+        .flatten()
     )
-    pop_data = pd.read_csv(pop_file, encoding="utf-8")
-    pop_data_samp = pop_data[
-        (pop_data["Age"] >= min_yr - 1) & (pop_data["Age"] <= max_yr - 1)
-    ]
-    pop_2011 = np.array(pop_data_samp["2011"], dtype="f")
-    # Generate the current population distribution given that E+S might
-    # be less than max_yr-min_yr+1
+    pop_2021 = (
+        pop_df["pop"][
+            (
+                (pop_df["sex_num"] == 3)
+                & (pop_df["year"] == 2021)
+                & (pop_df["age"] < 100)
+            )
+        ]
+        .to_numpy()
+        .flatten()
+    )
     age_per_EpS = np.arange(1, E + S + 1)
-    pop_2011_EpS = pop_rebin(pop_2011, E + S)
-    pop_2011_pct = pop_2011_EpS / pop_2011_EpS.sum()
+    pop_2020_EpS = pop_rebin(pop_2020, E + S)
+    pop_2021_EpS = pop_rebin(pop_2021, E + S)
+    pop_2020_pct = pop_2020_EpS / pop_2020_EpS.sum()
+    pop_2021_pct = pop_2021_EpS / pop_2021_EpS.sum()
     # Age most recent population data to the current year of analysis
-    pop_curr = pop_2011_EpS.copy()
-    data_year = 2019
-    pop_next = np.dot(OMEGA_orig, pop_curr)
-    g_n_curr = (pop_next[-S:].sum() - pop_curr[-S:].sum()) / pop_curr[
-        -S:
-    ].sum()  # g_n in 2019
-    pop_past = pop_curr  # assume 2018-2019 pop
-    # Age the data to the current year
-    for per in range(curr_year - data_year):
-        pop_next = np.dot(OMEGA_orig, pop_curr)
-        g_n_curr = (pop_next[-S:].sum() - pop_curr[-S:].sum()) / pop_curr[
-            -S:
-        ].sum()
-        pop_past = pop_curr
-        pop_curr = pop_next
-
-    # Generate time path of the population distribution
-    omega_path_lev[:, 0] = pop_curr.copy()
+    pop_curr = pop_2021_EpS.copy()
+    data_year = 2021
+    if curr_year == data_year:
+        omega_path_lev[:, 0] = pop_curr
+        g_n_curr = (
+            pop_curr[-S:].sum() - pop_2020_EpS[-S:].sum()
+        ) / pop_2020_EpS[-S:].sum()
+        pop_past = pop_2020_EpS.copy()
+    elif curr_year > data_year:
+        for per in range(curr_year - data_year):
+            pop_next = np.dot(OMEGA_orig, pop_curr)
+            g_n_curr = (pop_next[-S:].sum() - pop_curr[-S:].sum()) / pop_curr[
+                -S:
+            ].sum()
+            pop_past = pop_curr.copy()
+            pop_curr = pop_next.copy()
+        omega_path_lev[:, 0] = pop_curr
     for per in range(1, T + S):
         pop_next = np.dot(OMEGA_orig, pop_curr)
         omega_path_lev[:, per] = pop_next.copy()
@@ -721,7 +757,7 @@ def get_pop_objs(E, S, T, min_yr, max_yr, curr_year, GraphDiag=False):
         mort_rates,
         infmort_rate,
         omega_path_lev[:, fixper],
-        g_n_SS,
+        g_n_ss,
     )
     imm_fulloutput = opt.fsolve(
         immsolve,
@@ -744,7 +780,7 @@ def get_pop_objs(E, S, T, min_yr, max_yr, curr_year, GraphDiag=False):
         omega_path_lev[-S:, 1:].sum(axis=0)
         - omega_path_lev[-S:, :-1].sum(axis=0)
     ) / omega_path_lev[-S:, :-1].sum(axis=0)
-    g_n_path[fixper + 1 :] = g_n_SS
+    g_n_path[fixper + 1 :] = g_n_ss
     omega_S_preTP = (pop_past.copy()[-S:]) / (pop_past.copy()[-S:].sum())
     imm_rates_mat = np.hstack(
         (
@@ -831,21 +867,21 @@ def get_pop_objs(E, S, T, min_yr, max_yr, curr_year, GraphDiag=False):
         OMEGA2[1:, :-1] += np.diag(1 - mort_rates[:-1])
         OMEGA2[1:, 1:] += np.diag(imm_rates_adj[1:])
         eigvalues2, eigvectors2 = np.linalg.eig(OMEGA2)
-        g_n_SS_adj = (eigvalues[np.isreal(eigvalues2)].real).max() - 1
-        if np.max(np.absolute(g_n_SS_adj - g_n_SS)) > 10 ** (-8):
+        g_n_ss_adj = (eigvalues[np.isreal(eigvalues2)].real).max() - 1
+        if np.max(np.absolute(g_n_ss_adj - g_n_ss)) > 10 ** (-8):
             print(
                 "FAILURE: The steady-state population growth rate"
                 + " from adjusted OMEGA is different (diff is "
-                + str(g_n_SS_adj - g_n_SS)
+                + str(g_n_ss_adj - g_n_ss)
                 + ") than the steady-"
                 + "state population growth rate from the original"
                 + " OMEGA."
             )
-        elif np.max(np.absolute(g_n_SS_adj - g_n_SS)) <= 10 ** (-8):
+        elif np.max(np.absolute(g_n_ss_adj - g_n_ss)) <= 10 ** (-8):
             print(
                 "SUCCESS: The steady-state population growth rate"
                 + " from adjusted OMEGA is close to (diff is "
-                + str(g_n_SS_adj - g_n_SS)
+                + str(g_n_ss_adj - g_n_ss)
                 + ") the steady-"
                 + "state population growth rate from the original"
                 + " OMEGA."
@@ -890,7 +926,7 @@ def get_pop_objs(E, S, T, min_yr, max_yr, curr_year, GraphDiag=False):
         )
         pp.plot_population_path(
             age_per_EpS,
-            pop_2011_pct,
+            pop_2021_pct,
             omega_path_lev,
             omega_SSfx,
             curr_year,
@@ -899,11 +935,11 @@ def get_pop_objs(E, S, T, min_yr, max_yr, curr_year, GraphDiag=False):
             output_dir=OUTPUT_DIR,
         )
 
-    # return omega_path_S, g_n_SS, omega_SSfx, survival rates,
+    # return omega_path_S, g_n_ss, omega_SSfx, survival rates,
     # mort_rates_S, and g_n_path
     pop_dict = {
         "omega": omega_path_S.T,
-        "g_n_SS": g_n_SS,
+        "g_n_ss": g_n_ss,
         "omega_SS": omega_SSfx[-S:] / omega_SSfx[-S:].sum(),
         "surv_rate": 1 - mort_rates_S,
         "rho": mort_rates_S,
