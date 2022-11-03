@@ -156,15 +156,16 @@ def get_un_fert_data(
 
 
 def get_un_mort_data(
-    country_id: str = "356",
+    country_id: str = "710",
     start_year: int = 2021,
     end_year: int = None,
     download: bool = True,
 ) -> pd.DataFrame:
     """
     Get UN mortality rate data for a country for some range of years (at least
-    one year) and by age, and get infant mortality rate data. These data come
-    from the United Nations Data Portal API for UN population data (see
+    one year) and by age, and get infant mortality rate data. The
+    country_id=710 is for South Africa. These data come from the United Nations
+    Population Data Portal API for UN population data (see
     https://population.un.org/dataportal/about/dataapi)
 
     Args:
@@ -209,8 +210,8 @@ def get_un_mort_data(
             + "?format=csv"
         )
     else:
-        infmort_target = os.path.join(DATA_DIR, "un_ind_infmort.csv")
-        mort_target = os.path.join(DATA_DIR, "un_ind_mort.csv")
+        infmort_target = os.path.join(DATA_DIR, "un_zaf_infmort.csv")
+        mort_target = os.path.join(DATA_DIR, "un_zaf_mort.csv")
 
     # Convert .csv file to Pandas DataFrame
     infmort_rate_df = pd.read_csv(
