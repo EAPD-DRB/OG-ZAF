@@ -167,7 +167,8 @@ def get_un_mort_data(
         path_folder (None or str): string path to folder where data are stored
 
     Returns:
-        fert_rates_df (DataFrame): dataset with fertility rates by age
+        infmort_rate_df (DataFrame): dataset with infant mortality rates by yr
+        mort_rates_df(DataFrame): dataset with mortality rates by age
     """
     if end_year is None:
         end_year = start_year
@@ -282,7 +283,7 @@ def get_un_pop_data(
         path_folder (None or str): string path to folder where data are stored
 
     Returns:
-        fert_rates_df (DataFrame): dataset with fertility rates by age
+        pop_df (DataFrame): dataset with total population by age
     """
     if end_year is None:
         end_year = start_year
@@ -350,7 +351,7 @@ def get_fert(totpers, min_yr, max_yr, graph=False):
             of life
 
     """
-    # Get UN fertility rates for India for ages 15-49
+    # Get UN fertility rates for South Africa for ages 15-49
     ages_15_49 = np.arange(15, 50)
     fert_rates_15_49 = (
         get_un_fert_data(download=False)["fert_rate"].to_numpy().flatten()
