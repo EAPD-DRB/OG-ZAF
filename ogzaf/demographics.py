@@ -88,14 +88,14 @@ def get_un_fert_data(
         pop_target,
         sep="|",
         header=1,
-        usecols=["TimeLabel", "SexId", "Sex", "AgeMid", "Value"],
+        usecols=["TimeLabel", "SexId", "Sex", "AgeStart", "Value"],
         float_precision="round_trip",
     )
     fert_rates_df = pd.read_csv(
         fert_target,
         sep="|",
         header=1,
-        usecols=["TimeLabel", "AgeMid", "Value"],
+        usecols=["TimeLabel", "AgeStart", "Value"],
         float_precision="round_trip",
     )
 
@@ -105,7 +105,7 @@ def get_un_fert_data(
             "TimeLabel": "year",
             "SexId": "sex_num",
             "Sex": "sex_str",
-            "AgeMid": "age",
+            "AgeStart": "age",
             "Value": "pop",
         },
         inplace=True,
@@ -113,20 +113,10 @@ def get_un_fert_data(
     fert_rates_df.rename(
         columns={
             "TimeLabel": "year",
-            "AgeMid": "age",
+            "AgeStart": "age",
             "Value": "births_p_1000f",
         },
         inplace=True,
-    )
-
-    # Clean the data
-    # I don't know why in the pop_df population data by age and sex and year
-    # there are 10 different population numbers for each sex and age and year
-    # and all the other variables are equal. I just average them here.
-    pop_df = (
-        pop_df.groupby(["year", "sex_num", "sex_str", "age"])
-        .mean()
-        .reset_index()
     )
 
     # Merge in the male and female population by age data
@@ -441,6 +431,8 @@ def get_mort(totpers, min_yr, max_yr, graph=False):
         .to_numpy()
         .flatten()
     )
+    # Artificially set the mortality rate of the oldest age to 1.
+    mort_rates[-1] = 1.0
 
     if graph:
         ages_all = np.arange(0, 101)
