@@ -334,16 +334,13 @@ def get_un_pop_data(
     return pop_df
 
 
-def get_fert(totpers, min_yr, max_yr, graph=False):
+def get_fert(totpers, graph=False):
     """
     This function generates a vector of fertility rates by model period
     age that corresponds to the fertility rate data by age in years.
 
     Args:
         totpers (int): total number of agent life periods (E+S), >= 3
-        min_yr (int): age in years at which agents are born, >= 0
-        max_yr (int): age in years at which agents die with certainty,
-            >= 4
         graph (bool): =True if want graphical output
 
     Returns:
@@ -351,6 +348,10 @@ def get_fert(totpers, min_yr, max_yr, graph=False):
             of life
 
     """
+    if totpers > 100:
+        err_msg = "ERROR get_fert(): totpers must be <= 100."
+        raise ValueError(err_msg)
+
     # Get UN fertility rates for South Africa for ages 15-49
     ages_15_49 = np.arange(15, 50)
     fert_rates_15_49 = (
@@ -377,13 +378,60 @@ def get_fert(totpers, min_yr, max_yr, graph=False):
         (57, 0.0001),
         low=False,
     )
-    fert_rates = np.hstack(
+    fert_rates_1_100 = np.hstack(
         (fert_rates_1_14, fert_rates_15_49, fert_rates_50_100)
     )
-    ages = np.arange(1, 101)
+    if totpers == 100:
+        fert_rates = fert_rates_1_100.copy()
+        ages = np.arange(1, 101)
+    elif totpers < 100:
+        # Create population weighted average fertility rates across bins
+        # Get population data for ages 1-100
+        pop_df = get_un_pop_data(download=False)
+        pop_1_100 = pop_df[
+            ((pop_df["age"] < 100) & (pop_df["sex_num"]==3))
+        ]["pop"].to_numpy().flatten()
+        fert_rates = np.zeros(totpers)
+        len_subbins = len_subbins = np.float64(100 / totpers)
+        end_sub_bin = int(0)
+        end_pct = 0.0
+        print("len_subbins = ", len_subbins)
+        for i in range(totpers):
+            if end_pct < 1.0:
+                beg_sub_bin = int(end_sub_bin)
+                beg_pct = 1 - end_pct
+            elif end_pct == 1.0:
+                beg_sub_bin = 1 + int(end_sub_bin)
+                beg_pct = 1.0
+            print("")
+            print("Model period = ", i)
+            print("")
+            print("beg_sub_bin=", beg_sub_bin)
+            print("beg_pct=", beg_pct)
+            end_sub_bin = int((i + 1) * len_subbins)
+            print("first end_sub_bin = ", end_sub_bin)
+            print("remainder = ", (i + 1) * len_subbins - end_sub_bin)
+            print("remainder is positive:", (i + 1) * len_subbins - end_sub_bin > 0)
+            print("remainder is negative:", (i + 1) * len_subbins - end_sub_bin < 0)
+            print("remainder is zero:", (i + 1) * len_subbins - end_sub_bin == 0)
+            if (i + 1) * len_subbins - end_sub_bin  == 0.0:
+                end_sub_bin = end_sub_bin - 1
+                end_pct = 1
+            elif (i + 1) * len_subbins - end_sub_bin > 0.0:
+                end_pct = (i + 1) * len_subbins - end_sub_bin
+            print("")
+            print("end_sub_bin=", end_sub_bin)
+            print("end_pct=", end_pct)
+            fert_rates_sub = fert_rates_1_100[beg_sub_bin:end_sub_bin + 1]
+            pop_sub = pop_1_100[beg_sub_bin:end_sub_bin + 1]
+            pop_sub[0] = beg_pct * pop_sub[0]
+            pop_sub[-1] = end_pct * pop_sub[-1]
+            fert_rates[i] = ((fert_rates_sub * pop_sub) / pop_sub.sum()).sum()
+        ages = np.arange(1, totpers + 1)
 
     if graph:  # Plot fertility rates
         plt.plot(ages, fert_rates)
+        plt.scatter(ages, fert_rates, marker="d")
         plt.xlabel(r"Age $s$")
         plt.ylabel(r"Fertility rate $f_{s}$")
         plt.text(
@@ -629,7 +677,7 @@ def immsolve(imm_rates, *args):
     return omega_errs
 
 
-def get_pop_objs(E, S, T, min_yr, max_yr, curr_year, GraphDiag=False):
+def get_pop_objs(E, S, T, curr_year, GraphDiag=False):
     """
     This function produces the demographics objects to be used in the OG-ZAF
     model package.
@@ -640,9 +688,6 @@ def get_pop_objs(E, S, T, min_yr, max_yr, curr_year, GraphDiag=False):
         S (int): number of model periods in which agent is economically
             active, >= 3
         T (int): number of periods to be simulated in TPI, > 2*S
-        min_yr (int): age in years at which agents are born, >= 0
-        max_yr (int): age in years at which agents die with certainty,
-            >= 4
         curr_year (int): current year for which analysis will begin,
             >= 2016
         GraphDiag (bool): =True if want graphical output and printed
@@ -665,10 +710,10 @@ def get_pop_objs(E, S, T, min_yr, max_yr, curr_year, GraphDiag=False):
 
     """
     assert curr_year >= 2021
-    fert_rates = get_fert(E + S, min_yr, max_yr, graph=False)
-    mort_rates, infmort_rate = get_mort(E + S, min_yr, max_yr, graph=False)
+    fert_rates = get_fert(E + S, graph=False)
+    mort_rates, infmort_rate = get_mort(E + S, graph=False)
     mort_rates_S = mort_rates[-S:]
-    imm_rates_orig = get_imm_resid(E + S, min_yr, max_yr)
+    imm_rates_orig = get_imm_resid(E + S)
     OMEGA_orig = np.zeros((E + S, E + S))
     OMEGA_orig[0, :] = (1 - infmort_rate) * fert_rates + np.hstack(
         (imm_rates_orig[0], np.zeros(E + S - 1))
