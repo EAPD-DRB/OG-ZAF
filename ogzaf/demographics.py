@@ -172,12 +172,29 @@ def get_un_mort_data(
     """
     if end_year is None:
         end_year = start_year
-    # UN variable code for Age specific mortality rate
-    mort_code = "80"
+    # UN variable code for Population by 1-year age groups and sex
+    pop_code = "47"
+    # # UN variable code for Age specific mortality rate
+    # mort_code = "80"
+    # We use deaths and population to compute mortality rates rather than the
+    # mortality rates data so that we have the option to have totpers<100.
+    # UN variable code for Deaths by 1-year age groups
+    deaths_code = "69"
     # UN variable code for Age specific mortality rate
     infmort_code = "22"
 
     if download:
+        pop_target = (
+            "https://population.un.org/dataportalapi/api/v1/data/indicators/"
+            + pop_code
+            + "/locations/"
+            + country_id
+            + "/start/"
+            + str(start_year)
+            + "/end/"
+            + str(end_year)
+            + "?format=csv"
+        )
         infmort_target = (
             "https://population.un.org/dataportalapi/api/v1/data/indicators/"
             + infmort_code
@@ -189,9 +206,9 @@ def get_un_mort_data(
             + str(end_year)
             + "?format=csv"
         )
-        mort_target = (
+        deaths_target = (
             "https://population.un.org/dataportalapi/api/v1/data/indicators/"
-            + mort_code
+            + deaths_code
             + "/locations/"
             + country_id
             + "/start/"
@@ -201,10 +218,18 @@ def get_un_mort_data(
             + "?format=csv"
         )
     else:
+        pop_target = os.path.join(DATA_DIR, "un_zaf_pop.csv")
         infmort_target = os.path.join(DATA_DIR, "un_zaf_infmort.csv")
-        mort_target = os.path.join(DATA_DIR, "un_zaf_mort.csv")
+        deaths_target = os.path.join(DATA_DIR, "un_zaf_deaths.csv")
 
     # Convert .csv file to Pandas DataFrame
+    pop_df = pd.read_csv(
+        pop_target,
+        sep="|",
+        header=1,
+        usecols=["TimeLabel", "SexId", "Sex", "AgeStart", "Value"],
+        float_precision="round_trip",
+    )
     infmort_rate_df = pd.read_csv(
         infmort_target,
         sep="|",
@@ -212,15 +237,25 @@ def get_un_mort_data(
         usecols=["TimeLabel", "SexId", "Sex", "Value"],
         float_precision="round_trip",
     )
-    mort_rates_df = pd.read_csv(
-        mort_target,
+    deaths_df = pd.read_csv(
+        deaths_target,
         sep="|",
         header=1,
         usecols=["TimeLabel", "SexId", "Sex", "AgeStart", "Value"],
         float_precision="round_trip",
     )
 
-    # Rename variables in the population and fertility rates data
+    # Rename variables in the population and mortality rates data
+    pop_df.rename(
+        columns={
+            "TimeLabel": "year",
+            "SexId": "sex_num",
+            "Sex": "sex_str",
+            "AgeStart": "age",
+            "Value": "pop",
+        },
+        inplace=True,
+    )
     infmort_rate_df.rename(
         columns={
             "TimeLabel": "year",
@@ -230,16 +265,30 @@ def get_un_mort_data(
         },
         inplace=True,
     )
-    mort_rates_df.rename(
+    deaths_df.rename(
         columns={
             "TimeLabel": "year",
             "SexId": "sex_num",
             "Sex": "sex_str",
             "AgeStart": "age",
-            "Value": "mort_rate",
+            "Value": "deaths",
         },
         inplace=True,
     )
+
+    # Merge in the male and female population by age data to the deaths_df
+    deaths_df = deaths_df.merge(
+        pop_df, how="left",
+        on=["year", "sex_num", "sex_str", "age"],
+    )
+    deaths_df["mort_rate"] = deaths_df["deaths"] / deaths_df["pop"]
+    deaths_df = deaths_df[
+        (
+            (deaths_df["year"] >= start_year)
+            & (deaths_df["year"] <= end_year)
+        )
+    ]
+    mort_rates_df = deaths_df.copy()
 
     # Clean the data
     infmort_rate_df["infmort_rate"] = (
@@ -250,12 +299,6 @@ def get_un_mort_data(
         (
             (infmort_rate_df["year"] >= start_year)
             & (infmort_rate_df["year"] <= end_year)
-        )
-    ]
-    mort_rates_df = mort_rates_df[
-        (
-            (mort_rates_df["year"] >= start_year)
-            & (mort_rates_df["year"] <= end_year)
         )
     ]
 
@@ -395,7 +438,6 @@ def get_fert(totpers, graph=False):
         len_subbins = len_subbins = np.float64(100 / totpers)
         end_sub_bin = int(0)
         end_pct = 0.0
-        print("len_subbins = ", len_subbins)
         for i in range(totpers):
             if end_pct < 1.0:
                 beg_sub_bin = int(end_sub_bin)
@@ -403,25 +445,12 @@ def get_fert(totpers, graph=False):
             elif end_pct == 1.0:
                 beg_sub_bin = 1 + int(end_sub_bin)
                 beg_pct = 1.0
-            print("")
-            print("Model period = ", i)
-            print("")
-            print("beg_sub_bin=", beg_sub_bin)
-            print("beg_pct=", beg_pct)
             end_sub_bin = int((i + 1) * len_subbins)
-            print("first end_sub_bin = ", end_sub_bin)
-            print("remainder = ", (i + 1) * len_subbins - end_sub_bin)
-            print("remainder is positive:", (i + 1) * len_subbins - end_sub_bin > 0)
-            print("remainder is negative:", (i + 1) * len_subbins - end_sub_bin < 0)
-            print("remainder is zero:", (i + 1) * len_subbins - end_sub_bin == 0)
             if (i + 1) * len_subbins - end_sub_bin  == 0.0:
                 end_sub_bin = end_sub_bin - 1
                 end_pct = 1
             elif (i + 1) * len_subbins - end_sub_bin > 0.0:
                 end_pct = (i + 1) * len_subbins - end_sub_bin
-            print("")
-            print("end_sub_bin=", end_sub_bin)
-            print("end_pct=", end_pct)
             fert_rates_sub = fert_rates_1_100[beg_sub_bin:end_sub_bin + 1]
             pop_sub = pop_1_100[beg_sub_bin:end_sub_bin + 1]
             pop_sub[0] = beg_pct * pop_sub[0]
@@ -448,16 +477,13 @@ def get_fert(totpers, graph=False):
     return fert_rates
 
 
-def get_mort(totpers, min_yr, max_yr, graph=False):
+def get_mort(totpers, graph=False):
     """
     This function generates a vector of mortality rates by model period
     age. Source: UN Population Data portal.
 
     Args:
         totpers (int): total number of agent life periods (E+S), >= 3
-        min_yr (int): age in years at which agents are born, >= 0
-        max_yr (int): age in years at which agents die with certainty,
-            >= 4
         graph (bool): =True if want graphical output
 
     Returns:
