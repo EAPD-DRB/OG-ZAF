@@ -464,7 +464,7 @@ def get_fert(totpers, graph=False):
         plt.xlabel(r"Age $s$")
         plt.ylabel(r"Fertility rate $f_{s}$")
         plt.text(
-            -5,
+            -0,
             -0.023,
             "Source: UN Population Data",
             fontsize=9,
