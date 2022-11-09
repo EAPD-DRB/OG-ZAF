@@ -492,6 +492,10 @@ def get_mort(totpers, graph=False):
         infmort_rate (scalar): infant mortality rate
 
     """
+    if totpers > 100:
+        err_msg = "ERROR get_mort(): totpers must be <= 100."
+        raise ValueError(err_msg)
+
     # Get UN infant mortality and mortality rate data by age
     infmort_rate_df, mort_rates_df = get_un_mort_data(
         start_year=2021, download=False
@@ -499,35 +503,81 @@ def get_mort(totpers, graph=False):
     infmort_rate = infmort_rate_df["infmort_rate"][
         infmort_rate_df["sex_num"] == 3
     ].to_numpy()[0]
-    mort_rates = (
-        mort_rates_df["mort_rate"][
-            ((mort_rates_df["sex_num"] == 3) & (mort_rates_df["age"] < 100))
-        ]
-        .to_numpy()
-        .flatten()
-    )
+    if totpers == 100:
+        mort_rates = (
+            mort_rates_df["mort_rate"][
+                ((mort_rates_df["sex_num"] == 3) & (mort_rates_df["age"] < 100))
+            ]
+            .to_numpy()
+            .flatten()
+        )
+    elif totpers < 100:
+        # Create population weighted average mortality rates across bins
+        mort_rates = np.zeros(totpers)
+        len_subbins = len_subbins = np.float64(100 / totpers)
+        end_sub_bin = int(0)
+        end_pct = 0.0
+        deaths_0_99 = mort_rates_df[
+            ((mort_rates_df["sex_num"]==3) & (mort_rates_df["age"] < 100))
+        ]["deaths"].to_numpy().flatten()
+        pop_0_99 = mort_rates_df[
+            ((mort_rates_df["sex_num"]==3) & (mort_rates_df["age"] < 100))
+        ]["pop"].to_numpy().flatten()
+        deaths_pop_0_99 = mort_rates_df[
+            ((mort_rates_df["sex_num"]==3) & (mort_rates_df["age"] < 100))
+        ][["age", "deaths", "pop"]]
+        for i in range(totpers):
+            if end_pct < 1.0:
+                beg_sub_bin = int(end_sub_bin)
+                beg_pct = 1 - end_pct
+            elif end_pct == 1.0:
+                beg_sub_bin = 1 + int(end_sub_bin)
+                beg_pct = 1.0
+            end_sub_bin = int((i + 1) * len_subbins)
+            if (i + 1) * len_subbins - end_sub_bin  == 0.0:
+                end_sub_bin = end_sub_bin - 1
+                end_pct = 1
+            elif (i + 1) * len_subbins - end_sub_bin > 0.0:
+                end_pct = (i + 1) * len_subbins - end_sub_bin
+            deaths_sub = deaths_0_99[beg_sub_bin:end_sub_bin + 1]
+            pop_sub = pop_0_99[beg_sub_bin:end_sub_bin + 1]
+            deaths_sub[0] = beg_pct * deaths_sub[0]
+            pop_sub[0] = beg_pct * pop_sub[0]
+            deaths_sub[-1] = end_pct * deaths_sub[-1]
+            pop_sub[-1] = end_pct * pop_sub[-1]
+            mort_rates[i] = deaths_sub.sum() / pop_sub.sum()
     # Artificially set the mortality rate of the oldest age to 1.
+    orig_end_mort_rate = mort_rates[-1]
     mort_rates[-1] = 1.0
+    ages = np.arange(1, totpers + 1)
 
     if graph:
-        ages_all = np.arange(0, 101)
         mort_rates_all = np.hstack((infmort_rate, mort_rates))
-        plt.plot(ages_all, mort_rates_all, label="Data")
+        mort_rates_all[-1] = orig_end_mort_rate
+        plt.plot(np.arange(0, totpers + 1), mort_rates_all)
         plt.scatter(
             0,
             infmort_rate,
-            c="blue",
+            c="green",
             marker="d",
             label="Infant mortality rate",
         )
         plt.scatter(
-            100, 1.0, c="red", marker="d", label="Artificial mortality limit"
+            ages,
+            np.hstack((mort_rates[:-1], orig_end_mort_rate)),
+            c="blue",
+            marker="d",
+            label="Mortality rates, model ages 1 to " + str(totpers),
+        )
+        plt.scatter(
+            totpers, 1.0, c="red", marker="d",
+            label="Artificial mortality limit, model age " + str(totpers)
         )
         plt.xlabel(r"Age $s$")
         plt.ylabel(r"Mortality rate $\rho_{s}$")
         plt.legend(loc="upper left")
         plt.text(
-            -5,
+            0,
             -0.23,
             "Source: UN Population Data",
             fontsize=9,
