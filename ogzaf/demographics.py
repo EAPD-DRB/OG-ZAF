@@ -632,7 +632,7 @@ def pop_rebin(curr_pop_dist, totpers_new):
     return curr_pop_new
 
 
-def get_imm_resid(totpers, min_yr, max_yr, graph=False):
+def get_imm_resid(totpers, graph=False):
     """
     Calculate immigration rates by age as a residual given population levels in
     different periods, then output average calculated immigration rate. We have
@@ -641,9 +641,6 @@ def get_imm_resid(totpers, min_yr, max_yr, graph=False):
 
     Args:
         totpers (int): total number of agent life periods (E+S), >= 3
-        min_yr (int): age in years at which agents are born, >= 0
-        max_yr (int): age in years at which agents die with certainty,
-            >= 4
         graph (bool): =True if want graphical output
 
     Returns:
@@ -685,8 +682,8 @@ def get_imm_resid(totpers, min_yr, max_yr, graph=False):
         .to_numpy()
         .flatten()
     )
-    fert_rates = get_fert(totpers, min_yr, max_yr)
-    mort_rates, infmort_rate = get_mort(totpers, min_yr, max_yr)
+    fert_rates = get_fert(totpers)
+    mort_rates, infmort_rate = get_mort(totpers)
 
     # Create two years of estimated immigration rates, then take average
     imm_rate_1_2020 = (
@@ -706,7 +703,7 @@ def get_imm_resid(totpers, min_yr, max_yr, graph=False):
     imm_rates_s = (imm_rates_s_2020 + imm_rates_s_2019) / 2
     imm_rates = np.hstack((imm_rate_1, imm_rates_s))
     if graph:
-        ages = np.arange(min_yr, max_yr + 1)
+        ages = np.arange(1, totpers + 1)
         plt.plot(ages, imm_rates, label="Residual data")
         plt.xlabel(r"Age $s$")
         plt.ylabel(r"immigration rates $\i_s$")
