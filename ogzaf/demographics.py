@@ -687,24 +687,34 @@ def get_imm_resid(totpers, graph=False):
         .to_numpy()
         .flatten()
     )
+    if totpers == 100:
+        pop_2019_EpS = pop_2019.copy()
+        pop_2020_EpS = pop_2020.copy()
+        pop_2021_EpS = pop_2021.copy()
+    elif totpers < 100:
+        pop_2019_EpS = pop_rebin(pop_2019, totpers)
+        pop_2020_EpS = pop_rebin(pop_2020, totpers)
+        pop_2021_EpS = pop_rebin(pop_2021, totpers)
     fert_rates = get_fert(totpers)
     mort_rates, infmort_rate = get_mort(totpers)
 
     # Create two years of estimated immigration rates, then take average
     imm_rate_1_2020 = (
-        pop_2021[0] - (1 - infmort_rate) * (fert_rates * pop_2020).sum()
-    ) / pop_2020[0]
+        pop_2021_EpS[0] -
+        (1 - infmort_rate) * (fert_rates * pop_2020_EpS).sum()
+    ) / pop_2020_EpS[0]
     imm_rate_1_2019 = (
-        pop_2021[0] - (1 - infmort_rate) * (fert_rates * pop_2020).sum()
-    ) / pop_2020[0]
+        pop_2020_EpS[0] -
+        (1 - infmort_rate) * (fert_rates * pop_2019_EpS).sum()
+    ) / pop_2019_EpS[0]
     imm_rate_1 = (imm_rate_1_2020 + imm_rate_1_2019) / 2
 
     imm_rates_s_2020 = (
-        pop_2021[1:] - (1 - mort_rates[:-1]) * pop_2020[:-1]
-    ) / pop_2020[1:]
+        pop_2021_EpS[1:] - (1 - mort_rates[:-1]) * pop_2020_EpS[:-1]
+    ) / pop_2020_EpS[1:]
     imm_rates_s_2019 = (
-        pop_2020[1:] - (1 - mort_rates[:-1]) * pop_2019[:-1]
-    ) / pop_2019[1:]
+        pop_2020_EpS[1:] - (1 - mort_rates[:-1]) * pop_2019_EpS[:-1]
+    ) / pop_2019_EpS[1:]
     imm_rates_s = (imm_rates_s_2020 + imm_rates_s_2019) / 2
     imm_rates = np.hstack((imm_rate_1, imm_rates_s))
     if graph:
