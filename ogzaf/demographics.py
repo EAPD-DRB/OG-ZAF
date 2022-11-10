@@ -277,15 +277,13 @@ def get_un_mort_data(
 
     # Merge in the male and female population by age data to the deaths_df
     deaths_df = deaths_df.merge(
-        pop_df, how="left",
+        pop_df,
+        how="left",
         on=["year", "sex_num", "sex_str", "age"],
     )
     deaths_df["mort_rate"] = deaths_df["deaths"] / deaths_df["pop"]
     deaths_df = deaths_df[
-        (
-            (deaths_df["year"] >= start_year)
-            & (deaths_df["year"] <= end_year)
-        )
+        ((deaths_df["year"] >= start_year) & (deaths_df["year"] <= end_year))
     ]
     mort_rates_df = deaths_df.copy()
 
@@ -430,9 +428,11 @@ def get_fert(totpers, graph=False):
         # Create population weighted average fertility rates across bins
         # Get population data for ages 1-100
         pop_df = get_un_pop_data(download=False)
-        pop_1_100 = pop_df[
-            ((pop_df["age"] < 100) & (pop_df["sex_num"]==3))
-        ]["pop"].to_numpy().flatten()
+        pop_1_100 = (
+            pop_df[((pop_df["age"] < 100) & (pop_df["sex_num"] == 3))]["pop"]
+            .to_numpy()
+            .flatten()
+        )
         fert_rates = np.zeros(totpers)
         len_subbins = len_subbins = np.float64(100 / totpers)
         end_sub_bin = int(0)
@@ -445,13 +445,13 @@ def get_fert(totpers, graph=False):
                 beg_sub_bin = 1 + int(end_sub_bin)
                 beg_pct = 1.0
             end_sub_bin = int((i + 1) * len_subbins)
-            if (i + 1) * len_subbins - end_sub_bin  == 0.0:
+            if (i + 1) * len_subbins - end_sub_bin == 0.0:
                 end_sub_bin = end_sub_bin - 1
                 end_pct = 1
             elif (i + 1) * len_subbins - end_sub_bin > 0.0:
                 end_pct = (i + 1) * len_subbins - end_sub_bin
-            fert_rates_sub = fert_rates_1_100[beg_sub_bin:end_sub_bin + 1]
-            pop_sub = pop_1_100[beg_sub_bin:end_sub_bin + 1]
+            fert_rates_sub = fert_rates_1_100[beg_sub_bin : end_sub_bin + 1]
+            pop_sub = pop_1_100[beg_sub_bin : end_sub_bin + 1]
             pop_sub[0] = beg_pct * pop_sub[0]
             pop_sub[-1] = end_pct * pop_sub[-1]
             fert_rates[i] = ((fert_rates_sub * pop_sub) / pop_sub.sum()).sum()
@@ -505,7 +505,10 @@ def get_mort(totpers, graph=False):
     if totpers == 100:
         mort_rates = (
             mort_rates_df["mort_rate"][
-                ((mort_rates_df["sex_num"] == 3) & (mort_rates_df["age"] < 100))
+                (
+                    (mort_rates_df["sex_num"] == 3)
+                    & (mort_rates_df["age"] < 100)
+                )
             ]
             .to_numpy()
             .flatten()
@@ -516,14 +519,28 @@ def get_mort(totpers, graph=False):
         len_subbins = np.float64(100 / totpers)
         end_sub_bin = int(0)
         end_pct = 0.0
-        deaths_0_99 = mort_rates_df[
-            ((mort_rates_df["sex_num"]==3) & (mort_rates_df["age"] < 100))
-        ]["deaths"].to_numpy().flatten()
-        pop_0_99 = mort_rates_df[
-            ((mort_rates_df["sex_num"]==3) & (mort_rates_df["age"] < 100))
-        ]["pop"].to_numpy().flatten()
+        deaths_0_99 = (
+            mort_rates_df[
+                (
+                    (mort_rates_df["sex_num"] == 3)
+                    & (mort_rates_df["age"] < 100)
+                )
+            ]["deaths"]
+            .to_numpy()
+            .flatten()
+        )
+        pop_0_99 = (
+            mort_rates_df[
+                (
+                    (mort_rates_df["sex_num"] == 3)
+                    & (mort_rates_df["age"] < 100)
+                )
+            ]["pop"]
+            .to_numpy()
+            .flatten()
+        )
         deaths_pop_0_99 = mort_rates_df[
-            ((mort_rates_df["sex_num"]==3) & (mort_rates_df["age"] < 100))
+            ((mort_rates_df["sex_num"] == 3) & (mort_rates_df["age"] < 100))
         ][["age", "deaths", "pop"]]
         for i in range(totpers):
             if end_pct < 1.0:
@@ -533,13 +550,13 @@ def get_mort(totpers, graph=False):
                 beg_sub_bin = 1 + int(end_sub_bin)
                 beg_pct = 1.0
             end_sub_bin = int((i + 1) * len_subbins)
-            if (i + 1) * len_subbins - end_sub_bin  == 0.0:
+            if (i + 1) * len_subbins - end_sub_bin == 0.0:
                 end_sub_bin = end_sub_bin - 1
                 end_pct = 1
             elif (i + 1) * len_subbins - end_sub_bin > 0.0:
                 end_pct = (i + 1) * len_subbins - end_sub_bin
-            deaths_sub = deaths_0_99[beg_sub_bin:end_sub_bin + 1]
-            pop_sub = pop_0_99[beg_sub_bin:end_sub_bin + 1]
+            deaths_sub = deaths_0_99[beg_sub_bin : end_sub_bin + 1]
+            pop_sub = pop_0_99[beg_sub_bin : end_sub_bin + 1]
             deaths_sub[0] = beg_pct * deaths_sub[0]
             pop_sub[0] = beg_pct * pop_sub[0]
             deaths_sub[-1] = end_pct * deaths_sub[-1]
@@ -569,8 +586,11 @@ def get_mort(totpers, graph=False):
             label="Mortality rates, model ages 1 to " + str(totpers),
         )
         plt.scatter(
-            totpers, 1.0, c="red", marker="d",
-            label="Artificial mortality limit, model age " + str(totpers)
+            totpers,
+            1.0,
+            c="red",
+            marker="d",
+            label="Artificial mortality limit, model age " + str(totpers),
         )
         plt.xlabel(r"Age $s$")
         plt.ylabel(r"Mortality rate $\rho_{s}$")
@@ -624,12 +644,12 @@ def pop_rebin(curr_pop_dist, totpers_new):
                 beg_sub_bin = 1 + int(end_sub_bin)
                 beg_pct = 1.0
             end_sub_bin = int((i + 1) * len_subbins)
-            if (i + 1) * len_subbins - end_sub_bin  == 0.0:
+            if (i + 1) * len_subbins - end_sub_bin == 0.0:
                 end_sub_bin = end_sub_bin - 1
                 end_pct = 1
             elif (i + 1) * len_subbins - end_sub_bin > 0.0:
                 end_pct = (i + 1) * len_subbins - end_sub_bin
-            curr_pop_sub = curr_pop_dist[beg_sub_bin:end_sub_bin + 1]
+            curr_pop_sub = curr_pop_dist[beg_sub_bin : end_sub_bin + 1]
             curr_pop_sub[0] = beg_pct * curr_pop_sub[0]
             curr_pop_sub[-1] = end_pct * curr_pop_sub[-1]
             curr_pop_new[i] = curr_pop_sub.sum()
@@ -695,12 +715,12 @@ def get_imm_resid(totpers, graph=False):
 
     # Create two years of estimated immigration rates, then take average
     imm_rate_1_2020 = (
-        pop_2021_EpS[0] -
-        (1 - infmort_rate) * (fert_rates * pop_2020_EpS).sum()
+        pop_2021_EpS[0]
+        - (1 - infmort_rate) * (fert_rates * pop_2020_EpS).sum()
     ) / pop_2020_EpS[0]
     imm_rate_1_2019 = (
-        pop_2020_EpS[0] -
-        (1 - infmort_rate) * (fert_rates * pop_2019_EpS).sum()
+        pop_2020_EpS[0]
+        - (1 - infmort_rate) * (fert_rates * pop_2019_EpS).sum()
     ) / pop_2019_EpS[0]
     imm_rate_1 = (imm_rate_1_2020 + imm_rate_1_2019) / 2
 
@@ -850,9 +870,9 @@ def get_pop_objs(E, S, T, curr_year, GraphDiag=False):
     pop_past = pop_2020_EpS.copy()
     if curr_year == data_year:
         omega_path_lev[:, 0] = pop_curr
-        g_n_curr = (
-            pop_curr[-S:].sum() - pop_past[-S:].sum()
-        ) / pop_past[-S:].sum()
+        g_n_curr = (pop_curr[-S:].sum() - pop_past[-S:].sum()) / pop_past[
+            -S:
+        ].sum()
     elif curr_year > data_year:
         for per in range(curr_year - data_year):
             pop_next = np.dot(OMEGA_orig, pop_curr)
