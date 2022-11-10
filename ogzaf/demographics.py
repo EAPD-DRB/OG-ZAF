@@ -687,14 +687,9 @@ def get_imm_resid(totpers, graph=False):
         .to_numpy()
         .flatten()
     )
-    if totpers == 100:
-        pop_2019_EpS = pop_2019.copy()
-        pop_2020_EpS = pop_2020.copy()
-        pop_2021_EpS = pop_2021.copy()
-    elif totpers < 100:
-        pop_2019_EpS = pop_rebin(pop_2019, totpers)
-        pop_2020_EpS = pop_rebin(pop_2020, totpers)
-        pop_2021_EpS = pop_rebin(pop_2021, totpers)
+    pop_2019_EpS = pop_rebin(pop_2019, totpers)
+    pop_2020_EpS = pop_rebin(pop_2020, totpers)
+    pop_2021_EpS = pop_rebin(pop_2021, totpers)
     fert_rates = get_fert(totpers)
     mort_rates, infmort_rate = get_mort(totpers)
 
