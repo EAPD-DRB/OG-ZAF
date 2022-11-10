@@ -28,6 +28,7 @@ dependencies:
 - statsmodels
 - linearmodels
 - black
+- jupyter
 - pip:
   - jupyter-book>=0.9.1
   - pandas-datareader
