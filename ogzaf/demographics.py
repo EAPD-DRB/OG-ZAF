@@ -8,7 +8,6 @@ import os
 import numpy as np
 import pandas as pd
 import scipy.optimize as opt
-import scipy.interpolate as si
 from ogcore import parameter_plots as pp
 import matplotlib.pyplot as plt
 
