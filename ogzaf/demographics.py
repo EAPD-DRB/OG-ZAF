@@ -513,7 +513,7 @@ def get_mort(totpers, graph=False):
     elif totpers < 100:
         # Create population weighted average mortality rates across bins
         mort_rates = np.zeros(totpers)
-        len_subbins = len_subbins = np.float64(100 / totpers)
+        len_subbins = np.float64(100 / totpers)
         end_sub_bin = int(0)
         end_pct = 0.0
         deaths_0_99 = mort_rates_df[
@@ -606,27 +606,33 @@ def pop_rebin(curr_pop_dist, totpers_new):
             totpers (E+S) periods that approximates curr_pop_dist
 
     """
-    # Number of periods in original data
     assert totpers_new >= 3
     # Number of periods in original data
     totpers_orig = len(curr_pop_dist)
     if int(totpers_new) == totpers_orig:
         curr_pop_new = curr_pop_dist
     elif int(totpers_new) < totpers_orig:
-        num_sub_bins = float(10000)
-        curr_pop_sub = np.repeat(
-            np.float64(curr_pop_dist) / num_sub_bins, num_sub_bins
-        )
-        len_subbins = (np.float64(totpers_orig * num_sub_bins)) / totpers_new
-        curr_pop_new = np.zeros(totpers_new, dtype=np.float64)
-        end_sub_bin = 0
+        curr_pop_new = np.zeros(totpers_new)
+        len_subbins = np.float64(totpers_orig / totpers_new)
+        end_sub_bin = int(0)
+        end_pct = 0.0
         for i in range(totpers_new):
-            beg_sub_bin = int(end_sub_bin)
-            end_sub_bin = int(np.rint((i + 1) * len_subbins))
-            curr_pop_new[i] = curr_pop_sub[beg_sub_bin:end_sub_bin].sum()
-        # Return curr_pop_new to single precision float (float32)
-        # datatype
-        curr_pop_new = np.float32(curr_pop_new)
+            if end_pct < 1.0:
+                beg_sub_bin = int(end_sub_bin)
+                beg_pct = 1 - end_pct
+            elif end_pct == 1.0:
+                beg_sub_bin = 1 + int(end_sub_bin)
+                beg_pct = 1.0
+            end_sub_bin = int((i + 1) * len_subbins)
+            if (i + 1) * len_subbins - end_sub_bin  == 0.0:
+                end_sub_bin = end_sub_bin - 1
+                end_pct = 1
+            elif (i + 1) * len_subbins - end_sub_bin > 0.0:
+                end_pct = (i + 1) * len_subbins - end_sub_bin
+            curr_pop_sub = curr_pop_dist[beg_sub_bin:end_sub_bin + 1]
+            curr_pop_sub[0] = beg_pct * curr_pop_sub[0]
+            curr_pop_sub[-1] = end_pct * curr_pop_sub[-1]
+            curr_pop_new[i] = curr_pop_sub.sum()
 
     return curr_pop_new
 
@@ -782,8 +788,8 @@ def get_pop_objs(E, S, T, curr_year, GraphDiag=False):
 
     """
     assert curr_year >= 2021
-    fert_rates = get_fert(E + S, graph=False)
-    mort_rates, infmort_rate = get_mort(E + S, graph=False)
+    fert_rates = get_fert(E + S)
+    mort_rates, infmort_rate = get_mort(E + S)
     mort_rates_S = mort_rates[-S:]
     imm_rates_orig = get_imm_resid(E + S)
     OMEGA_orig = np.zeros((E + S, E + S))
@@ -839,9 +845,9 @@ def get_pop_objs(E, S, T, curr_year, GraphDiag=False):
     if curr_year == data_year:
         omega_path_lev[:, 0] = pop_curr
         g_n_curr = (
-            pop_curr[-S:].sum() - pop_2020_EpS[-S:].sum()
+            pop_curr[-S:].sum() - pop_2021_EpS[-S:].sum()
         ) / pop_2020_EpS[-S:].sum()
-        pop_past = pop_2020_EpS.copy()
+        pop_past = pop_curr.copy()
     elif curr_year > data_year:
         for per in range(curr_year - data_year):
             pop_next = np.dot(OMEGA_orig, pop_curr)
