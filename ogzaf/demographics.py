@@ -840,14 +840,14 @@ def get_pop_objs(E, S, T, curr_year, GraphDiag=False):
     pop_2020_pct = pop_2020_EpS / pop_2020_EpS.sum()
     pop_2021_pct = pop_2021_EpS / pop_2021_EpS.sum()
     # Age most recent population data to the current year of analysis
-    pop_curr = pop_2021_EpS.copy()
     data_year = 2021
+    pop_curr = pop_2021_EpS.copy()
+    pop_past = pop_2020_EpS.copy()
     if curr_year == data_year:
         omega_path_lev[:, 0] = pop_curr
         g_n_curr = (
-            pop_curr[-S:].sum() - pop_2021_EpS[-S:].sum()
-        ) / pop_2020_EpS[-S:].sum()
-        pop_past = pop_curr.copy()
+            pop_curr[-S:].sum() - pop_past[-S:].sum()
+        ) / pop_past[-S:].sum()
     elif curr_year > data_year:
         for per in range(curr_year - data_year):
             pop_next = np.dot(OMEGA_orig, pop_curr)
