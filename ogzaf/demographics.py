@@ -726,10 +726,10 @@ def get_imm_resid(totpers, graph=False):
 
     imm_rates_s_2020 = (
         pop_2021_EpS[1:] - (1 - mort_rates[:-1]) * pop_2020_EpS[:-1]
-    ) / pop_2020_EpS[1:]
+    ) / pop_2020_EpS[:-1]
     imm_rates_s_2019 = (
         pop_2020_EpS[1:] - (1 - mort_rates[:-1]) * pop_2019_EpS[:-1]
-    ) / pop_2019_EpS[1:]
+    ) / pop_2019_EpS[:-1]
     imm_rates_s = (imm_rates_s_2020 + imm_rates_s_2019) / 2
     imm_rates = np.hstack((imm_rate_1, imm_rates_s))
     if graph:
