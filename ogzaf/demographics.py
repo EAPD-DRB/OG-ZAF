@@ -710,10 +710,10 @@ def get_imm_resid(totpers, graph=False):
     pop_2019_EpS = pop_rebin(pop_2019, totpers)
     pop_2020_EpS = pop_rebin(pop_2020, totpers)
     pop_2021_EpS = pop_rebin(pop_2021, totpers)
+
     fert_rates = get_fert(totpers)
     mort_rates, infmort_rate = get_mort(totpers)
 
-    # Create two years of estimated immigration rates, then take average
     imm_rate_1_2020 = (
         pop_2021_EpS[0]
         - (1 - infmort_rate) * (fert_rates * pop_2020_EpS).sum()
@@ -724,14 +724,14 @@ def get_imm_resid(totpers, graph=False):
     ) / pop_2019_EpS[0]
     imm_rate_1 = (imm_rate_1_2020 + imm_rate_1_2019) / 2
 
-    imm_rates_s_2020 = (
+    imm_rates_sp1_2020 = (
         pop_2021_EpS[1:] - (1 - mort_rates[:-1]) * pop_2020_EpS[:-1]
     ) / pop_2020_EpS[:-1]
-    imm_rates_s_2019 = (
+    imm_rates_sp1_2019 = (
         pop_2020_EpS[1:] - (1 - mort_rates[:-1]) * pop_2019_EpS[:-1]
     ) / pop_2019_EpS[:-1]
-    imm_rates_s = (imm_rates_s_2020 + imm_rates_s_2019) / 2
-    imm_rates = np.hstack((imm_rate_1, imm_rates_s))
+    imm_rates_sp1 = (imm_rates_sp1_2020 + imm_rates_sp1_2019) / 2
+    imm_rates = np.hstack((imm_rate_1, imm_rates_sp1))
     if graph:
         ages = np.arange(1, totpers + 1)
         plt.plot(ages, imm_rates, label="Residual data")
@@ -828,7 +828,7 @@ def get_pop_objs(E, S, T, curr_year, GraphDiag=False):
     # population distribution by age using eigenvalue and eigenvector
     # decomposition
     eigvalues, eigvectors = np.linalg.eig(OMEGA_orig)
-    g_n_ss = (eigvalues[np.isreal(eigvalues)].real).max() - 1
+    g_n_ss_orig = (eigvalues[np.isreal(eigvalues)].real).max() - 1
     eigvec_raw = eigvectors[
         :, (eigvalues[np.isreal(eigvalues)].real).argmax()
     ].real
@@ -862,7 +862,6 @@ def get_pop_objs(E, S, T, curr_year, GraphDiag=False):
     age_per_EpS = np.arange(1, E + S + 1)
     pop_2020_EpS = pop_rebin(pop_2020, E + S)
     pop_2021_EpS = pop_rebin(pop_2021, E + S)
-    pop_2020_pct = pop_2020_EpS / pop_2020_EpS.sum()
     pop_2021_pct = pop_2021_EpS / pop_2021_EpS.sum()
     # Age most recent population data to the current year of analysis
     data_year = 2021
@@ -898,7 +897,7 @@ def get_pop_objs(E, S, T, curr_year, GraphDiag=False):
         mort_rates,
         infmort_rate,
         omega_path_lev[:, fixper],
-        g_n_ss,
+        g_n_ss_orig,
     )
     imm_fulloutput = opt.fsolve(
         immsolve,
@@ -921,7 +920,17 @@ def get_pop_objs(E, S, T, curr_year, GraphDiag=False):
         omega_path_lev[-S:, 1:].sum(axis=0)
         - omega_path_lev[-S:, :-1].sum(axis=0)
     ) / omega_path_lev[-S:, :-1].sum(axis=0)
-    g_n_path[fixper + 1 :] = g_n_ss
+    # Compute adjusted population growth rate
+    OMEGA2 = np.zeros((E + S, E + S))
+    OMEGA2[0, :] = (1 - infmort_rate) * fert_rates + np.hstack(
+        (imm_rates_adj[0], np.zeros(E + S - 1))
+    )
+    OMEGA2[1:, :-1] += np.diag(1 - mort_rates[:-1])
+    OMEGA2[1:, 1:] += np.diag(imm_rates_adj[1:])
+    eigvalues2, eigvectors2 = np.linalg.eig(OMEGA2)
+    g_n_ss_adj = (eigvalues[np.isreal(eigvalues2)].real).max() - 1
+    g_n_ss = g_n_ss_adj.copy()
+    # g_n_path[fixper + 1 :] = g_n_ss
     omega_S_preTP = (pop_past.copy()[-S:]) / (pop_past.copy()[-S:].sum())
     imm_rates_mat = np.hstack(
         (
@@ -1001,28 +1010,20 @@ def get_pop_objs(E, S, T, curr_year, GraphDiag=False):
         # Test whether the steady-state growth rates implied by the
         # adjusted OMEGA matrix equals the steady-state growth rate of
         # the original OMEGA matrix
-        OMEGA2 = np.zeros((E + S, E + S))
-        OMEGA2[0, :] = (1 - infmort_rate) * fert_rates + np.hstack(
-            (imm_rates_adj[0], np.zeros(E + S - 1))
-        )
-        OMEGA2[1:, :-1] += np.diag(1 - mort_rates[:-1])
-        OMEGA2[1:, 1:] += np.diag(imm_rates_adj[1:])
-        eigvalues2, eigvectors2 = np.linalg.eig(OMEGA2)
-        g_n_ss_adj = (eigvalues[np.isreal(eigvalues2)].real).max() - 1
-        if np.max(np.absolute(g_n_ss_adj - g_n_ss)) > 10 ** (-8):
+        if np.max(np.absolute(g_n_ss_adj - g_n_ss_orig)) > 10 ** (-8):
             print(
                 "FAILURE: The steady-state population growth rate"
                 + " from adjusted OMEGA is different (diff is "
-                + str(g_n_ss_adj - g_n_ss)
+                + str(g_n_ss_adj - g_n_ss_orig)
                 + ") than the steady-"
                 + "state population growth rate from the original"
                 + " OMEGA."
             )
-        elif np.max(np.absolute(g_n_ss_adj - g_n_ss)) <= 10 ** (-8):
+        elif np.max(np.absolute(g_n_ss_adj - g_n_ss_orig)) <= 10 ** (-8):
             print(
                 "SUCCESS: The steady-state population growth rate"
                 + " from adjusted OMEGA is close to (diff is "
-                + str(g_n_ss_adj - g_n_ss)
+                + str(g_n_ss_adj - g_n_ss_orig)
                 + ") the steady-"
                 + "state population growth rate from the original"
                 + " OMEGA."
