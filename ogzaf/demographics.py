@@ -15,6 +15,7 @@ import pandas as pd
 import scipy.interpolate as si
 from ogcore import utils
 from ogcore import parameter_plots as pp
+from pandas_datareader import wb
 
 
 # create output director for figures
@@ -206,8 +207,11 @@ def get_mort(totpers, min_yr, max_yr, graph=False):
     age_year_all = pop_data_samp["Age"] + 1
     curr_pop = np.array(pop_data_samp["2011"], dtype="f")
     curr_pop_pct = curr_pop / curr_pop.sum()
+    
     # Get mortality rate by age data
-    infmort_rate = 0.0482
+    # Neonatal mortality rate from World Bank World Development Indicators database
+    infmort_rate = wb.download(indicator="SH.DYN.NMRT", country="ZAF", start=2020, end=2020).squeeze()/1000
+
     # Get fertility rate by age-bin data
     mort_data = (
         np.array(
