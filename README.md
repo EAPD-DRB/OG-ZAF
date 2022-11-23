@@ -16,6 +16,7 @@ OG-ZAF is an overlapping-generations (OG) model that allows for dynamic general 
   * From the terminal (or Anaconda command prompt), navigate to the directory to which you cloned this repository and run `conda env create -f environment-M1.yml`. The process of creating the `ogzaf-dev` conda environment should not take more than five minutes.
   * Then, `conda activate ogzaf-dev`
   * Then, `pip install --no-dependencies ogcore`
+  * Then install by `pip install -e .`
 * **If you are installing this on a Windows or Intel Mac:**
   * From the terminal (or Anaconda command prompt), navigate to the directory to which you cloned this repository and run `conda env create -f environment.yml`. The process of creating the `ogzaf-dev` conda environment should not take more than five minutes.
   * Then, `conda activate ogzaf-dev`
