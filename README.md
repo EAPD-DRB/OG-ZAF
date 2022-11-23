@@ -20,7 +20,7 @@ OG-ZAF is an overlapping-generations (OG) model that allows for dynamic general 
 * **If you are installing this on a Windows or Intel Mac:**
   * From the terminal (or Anaconda command prompt), navigate to the directory to which you cloned this repository and run `conda env create -f environment.yml`. The process of creating the `ogzaf-dev` conda environment should not take more than five minutes.
   * Then, `conda activate ogzaf-dev`
-* Then install by `pip install -e .`
+  * Then install by `pip install -e .`
 ### Run an example of the model
 * Navigate to `./examples`
 * Run the model with an example reform from terminal/command prompt by typing `python run_og_zaf.py`
