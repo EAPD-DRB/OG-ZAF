@@ -6,13 +6,22 @@ OG-ZAF is an overlapping-generations (OG) model that allows for dynamic general 
 
 ## Using and contributing to OG-ZAF
 
-* Install the [Anaconda distribution](https://www.anaconda.com/distribution/) of Python
+* If you are installing on a Mac computer, install XCode Tools. In Terminal: `xcode-select —install`
+* Download and install the appropriate [Anaconda distribution](https://www.anaconda.com/products/distribution#Downloads) of Python. Select the correct version for you platform (Windows, Intel Mac, or M1 Mac).
+* In Terminal:
   * Make sure the `conda` package manager is up-to-date: `conda update conda`.
   * Make sure the Anaconda distribution of Python is up-to-date: `conda update anaconda`.
 * Fork this repository and clone your fork of this repository to a directory on your computer.
-* From the terminal (or Anaconda command prompt), navigate to the directory to which you cloned this repository and run `conda env create -f environment.yml`. The process of creating the `ogzaf-dev` conda environment should not take more than five minutes.
-* Then, `conda activate ogzaf-dev`
-* Then install by `pip install -e .`
+* **If you are installing this on a M1/M2 Mac (ARM):**
+  * From the terminal (or Anaconda command prompt), navigate to the directory to which you cloned this repository and run `conda env create -f environment-M1.yml`. The process of creating the `ogzaf-dev` conda environment should not take more than five minutes.
+  * Then, `conda activate ogzaf-dev`
+  * Then, `pip install --no-dependencies ogcore`
+  * Then install by `pip install -e .`
+* **If you are installing this on a Windows or Intel Mac:**
+  * From the terminal (or Anaconda command prompt), navigate to the directory to which you cloned this repository and run `conda env create -f environment.yml`. The process of creating the `ogzaf-dev` conda environment should not take more than five minutes.
+  * Then, `conda activate ogzaf-dev`
+  * Then install by `pip install -e .`
+### Run an example of the model
 * Navigate to `./examples`
 * Run the model with an example reform from terminal/command prompt by typing `python run_og_zaf.py`
 * You can adjust the `./examples/run_og_zaf.py` by modifying model parameters specified in the dictionary passed to the `p.update_specifications()` calls.
@@ -32,7 +41,7 @@ OG-ZAF is an overlapping-generations (OG) model that allows for dynamic general 
     * See [`ogcore.TPI.py`](https://github.com/PSLmodels/OG-Core/blob/master/ogcore/TPI.py) for what is in the dictionary object in this pickle file
   * An analogous set of files in the `./examples/OUTPUT_REFORM` directory, which represent objects from the simulation of the reform policy
 
-Note that, depending on your machine, a full model run (solving for the full time path equilibrium for the baseline and reform policies) can take more than two hours of compute time.
+Note that, depending on your machine, a full model run (solving for the full time path equilibrium for the baseline and reform policies) can take from 35 minutes to more than two hours of compute time.
 
 If you run into errors running the example script, please open a new issue in the OG-ZAF repo with a description of the issue and any relevant tracebacks you receive.
 
