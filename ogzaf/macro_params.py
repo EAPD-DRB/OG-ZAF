@@ -23,7 +23,9 @@ def get_macro_params():
     start = datetime.datetime(1947, 1, 1)
     end = datetime.date.today()  # go through today
     baseline_date = datetime.datetime(2019, 3, 31)
-    baseline_yearquarter = "2019Q1"  # The WB QPSD database has the date in YYYYQQ format
+    baseline_yearquarter = (
+        "2019Q1"  # The WB QPSD database has the date in YYYYQQ format
+    )
 
     """
     This retrieves annual data from the World Bank World Development Indicators.
@@ -39,11 +41,17 @@ def get_macro_params():
     }
 
     # pull series of interest using pandas_datareader
-    wb_data_a = wb.download(indicator=wb_a_variable_dict.values(), country="ZAF", start=start, end=end)
-    wb_data_a.rename(
-        columns=dict((y, x) for x, y in wb_a_variable_dict.items()), inplace=True
+    wb_data_a = wb.download(
+        indicator=wb_a_variable_dict.values(),
+        country="ZAF",
+        start=start,
+        end=end,
     )
-    
+    wb_data_a.rename(
+        columns=dict((y, x) for x, y in wb_a_variable_dict.items()),
+        inplace=True,
+    )
+
     """
     This retrieves quarterly data from the World Bank Quarterly Public Sector Debt database. 
     The command extracts all available data even when start and end dates are specified.
@@ -52,18 +60,24 @@ def get_macro_params():
     wb_q_variable_dict = {
         "Gross PSD USD - domestic creditors": "DP.DOD.DECD.CR.PS.CD",
         "Gross PSD USD - external creditors": "DP.DOD.DECX.CR.PS.CD",
-        "Gross PSD Gen Gov - percentage of GDP": "DP.DOD.DECT.CR.GG.Z1"
+        "Gross PSD Gen Gov - percentage of GDP": "DP.DOD.DECT.CR.GG.Z1",
     }
 
     # pull series of interest using pandas_datareader
-    wb_data_q = wb.download(indicator=wb_q_variable_dict.values(), country="ZAF", start=start, end=end)
+    wb_data_q = wb.download(
+        indicator=wb_q_variable_dict.values(),
+        country="ZAF",
+        start=start,
+        end=end,
+    )
     wb_data_q.rename(
-        columns=dict((y, x) for x, y in wb_q_variable_dict.items()), inplace=True
+        columns=dict((y, x) for x, y in wb_q_variable_dict.items()),
+        inplace=True,
     )
 
-    #Remove the hierarchical index (country and year) of wb_data_q and create a single row index using year 
-    wb_data_q=wb_data_q.reset_index()
-    wb_data_q=wb_data_q.set_index("year")
+    # Remove the hierarchical index (country and year) of wb_data_q and create a single row index using year
+    wb_data_q = wb_data_q.reset_index()
+    wb_data_q = wb_data_q.set_index("year")
 
     """
     This retrieves labour share data from the United Nations Data Portal API
@@ -81,18 +95,18 @@ def get_macro_params():
         + "&format=csv"
     )
 
-    df_temp=pd.read_csv(target)
+    df_temp = pd.read_csv(target)
 
-    un_data_a=df_temp[["TIME_PERIOD","OBS_VALUE"]]
+    un_data_a = df_temp[["TIME_PERIOD", "OBS_VALUE"]]
 
     """
     This retrieves data from FRED.
     """
 
     fred_variable_dict = {
-        #"Labor share": "LABSHPINA156NRUG",
-        #"BAA Corp Bond Rates": "DBAA",
-        #"10 year govt bond rate": "IRLTLT01ZAM156N",
+        # "Labor share": "LABSHPINA156NRUG",
+        # "BAA Corp Bond Rates": "DBAA",
+        # "10 year govt bond rate": "IRLTLT01ZAM156N",
         "Total gov transfer payments": "B087RC1Q027SBEA",
         "Social Security payments": "W823RC1",
         "Gov expenditures": "INDGFCEQDSMEI",
@@ -104,7 +118,8 @@ def get_macro_params():
     # pull series of interest using pandas_datareader
     fred_data = web.DataReader(fred_variable_dict.values(), "fred", start, end)
     fred_data.rename(
-        columns=dict((y, x) for x, y in fred_variable_dict.items()), inplace=True
+        columns=dict((y, x) for x, y in fred_variable_dict.items()),
+        inplace=True,
     )
 
     # Separate quartely, monthly, and annual FRED dataseries
@@ -122,7 +137,7 @@ def get_macro_params():
         .mean()
     )
 
-    #fred_data_d = fred_data[["BAA Corp Bond Rates", "10 year govt bond rate"]]
+    # fred_data_d = fred_data[["BAA Corp Bond Rates", "10 year govt bond rate"]]
 
     # initialize a dictionary of parameters
     macro_parameters = {}
@@ -130,25 +145,24 @@ def get_macro_params():
     # print(fred_data.loc(str(baseline_date)))
     # find initial_debt_ratio
     macro_parameters["initial_debt_ratio"] = (
-        pd.Series(
-        wb_data_q["Gross PSD Gen Gov - percentage of GDP"]
-        ).loc[baseline_yearquarter]
-        )/100
-
+        pd.Series(wb_data_q["Gross PSD Gen Gov - percentage of GDP"]).loc[
+            baseline_yearquarter
+        ]
+    ) / 100
 
     # find initial_foreign_debt_ratio
     macro_parameters["initial_foreign_debt_ratio"] = pd.Series(
-        wb_data_q["Gross PSD USD - external creditors"] / 
-        (
+        wb_data_q["Gross PSD USD - external creditors"]
+        / (
             wb_data_q["Gross PSD USD - domestic creditors"]
             + wb_data_q["Gross PSD USD - external creditors"]
         )
-    ).loc[baseline_yearquarter] 
+    ).loc[baseline_yearquarter]
 
     # find zeta_D (Share of new debt issues from government that are purchased by foreigners)
     macro_parameters["zeta_D"] = pd.Series(
-        wb_data_q["Gross PSD USD - external creditors"] / 
-        (
+        wb_data_q["Gross PSD USD - external creditors"]
+        / (
             wb_data_q["Gross PSD USD - domestic creditors"]
             + wb_data_q["Gross PSD USD - external creditors"]
         )
@@ -174,8 +188,13 @@ def get_macro_params():
     ).loc[baseline_date]
 
     # find gamma
-    macro_parameters["gamma"] = (
-        1 - ((un_data_a.loc[un_data_a["TIME_PERIOD"]==baseline_date.year,"OBS_VALUE"].squeeze())/100)
+    macro_parameters["gamma"] = 1 - (
+        (
+            un_data_a.loc[
+                un_data_a["TIME_PERIOD"] == baseline_date.year, "OBS_VALUE"
+            ].squeeze()
+        )
+        / 100
     )
 
     # find g_y
