@@ -345,8 +345,10 @@ def get_wb_infmort_rate(
     if download:
         wb_infmort_rate = (
             wb.download(
-                indicator="SH.DYN.NMRT", country=country, start=start_year,
-                end=end_year
+                indicator="SH.DYN.NMRT",
+                country=country,
+                start=start_year,
+                end=end_year,
             ).squeeze()
             / 1000
         )
