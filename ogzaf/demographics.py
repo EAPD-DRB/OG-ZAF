@@ -397,8 +397,11 @@ def get_fert(totpers, start_year=2021, end_year=None, graph=False):
     # Get UN fertility rates for South Africa for ages 15-49
     ages_15_49 = np.arange(15, 50)
     fert_rates_15_49 = (
-        get_un_fert_data(start_year=start_year, end_year=end_year,
-                         download=False)["fert_rate"].to_numpy().flatten()
+        get_un_fert_data(
+            start_year=start_year, end_year=end_year, download=False
+        )["fert_rate"]
+        .to_numpy()
+        .flatten()
     )
 
     # Extrapolate fertility rates for ages 1-14 and 50-100 using exponential
@@ -430,8 +433,9 @@ def get_fert(totpers, start_year=2021, end_year=None, graph=False):
     elif totpers < 100:
         # Create population weighted average fertility rates across bins
         # Get population data for ages 1-100
-        pop_df = get_un_pop_data(start_year=start_year, end_year=end_year,
-                                 download=False)
+        pop_df = get_un_pop_data(
+            start_year=start_year, end_year=end_year, download=False
+        )
         pop_1_100 = (
             pop_df[((pop_df["age"] < 100) & (pop_df["sex_num"] == 3))]["pop"]
             .to_numpy()
@@ -720,8 +724,9 @@ def get_imm_resid(totpers, start_year=2021, end_year=None, graph=False):
     pop_2021_EpS = pop_rebin(pop_2021, totpers)
 
     fert_rates = get_fert(totpers, start_year=start_year, end_year=end_year)
-    mort_rates, infmort_rate = get_mort(totpers, start_year=start_year,
-                                        end_year=end_year)
+    mort_rates, infmort_rate = get_mort(
+        totpers, start_year=start_year, end_year=end_year
+    )
 
     imm_rate_1_2020 = (
         pop_2021_EpS[0]
