@@ -1,6 +1,21 @@
 """
 -------------------------------------------------------------------------------
 Functions for generating demographic objects necessary for the OG-ZAF model
+
+This module contains the following functions:
+    get_un_fert_data()
+    get_un_mort_data()
+    get_un_pop_data()
+    get_fert()
+    get_mort()
+    pop_rebin()
+    get_imm_resid()
+    immsolve()
+    get_pop_objs()
+    extrap_exp_3()
+    extrap_arctan_3()
+    ab_zero_eqs_exp_func()
+    b_zero_eq_artctan_func()
 -------------------------------------------------------------------------------
 """
 # Import packages
@@ -832,11 +847,9 @@ def get_pop_objs(E, S, T, curr_year, GraphDiag=False):
     mort_rates_S = mort_rates[-S:]
     imm_rates_orig = get_imm_resid(E + S, start_year=curr_year)
     OMEGA_orig = np.zeros((E + S, E + S))
-    OMEGA_orig[0, :] = (1 - infmort_rate) * fert_rates + np.hstack(
-        (imm_rates_orig[0], np.zeros(E + S - 1))
-    )
+    OMEGA_orig[0, :] = (1 - infmort_rate) * fert_rates
     OMEGA_orig[1:, :-1] += np.diag(1 - mort_rates[:-1])
-    OMEGA_orig[1:, 1:] += np.diag(imm_rates_orig[1:])
+    OMEGA_orig += np.diag(imm_rates_orig)
 
     # Solve for steady-state population growth rate and steady-state
     # population distribution by age using eigenvalue and eigenvector
@@ -878,16 +891,18 @@ def get_pop_objs(E, S, T, curr_year, GraphDiag=False):
     pop_2021_EpS = pop_rebin(pop_2021, E + S)
     pop_2021_pct = pop_2021_EpS / pop_2021_EpS.sum()
     # Age most recent population data to the current year of analysis
-    data_year = 2021
-    pop_curr = pop_2021_EpS.copy()
-    pop_past = pop_2020_EpS.copy()
-    if curr_year == data_year:
-        omega_path_lev[:, 0] = pop_curr
+    most_recent_data_year = 2021
+    pop_curr = pop_2020_EpS.copy()
+    # pop_past = pop_2020_EpS.copy()
+    if curr_year == most_recent_data_year:
+        pop_past = pop_curr.copy()
+        pop_curr = np.dot(OMEGA_orig, pop_past)
         g_n_curr = (pop_curr[-S:].sum() - pop_past[-S:].sum()) / pop_past[
             -S:
         ].sum()
-    elif curr_year > data_year:
-        for per in range(curr_year - data_year):
+        omega_path_lev[:, 0] = pop_curr
+    elif curr_year > most_recent_data_year:
+        for per in range(curr_year - most_recent_data_year):
             pop_past = pop_curr.copy()
             pop_curr = np.dot(OMEGA_orig, pop_past)
             g_n_curr = (pop_curr[-S:].sum() - pop_past[-S:].sum()) / pop_past[
@@ -935,16 +950,14 @@ def get_pop_objs(E, S, T, curr_year, GraphDiag=False):
     ) / omega_path_lev[-S:, :-1].sum(axis=0)
     # Compute adjusted population growth rate
     OMEGA2 = np.zeros((E + S, E + S))
-    OMEGA2[0, :] = (1 - infmort_rate) * fert_rates + np.hstack(
-        (imm_rates_adj[0], np.zeros(E + S - 1))
-    )
+    OMEGA2[0, :] = (1 - infmort_rate) * fert_rates
     OMEGA2[1:, :-1] += np.diag(1 - mort_rates[:-1])
-    OMEGA2[1:, 1:] += np.diag(imm_rates_adj[1:])
+    OMEGA2 += np.diag(imm_rates_adj)
     eigvalues2, eigvectors2 = np.linalg.eig(OMEGA2)
     g_n_ss_adj = (eigvalues2[np.isreal(eigvalues2)].real).max() - 1
     g_n_ss = g_n_ss_adj.copy()
     # g_n_path[fixper + 1 :] = g_n_ss
-    omega_S_preTP = pop_past.copy()[-S:] / pop_past.copy()[-S:].sum()
+    omega_S_preTP = pop_past[-S:] / pop_past[-S:].sum()
     imm_rates_mat = np.hstack(
         (
             np.tile(np.reshape(imm_rates_orig[E:], (S, 1)), (1, fixper)),
