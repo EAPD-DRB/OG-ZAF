@@ -5,6 +5,7 @@ Functions for generating demographic objects necessary for the OG-ZAF model
 This module contains the following functions:
     get_un_fert_data()
     get_un_mort_data()
+    get_wb_infmort_rate()
     get_un_pop_data()
     get_fert()
     get_mort()
@@ -323,11 +324,21 @@ def get_wb_infmort_rate(
     start_year: int = 2020,
     end_year: int = None,
     download: bool = True,
-):
+) -> np.float64:
     """
     Get World Bank infant mortality rate measure from neonatal mortality rate
     (deaths per 1,000 live births, divided by 1,0000)
     https://data.worldbank.org/indicator/SH.DYN.NMRT
+
+    Args:
+        country (str): 3-digit country id (alphabetic)
+        start_year (int): beginning year of the data
+        end_year (int or None): end year of the data
+        download (bool): whether to download the data from the UN Data Portal.
+            If False, a path must be specified in the path_folder argument.
+
+    Returns:
+        wb_infmort_rate (float): neonatal infant mortality rate
     """
     if end_year is None:
         end_year = start_year
