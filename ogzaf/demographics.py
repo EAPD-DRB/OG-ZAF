@@ -24,6 +24,7 @@ import numpy as np
 import pandas as pd
 import scipy.optimize as opt
 from ogcore import parameter_plots as pp
+from pandas_datareader import wb
 import matplotlib.pyplot as plt
 
 # create output director for figures
@@ -317,6 +318,35 @@ def get_un_mort_data(
     return infmort_rate_df, mort_rates_df
 
 
+def get_wb_infmort_rate(
+    country: str = "ZAF",
+    start_year: int = 2020,
+    end_year: int = None,
+    download: bool = True,
+):
+    """
+    Get World Bank infant mortality rate measure from neonatal mortality rate
+    (deaths per 1,000 live births, divided by 1,0000)
+    https://data.worldbank.org/indicator/SH.DYN.NMRT
+    """
+    if end_year is None:
+        end_year = start_year
+    if download:
+        wb_infmort_rate = (
+            wb.download(
+                indicator="SH.DYN.NMRT", country=country, start=start_year,
+                end=end_year
+            ).squeeze()
+            / 1000
+        )
+    else:
+        # Hard code the infant mortality rate for South Africa from the most
+        # recent year (2020)
+        wb_infmort_rate = 0.0106
+
+    return wb_infmort_rate
+
+
 def get_un_pop_data(
     country_id: str = "710",
     start_year: int = 2021,
@@ -521,12 +551,25 @@ def get_mort(totpers, start_year=2021, end_year=None, graph=False):
         raise ValueError(err_msg)
 
     # Get UN infant mortality and mortality rate data by age
-    infmort_rate_df, mort_rates_df = get_un_mort_data(
+    un_infmort_rate_df, mort_rates_df = get_un_mort_data(
         start_year=start_year, end_year=end_year, download=False
     )
-    infmort_rate = infmort_rate_df["infmort_rate"][
-        infmort_rate_df["sex_num"] == 3
+    un_infmort_rate = un_infmort_rate_df["infmort_rate"][
+        un_infmort_rate_df["sex_num"] == 3
     ].to_numpy()[0]
+
+    # Use World Bank infant mortality rate data (neonatal mortality rate) from
+    # World Bank World Development Indicators database
+    most_recent_wb_infmort_datayear = 2020
+    if start_year > most_recent_wb_infmort_datayear:
+        wb_infmort_rate = get_wb_infmort_rate(
+            start_year=most_recent_wb_infmort_datayear, download=False
+        )
+    else:
+        wb_infmort_rate = get_wb_infmort_rate(
+            start_year=start_year, download=False
+        )
+    infmort_rate = wb_infmort_rate
     if totpers == 100:
         mort_rates = (
             mort_rates_df["mort_rate"][
@@ -538,6 +581,7 @@ def get_mort(totpers, start_year=2021, end_year=None, graph=False):
             .to_numpy()
             .flatten()
         )
+
     elif totpers < 100:
         # Create population weighted average mortality rates across bins
         mort_rates = np.zeros(totpers)
