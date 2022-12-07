@@ -160,45 +160,45 @@ def get_macro_params():
     ).loc[baseline_yearquarter]
 
     # find zeta_D (Share of new debt issues from government that are purchased by foreigners)
-    macro_parameters["zeta_D"] = pd.Series(
+    macro_parameters["zeta_D"] = [pd.Series(
         wb_data_q["Gross PSD USD - external creditors"]
         / (
             wb_data_q["Gross PSD USD - domestic creditors"]
             + wb_data_q["Gross PSD USD - external creditors"]
         )
-    ).loc[baseline_yearquarter]
+    ).loc[baseline_yearquarter]]
 
     # find alpha_T
-    macro_parameters["alpha_T"] = pd.Series(
+    macro_parameters["alpha_T"] = [pd.Series(
         (
             fred_data_q["Total gov transfer payments"]
             - fred_data_q["Social Security payments"]
         )
         / fred_data_q["Nominal GDP"]
-    ).loc[baseline_date]
+    ).loc[baseline_date]]
 
     # find alpha_G
-    macro_parameters["alpha_G"] = pd.Series(
+    macro_parameters["alpha_G"] = [pd.Series(
         (
             fred_data_q["Gov expenditures"]
             - fred_data_q["Total gov transfer payments"]
             - fred_data_q["Gov interest payments"]
         )
         / fred_data_q["Nominal GDP"]
-    ).loc[baseline_date]
+    ).loc[baseline_date]]
 
     # find gamma
-    macro_parameters["gamma"] = 1 - (
+    macro_parameters["gamma"] = [1 - (
         (
             un_data_a.loc[
                 un_data_a["TIME_PERIOD"] == baseline_date.year, "OBS_VALUE"
             ].squeeze()
         )
         / 100
-    )
+    )]
 
     # find g_y
-    macro_parameters["g_y"] = (
+    macro_parameters["g_y_annual"] = (
         wb_data_a["GDP per capita (constant 2015 US$)"].pct_change(-1).mean()
     )
 
