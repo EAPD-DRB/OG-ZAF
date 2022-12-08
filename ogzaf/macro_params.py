@@ -1,5 +1,5 @@
 """
-This module uses data from World Bank WDI, World Bank Quarterly Public Sector Debt (QPSD) database, 
+This module uses data from World Bank WDI, World Bank Quarterly Public Sector Debt (QPSD) database,
 UN Data Portal, and FRED to find values for parameters for the
 OG-ZAF model that rely on macro data for calibration.
 """
@@ -53,7 +53,7 @@ def get_macro_params():
     )
 
     """
-    This retrieves quarterly data from the World Bank Quarterly Public Sector Debt database. 
+    This retrieves quarterly data from the World Bank Quarterly Public Sector Debt database.
     The command extracts all available data even when start and end dates are specified.
     """
 
@@ -171,27 +171,29 @@ def get_macro_params():
     ]
 
     # find alpha_T
-    macro_parameters["alpha_T"] = [
-        pd.Series(
-            (
-                fred_data_q["Total gov transfer payments"]
-                - fred_data_q["Social Security payments"]
-            )
-            / fred_data_q["Nominal GDP"]
-        ).loc[baseline_date]
-    ]
+    macro_parameters["alpha_T"] = [0.08]
+    # macro_parameters["alpha_T"] = [
+    #     pd.Series(
+    #         (
+    #             fred_data_q["Total gov transfer payments"]
+    #             - fred_data_q["Social Security payments"]
+    #         )
+    #         / fred_data_q["Nominal GDP"]
+    #     ).loc[baseline_date]
+    # ]
 
     # find alpha_G
-    macro_parameters["alpha_G"] = [
-        pd.Series(
-            (
-                fred_data_q["Gov expenditures"]
-                - fred_data_q["Total gov transfer payments"]
-                - fred_data_q["Gov interest payments"]
-            )
-            / fred_data_q["Nominal GDP"]
-        ).loc[baseline_date]
-    ]
+    macro_parameters["alpha_G"] = [0.08]
+    # macro_parameters["alpha_G"] = [
+    #     pd.Series(
+    #         (
+    #             fred_data_q["Gov expenditures"]
+    #             - fred_data_q["Total gov transfer payments"]
+    #             - fred_data_q["Gov interest payments"]
+    #         )
+    #         / fred_data_q["Nominal GDP"]
+    #     ).loc[baseline_date]
+    # ]
 
     # find gamma
     macro_parameters["gamma"] = [
