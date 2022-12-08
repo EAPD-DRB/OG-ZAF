@@ -31,32 +31,32 @@ def main():
     Run baseline policy
     ---------------------------------------------------------------------------
     """
-    # # Set up baseline parameterization
-    # p = Specifications(
-    #     baseline=True,
-    #     num_workers=num_workers,
-    #     baseline_dir=base_dir,
-    #     output_base=base_dir,
-    # )
-    # # Update parameters for baseline from default json file
-    # p.update_specifications(
-    #     json.load(
-    #         open(
-    #             os.path.join(
-    #                 CUR_DIR, "..", "ogzaf", "ogzaf_default_parameters.json"
-    #             )
-    #         )
-    #     )
-    # )
-    # # Update parameters from calibrate.py Calibration class
-    # c = Calibration(p)
-    # updated_params = c.get_dict()
-    # p.update_specifications(updated_params)
+    # Set up baseline parameterization
+    p = Specifications(
+        baseline=True,
+        num_workers=num_workers,
+        baseline_dir=base_dir,
+        output_base=base_dir,
+    )
+    # Update parameters for baseline from default json file
+    p.update_specifications(
+        json.load(
+            open(
+                os.path.join(
+                    CUR_DIR, "..", "ogzaf", "ogzaf_default_parameters.json"
+                )
+            )
+        )
+    )
+    # Update parameters from calibrate.py Calibration class
+    c = Calibration(p)
+    updated_params = c.get_dict()
+    p.update_specifications(updated_params)
 
-    # # Run model
-    # start_time = time.time()
-    # runner(p, time_path=True, client=client)
-    # print("run time = ", time.time() - start_time)
+    # Run model
+    start_time = time.time()
+    runner(p, time_path=True, client=client)
+    print("run time = ", time.time() - start_time)
 
     """
     ---------------------------------------------------------------------------
