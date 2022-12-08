@@ -48,6 +48,10 @@ def main():
             )
         )
     )
+    # Update parameters from calibrate.py Calibration class
+    c = Calibration(p)
+    updated_params = c.get_dict()
+    p.update_specifications(updated_params)
 
     # Run model
     start_time = time.time()
@@ -67,21 +71,11 @@ def main():
         baseline_dir=base_dir,
         output_base=reform_dir,
     )
-    # Update parameters for baseline from default json file
-    p2.update_specifications(
-        json.load(
-            open(
-                os.path.join(
-                    CUR_DIR, "..", "ogzaf", "ogzaf_default_parameters.json"
-                )
-            )
-        )
-    )
     # additional parameters to change
-    updated_params = {
+    updated_params_ref = {
         "cit_rate": [[0.35]],
     }
-    p2.update_specifications(updated_params)
+    p2.update_specifications(updated_params_ref)
     # Run model
     start_time = time.time()
     runner(p2, time_path=True, client=client)
