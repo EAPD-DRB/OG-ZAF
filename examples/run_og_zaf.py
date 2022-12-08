@@ -73,7 +73,8 @@ def main():
     )
     # additional parameters to change
     updated_params_ref = {
-        "cit_rate": [[0.30]],
+        "cit_rate": [[0.26]],
+        "debt_ratio_ss": 1.2,
     }
     p2.update_specifications(updated_params_ref)
     # Run model
