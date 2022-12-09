@@ -121,11 +121,6 @@ def get_macro_params():
     )
 
     # Separate quartely, monthly, and annual FRED dataseries
-            ]
-        ]
-        .resample("Q")
-        .mean()
-    )
 
     # fred_data_d = fred_data[["BAA Corp Bond Rates", "10 year govt bond rate"]]
 
