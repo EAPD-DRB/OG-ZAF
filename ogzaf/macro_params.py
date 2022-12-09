@@ -44,7 +44,7 @@ def get_macro_params():
     # pull series of interest using pandas_datareader
     wb_data_a = wb.download(
         indicator=wb_a_variable_dict.values(),
-        country="ZAF",
+        country=country_iso,
         start=start,
         end=end,
     )
@@ -67,7 +67,7 @@ def get_macro_params():
     # pull series of interest using pandas_datareader
     wb_data_q = wb.download(
         indicator=wb_q_variable_dict.values(),
-        country="ZAF",
+        country=country_iso,
         start=start,
         end=end,
     )
@@ -156,7 +156,7 @@ def get_macro_params():
     ]
 
     # find alpha_T
-    macro_parameters["alpha_T"] = [0.10]
+    macro_parameters["alpha_T"] = [0.04]
     # macro_parameters["alpha_T"] = [
     #     pd.Series(
     #         (
@@ -168,7 +168,7 @@ def get_macro_params():
     # ]
 
     # find alpha_G
-    macro_parameters["alpha_G"] = [0.25]
+    macro_parameters["alpha_G"] = [0.27]
     # macro_parameters["alpha_G"] = [
     #     pd.Series(
     #         (
