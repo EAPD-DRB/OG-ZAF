@@ -20,6 +20,7 @@ def get_macro_params():
 
     # set beginning and end dates for data
     # format is year (1940),month (1),day (1)
+    country_iso = "ZAF"
     start = datetime.datetime(1947, 1, 1)
     end = datetime.date.today()  # go through today
     baseline_date = datetime.datetime(2019, 3, 31)
