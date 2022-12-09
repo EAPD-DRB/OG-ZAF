@@ -111,8 +111,6 @@ def get_macro_params():
         "Total gov transfer payments": "B087RC1Q027SBEA",
         "Social Security payments": "W823RC1",
         "Gov interest payments": "A091RC1Q027SBEA",
-        "Real GDP": "RGDPNAINA666NRUG",
-        "Nominal GDP": "MKTGDPINA646NWDB",
     }
 
     # pull series of interest using pandas_datareader
