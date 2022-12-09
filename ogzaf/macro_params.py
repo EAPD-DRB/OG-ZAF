@@ -121,9 +121,6 @@ def get_macro_params():
     )
 
     # Separate quartely, monthly, and annual FRED dataseries
-    fred_data_q = (
-        fred_data[
-            [
                 "Nominal GDP",
                 "Total gov transfer payments",
                 "Social Security payments",
