@@ -110,7 +110,6 @@ def get_macro_params():
         # "10 year govt bond rate": "IRLTLT01ZAM156N",
         "Total gov transfer payments": "B087RC1Q027SBEA",
         "Social Security payments": "W823RC1",
-        "Gov expenditures": "INDGFCEQDSMEI",
         "Gov interest payments": "A091RC1Q027SBEA",
         "Real GDP": "RGDPNAINA666NRUG",
         "Nominal GDP": "MKTGDPINA646NWDB",
