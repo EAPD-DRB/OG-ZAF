@@ -216,7 +216,7 @@ def get_macro_params():
     )
     res = mod.fit()
     # print(res.params)  # first term is the constant. Second is the coefficient
-    macro_parameters["r_gov_shift"] = res.params[1]  # coefficient
-    macro_parameters["r_gov_scale"] = res.params[0]  # constant
+    macro_parameters["r_gov_shift"] = res.params[0]  # constant = 3.37662504
+    macro_parameters["r_gov_scale"] = res.params[1]  # coefficient = 0.24484764
 
     return macro_parameters
