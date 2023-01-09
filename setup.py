@@ -32,7 +32,6 @@ setuptools.setup(
         "pandas>=1.2.5",
         "matplotlib",
         "dask>=2.30.0",
-        "dask-core>=2.30.0",
         "distributed>=2.30.1",
         "paramtools>=0.15.0",
         "requests",
@@ -43,6 +42,9 @@ setuptools.setup(
         "black",
         "pandas-datareader",
         "ogcore",
+        "sphinx>=3.5.4",
+        "sphinx-book-theme>=0.1.3",
+        "jupyter-book>=0.9.1",
     ],
     classifiers=[
         "Development Status :: 2 - Pre-Alpha",
