@@ -27,7 +27,6 @@ setuptools.setup(
     python_requires=">=3.7.7, <3.11",
     install_requires=[
         "psutil",
-        "openssl=1.1.1",
         "numpy<=1.21.2",
         "scipy>=1.7.1",
         "pandas>=1.2.5",
