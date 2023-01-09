@@ -1,4 +1,7 @@
-[![Python 3.7+](https://img.shields.io/badge/python-3.7%2B-blue.svg)](https://www.python.org/downloads/release/python-377/)
+[![Python 3.9](https://img.shields.io/badge/python-3.9-blue.svg)](https://www.python.org/downloads/release/python-3916/)
+[![Python 3.10](https://img.shields.io/badge/python-3.10-blue.svg)](https://www.python.org/downloads/release/python-3108/)
+![example event parameter](https://github.com/EAPD-DRB/OG-ZAF/actions/workflows/deploy_docs.yml/badge.svg?branch=main)
+![example event parameter](https://github.com/EAPD-DRB/OG-ZAF/actions/workflows/check_black.yml/badge.svg?branch=main)
 
 # OG-ZAF
 OG-ZAF is an overlapping-generations (OG) model that allows for dynamic general equilibrium analysis of fiscal policy for South Africa. OG-ZAF is built on the OG-Core framework. The model output includes changes in macroeconomic aggregates (GDP, investment, consumption), wages, interest rates, and the stream of tax revenues over time. Regularly updated documentation of the model theory--its output, and solution method--and the Python API is available at https://pslmodels.github.io/OG-Core and documentation of the specific South African calibration of the model will be available soon.
@@ -12,15 +15,9 @@ OG-ZAF is an overlapping-generations (OG) model that allows for dynamic general 
   * Make sure the `conda` package manager is up-to-date: `conda update conda`.
   * Make sure the Anaconda distribution of Python is up-to-date: `conda update anaconda`.
 * Fork this repository and clone your fork of this repository to a directory on your computer.
-* **If you are installing this on a M1/M2 Mac (ARM):**
-  * From the terminal (or Anaconda command prompt), navigate to the directory to which you cloned this repository and run `conda env create -f environment-M1.yml`. The process of creating the `ogzaf-dev` conda environment should not take more than five minutes.
-  * Then, `conda activate ogzaf-dev`
-  * Then, `pip install --no-dependencies ogcore`
-  * Then install by `pip install -e .`
-* **If you are installing this on a Windows or Intel Mac:**
-  * From the terminal (or Anaconda command prompt), navigate to the directory to which you cloned this repository and run `conda env create -f environment.yml`. The process of creating the `ogzaf-dev` conda environment should not take more than five minutes.
-  * Then, `conda activate ogzaf-dev`
-  * Then install by `pip install -e .`
+* From the terminal (or Anaconda command prompt), navigate to the directory to which you cloned this repository and run `conda env create -f environment.yml`. The process of creating the `ogzaf-dev` conda environment should not take more than five minutes.
+* Then, `conda activate ogzaf-dev`
+* Then install by `pip install -e .`
 ### Run an example of the model
 * Navigate to `./examples`
 * Run the model with an example reform from terminal/command prompt by typing `python run_og_zaf.py`
