@@ -42,9 +42,6 @@ setuptools.setup(
         "black",
         "pandas-datareader",
         "ogcore",
-        "sphinx>=3.5.4",
-        "sphinx-book-theme>=0.1.3",
-        "jupyter-book>=0.9.1",
     ],
     classifiers=[
         "Development Status :: 2 - Pre-Alpha",
