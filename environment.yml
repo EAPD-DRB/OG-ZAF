@@ -6,6 +6,7 @@ dependencies:
 - ipython
 - setuptools
 - psutil
+- openssl=1.1.1  # This is a requirement of the UN data portal which we are using in demographics.py
 - numpy<=1.21.2  # This restriction can be removed as soon as Numba supports NumPy 1.22
 - scipy>=1.7.1
 - pandas>=1.2.5
