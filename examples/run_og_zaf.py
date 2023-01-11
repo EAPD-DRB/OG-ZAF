@@ -5,6 +5,7 @@ from distributed import Client
 import os
 import json
 import time
+import copy
 
 # from taxcalc import Calculator
 from ogzaf.calibrate import Calibration
