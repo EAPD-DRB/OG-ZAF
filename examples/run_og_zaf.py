@@ -5,6 +5,7 @@ from distributed import Client
 import os
 import json
 import time
+import copy
 
 # from taxcalc import Calculator
 from ogzaf.calibrate import Calibration
@@ -65,18 +66,17 @@ def main():
     """
 
     # create new Specifications object for reform simulation
-    p2 = Specifications(
-        baseline=False,
-        num_workers=num_workers,
-        baseline_dir=base_dir,
-        output_base=reform_dir,
-    )
+    p2 = copy.deepcopy(p)
+    p2.baseline = False
+    p2.output_base = reform_dir
+
     # additional parameters to change
     updated_params_ref = {
         "cit_rate": [[0.26]],
         "debt_ratio_ss": 1.2,
     }
     p2.update_specifications(updated_params_ref)
+
     # Run model
     start_time = time.time()
     runner(p2, time_path=True, client=client)
