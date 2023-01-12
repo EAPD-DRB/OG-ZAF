@@ -1,0 +1,5 @@
+sep =|
+LocationId|Location|Iso3|Iso2|LocationTypeId|IndicatorId|Indicator|IndicatorDisplayName|SourceId|Source|Revision|VariantId|Variant|VariantShortName|VariantLabel|TimeId|TimeLabel|TimeMid|CategoryId|Category|EstimateTypeId|EstimateType|EstimateMethodId|EstimateMethod|SexId|Sex|AgeId|AgeLabel|AgeStart|AgeEnd|AgeMid|Value
+710|South Africa|ZAF|ZA|4|22|Infant mortality rate (IMR)|Infant mortality rate (IMR)|25|World Population Prospects|0|4|Median|Median|Median|72|2021|2021.5|0|Not applicable|1|Model-based Estimates|2|Interpolation|1|Male|188|Total|0|-1|0|28.72984
+710|South Africa|ZAF|ZA|4|22|Infant mortality rate (IMR)|Infant mortality rate (IMR)|25|World Population Prospects|0|4|Median|Median|Median|72|2021|2021.5|0|Not applicable|1|Model-based Estimates|2|Interpolation|2|Female|188|Total|0|-1|0|24.52664
+710|South Africa|ZAF|ZA|4|22|Infant mortality rate (IMR)|Infant mortality rate (IMR)|25|World Population Prospects|0|4|Median|Median|Median|72|2021|2021.5|0|Not applicable|1|Model-based Estimates|2|Interpolation|3|Both sexes|188|Total|0|-1|0|26.65837
