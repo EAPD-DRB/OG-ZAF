@@ -198,23 +198,28 @@ def get_macro_params():
         wb_data_a["GDP per capita (constant 2015 US$)"].pct_change(-1).mean()
     )
 
-    """""
-    The estimates here use US data
+    """"
+    We want to use the non linear relationship estimated by Li, Magud, Werner, Witte (2021), available here: https://www.imf.org/en/Publications/WP/Issues/2021/06/04/The-Long-Run-Impact-of-Sovereign-Yields-on-Corporate-Yields-in-Emerging-Markets-50224
 
-
+    Steps:
+    1) Generate modelled corporate yields (corp_yhat) for a range of sovereign yields (sov_y)  using the estimated equation in col 2 of table 8 (and figure 3).
+    2) Estimate the OLS using sovereign yields as the dependent variable
+    """
+    """     
     # # estimate r_gov_shift and r_gov_scale
-    rate_data = fred_data_d[
-        ["10 year govt bond rate", "BAA Corp Bond Rates"]
-    ].dropna()
-    rate_data["constant"] = np.ones(len(rate_data.index))
-    # mod = PanelOLS(fred_data['10 year govt bond rate'],
-    #                fred_data[['constant', 'BAA Corp Bond Rates']])
+    sov_y = np.arange(20, 120) / 10
+    corp_yhat = 8.199 - (2.975 * sov_y) + (0.478 * sov_y**2)
+    corp_yhat = sm.add_constant(corp_yhat)
     mod = sm.OLS(
-        rate_data["10 year govt bond rate"],
-        rate_data[["constant", "BAA Corp Bond Rates"]],
+        sov_y,
+        corp_yhat,
     )
     res = mod.fit()
-    macro_parameters["r_gov_shift"] = res.params["BAA Corp Bond Rates"]
-    macro_parameters["r_gov_scale"] = res.params["constant"]
+    # first term is the constant and needs to be divided by 100 to have the correct unit. Second term is the coefficient
+    macro_parameters["r_gov_shift"] = (-res.params[0] / 100)  # constant = 0.0337662504
+    macro_parameters["r_gov_scale"] = res.params[1]  # coefficient = 0.24484764
     """
+    macro_parameters["r_gov_shift"] = -0.0337662504
+    macro_parameters["r_gov_scale"] = 0.24484764
+
     return macro_parameters
