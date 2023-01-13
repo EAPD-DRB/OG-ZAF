@@ -6,12 +6,10 @@ percentiles, as it uses fitted polynomials to those percentiles.
 -----------------------------------------------------------------
 """
 import numpy as np
-import pandas as pd
 import scipy.optimize as opt
 import scipy.interpolate as si
 from ogcore import parameter_plots as pp
 import os
-from linearmodels import PanelOLS
 
 CUR_PATH = os.path.abspath(os.path.dirname(__file__))
 OUTPUT_DIR = os.path.join(CUR_PATH, "OUTPUT", "ability")
