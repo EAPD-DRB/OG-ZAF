@@ -6,10 +6,12 @@ percentiles, as it uses fitted polynomials to those percentiles.
 -----------------------------------------------------------------
 """
 import numpy as np
+import pandas as pd
 import scipy.optimize as opt
 import scipy.interpolate as si
 from ogcore import parameter_plots as pp
 import os
+from linearmodels import PanelOLS
 
 CUR_PATH = os.path.abspath(os.path.dirname(__file__))
 OUTPUT_DIR = os.path.join(CUR_PATH, "OUTPUT", "ability")
@@ -316,14 +318,14 @@ def get_e_interp(S, age_wgts, age_wgts_80, abil_wgts, plot=False):
 
 
 def get_e_orig(age_wgts, abil_wgts, plot=False):
-    r"""
+    """
     This function generates the 80 x 7 matrix of lifetime earnings
     ability profiles, corresponding to annual ages from 21 to 100 and to
     paths based on income percentiles 0-25, 25-50, 50-70, 70-80, 80-90,
     90-99, 99-100. The ergodic population distribution is an input in
     order to rescale the paths so that the weighted average equals 1.
 
-    The data come from the following file:
+    The base curves use data for the USA. The data come from the following file:
 
         `data/ability/FR_wage_profile_tables.xlsx`
 
@@ -335,6 +337,12 @@ def get_e_orig(age_wgts, abil_wgts, plot=False):
 
     Values come from regression analysis using IRS CWHS with hours
     imputed from the CPS.
+
+    The calibrate for a specific country the USA curves are adjusted in 2 ways
+    1) Adjustment by age: adjust the shape/distribution of each J-income earning profile curve
+            The methodoly is described here:
+            https://github.com/EAPD-DRB/OG-ZAF/issues/18#issuecomment-1368580323
+    2) Adjustment by income: adjust the gaps between the J-income earning curves
 
     Args:
         age_wgts (Numpy array): ergodic age distribution, length S
@@ -356,7 +364,7 @@ def get_e_orig(age_wgts, abil_wgts, plot=False):
         err = "Vector abil_wgts does not have 7 elements."
         raise RuntimeError(err)
 
-    # 1) Generate polynomials and use them to get income profiles for
+    # 1) Generate polynomials using USA data and use them to get income profiles for
     #    ages 21 to 80.
     one = np.array(
         [
@@ -410,8 +418,69 @@ def get_e_orig(age_wgts, abil_wgts, plot=False):
         + (three * (ages_short**3))
     )
     abil_paths = np.exp(log_abil_paths)
+
+    # New estimated coefficients after adjustment by age (ZAF)
+    const = np.array(
+        [
+            2.079078544,
+            -0.634024536,
+            -2.118541036,
+            -2.440921456,
+            -2.270314176,
+            0.269078544,
+            0.559078544,
+        ]
+    )
+    one = np.array(
+        [
+            -0.057775294,
+            0.099378866,
+            0.215972106,
+            0.251108556,
+            0.255813236,
+            0.084428276,
+            0.131719846,
+        ]
+    )
+    two = np.array(
+        [
+            0.003139262,
+            0.000622012,
+            -0.001743688,
+            -0.002402678,
+            -0.002547538,
+            0.001605402,
+            0.000791892,
+        ]
+    )
+    three = np.array(
+        [
+            -3.53501e-05,
+            -2.21401e-05,
+            -6.54007e-06,
+            -2.55007e-06,
+            -1.14007e-06,
+            -3.16301e-05,
+            -2.86201e-05,
+        ]
+    )
+    # compute the lifetime income profiles using the new coefficients
+    ages_short_adj1 = np.tile(np.linspace(21, 80, 60).reshape((60, 1)), (1, 7))
+    log_abil_paths_adj1 = (
+        const
+        + (one * ages_short_adj1)
+        + (two * (ages_short_adj1**2))
+        + (three * (ages_short_adj1**3))
+    )
+    abil_paths_adj1 = np.exp(log_abil_paths_adj1)
+
+    # 2) Adjustment by income
+    abil_paths_adj = (
+        abil_paths_adj1  # Skipping: replace with adjustment 2 in the future
+    )
+
     e_orig = np.zeros((80, 7))
-    e_orig[:60, :] = abil_paths
+    e_orig[:60, :] = abil_paths_adj
     e_orig[60:, :] = 0.0
 
     # 2) Forecast (with some art) the path of the final 20 years of

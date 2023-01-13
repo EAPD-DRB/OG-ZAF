@@ -1,5 +1,6 @@
 from ogzaf import demographics
 from ogzaf import macro_params
+from ogzaf import income
 import os
 import numpy as np
 from ogcore import txfunc
@@ -54,19 +55,26 @@ class Calibration:
 
         # demographics
         self.demographic_params = demographics.get_pop_objs(
+<<<<<<< Updated upstream
             p.E, p.S, p.T, p.start_year
         )
         # demographics for 80 period lives (needed for getting e below)
         # demog80 = demographics.get_pop_objs(20, 80, p.T, p.start_year)
+=======
+            p.E, p.S, p.T, 1, 100, p.start_year
+        )
+        # demographics for 80 period lives (needed for getting e below)
+        demog80 = demographics.get_pop_objs(20, 80, p.T, 1, 100, p.start_year)
+>>>>>>> Stashed changes
 
         # earnings profiles
-        # self.e = income.get_e_interp(
-        #     p.S,
-        #     self.demographic_params["omega_SS"],
-        #     demog80["omega_SS"],
-        #     p.lambdas,
-        #     plot=False,
-        # )
+        self.e = income.get_e_interp(
+            p.S,
+            self.demographic_params["omega_SS"],
+            demog80["omega_SS"],
+            p.lambdas,
+            plot=False,
+        )
 
     # Tax Functions
     def get_tax_function_parameters(
@@ -371,7 +379,12 @@ class Calibration:
         # dict["eta"] = self.eta
         # dict["zeta"] = self.zeta
         dict.update(self.macro_params)
+<<<<<<< Updated upstream
         # dict["e"] = self.e
         dict.update(self.demographic_params)
+=======
+        dict["e"] = self.e
+        # dict.update(self.demographic_params)
+>>>>>>> Stashed changes
 
         return dict
