@@ -338,7 +338,7 @@ def get_e_orig(age_wgts, abil_wgts, plot=False):
     Values come from regression analysis using IRS CWHS with hours
     imputed from the CPS.
 
-    The calibrate for a specific country the USA curves are adjusted in 2 ways
+    To calibrate for a specific country the USA curves are adjusted in 2 ways
     1) Adjustment by age: adjust the shape/distribution of each J-income earning profile curve
             The methodoly is described here:
             https://github.com/EAPD-DRB/OG-ZAF/issues/18#issuecomment-1368580323
