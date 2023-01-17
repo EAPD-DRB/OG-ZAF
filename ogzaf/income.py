@@ -323,9 +323,7 @@ def get_e_orig(age_wgts, abil_wgts, plot=False):
     90-99, 99-100. The ergodic population distribution is an input in
     order to rescale the paths so that the weighted average equals 1.
 
-    The base curves use data for the USA. The data come from the following file:
-
-        `data/ability/FR_wage_profile_tables.xlsx`
+    The base curves are the ones in OG-USA, which are then adjusted for ZAF.
 
     The polynomials are of the form
 
@@ -333,14 +331,14 @@ def get_e_orig(age_wgts, abil_wgts, plot=False):
         \ln(abil) = \alpha + \beta_{1}\text{age} + \beta_{2}\text{age}^2
             + \beta_{3}\text{age}^3
 
-    Values come from regression analysis using IRS CWHS with hours
-    imputed from the CPS.
+    To calibrate for ZAF, the USA curves are adjusted in 2 ways (in this order)
+    1) Adjustment by income (J): adjust the gaps between the J-income earning curves
+        using data from WID.
+    2) Adjustment by age (S): adjust the shape/distribution of each J-income earning
+        profile curve using data from NTA.
 
-    To calibrate for a specific country the USA curves are adjusted in 2 ways
-    1) Adjustment by age: adjust the shape/distribution of each J-income earning profile curve
-            The methodoly is described here:
-            https://github.com/EAPD-DRB/OG-ZAF/issues/18#issuecomment-1368580323
-    2) Adjustment by income: adjust the gaps between the J-income earning curves
+    The methodoly is described here:
+    https://github.com/EAPD-DRB/OG-ZAF/issues/18#issuecomment-1368580323
 
     Args:
         age_wgts (Numpy array): ergodic age distribution, length S
@@ -417,65 +415,60 @@ def get_e_orig(age_wgts, abil_wgts, plot=False):
     )
     abil_paths = np.exp(log_abil_paths)
 
-    # New estimated coefficients after adjustment by age (ZAF)
+    # New estimated coefficients for ZAF after adjustment by income (J) and by age (S)
     const = np.array(
         [
-            2.079078544,
-            -0.634024536,
-            -2.118541036,
-            -2.440921456,
-            -2.270314176,
-            0.269078544,
-            0.559078544,
+            1.10766851280735,
+            -1.47205271208099,
+            -2.79826519632522,
+            -2.84592025503416,
+            -2.33264177437992,
+            0.820108734133472,
+            0.573684959034946,
         ]
     )
     one = np.array(
         [
-            -0.057775294,
-            0.099378866,
-            0.215972106,
-            0.251108556,
-            0.255813236,
-            0.084428276,
-            0.131719846,
+            -0.0577752937758472,
+            0.0993788662241527,
+            0.215972106224152,
+            0.251108556224153,
+            0.255813236224153,
+            0.0844282762241525,
+            0.131719846224152,
         ]
     )
     two = np.array(
         [
-            0.003139262,
-            0.000622012,
-            -0.001743688,
-            -0.002402678,
-            -0.002547538,
-            0.001605402,
-            0.000791892,
+            0.00313926193376278,
+            0.000622011933762788,
+            -0.00174368806623721,
+            -0.00240267806623721,
+            -0.00254753806623722,
+            0.00160540193376279,
+            0.000791891933762785,
         ]
     )
     three = np.array(
         [
-            -3.53501e-05,
-            -2.21401e-05,
-            -6.54007e-06,
-            -2.55007e-06,
-            -1.14007e-06,
-            -3.16301e-05,
-            -2.86201e-05,
+            -0.000035350068460927,
+            -2.21400684609271e-05,
+            -6.54006846092713e-06,
+            -2.55006846092713e-06,
+            -1.14006846092704e-06,
+            -3.16300684609271e-05,
+            -2.86200684609271e-05,
         ]
     )
     # compute the lifetime income profiles using the new coefficients
-    ages_short_adj1 = np.tile(np.linspace(21, 80, 60).reshape((60, 1)), (1, 7))
-    log_abil_paths_adj1 = (
+    ages_short_adj = np.tile(np.linspace(21, 80, 60).reshape((60, 1)), (1, 7))
+    log_abil_paths_adj = (
         const
-        + (one * ages_short_adj1)
-        + (two * (ages_short_adj1**2))
-        + (three * (ages_short_adj1**3))
+        + (one * ages_short_adj)
+        + (two * (ages_short_adj**2))
+        + (three * (ages_short_adj**3))
     )
-    abil_paths_adj1 = np.exp(log_abil_paths_adj1)
-
-    # 2) Adjustment by income
-    abil_paths_adj = (
-        abil_paths_adj1  # Skipping: replace with adjustment 2 in the future
-    )
+    abil_paths_adj = np.exp(log_abil_paths_adj)
 
     e_orig = np.zeros((80, 7))
     e_orig[:60, :] = abil_paths_adj
