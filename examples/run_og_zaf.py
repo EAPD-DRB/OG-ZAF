@@ -53,12 +53,12 @@ def main():
     c = Calibration(p)
     updated_params = c.get_dict()
     p.update_specifications(updated_params)
-    # updated_params_tax = {
-    #     "etr_params": [[0.35, 0.35, 0.35]],
-    #     "mtrx_params": [[0.35, 0.35, 0.35]],
-    #     "mtry_params": [[0.35, 0.35, 0.35]]
-    # }
-    # p.update_specifications(updated_params_tax)
+    updated_params_tax = {
+        "etr_params": [[[0.35]]],
+        "mtrx_params": [[[0.35]]],
+        "mtry_params": [[[0.35]]]
+    }
+    p.update_specifications(updated_params_tax)
 
     # Run model
     start_time = time.time()
