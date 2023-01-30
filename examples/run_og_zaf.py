@@ -53,6 +53,12 @@ def main():
     c = Calibration(p)
     updated_params = c.get_dict()
     p.update_specifications(updated_params)
+    updated_params_tax = {
+        "etr_params": [[[0.35]]],
+        "mtrx_params": [[[0.35]]],
+        "mtry_params": [[[0.35]]]
+    }
+    p.update_specifications(updated_params_tax)
 
     # Run model
     start_time = time.time()
@@ -72,8 +78,7 @@ def main():
 
     # additional parameters to change
     updated_params_ref = {
-        "cit_rate": [[0.26]],
-        "debt_ratio_ss": 1.2,
+        "cit_rate": [[0.30]],
     }
     p2.update_specifications(updated_params_ref)
 
