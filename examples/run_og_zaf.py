@@ -56,7 +56,7 @@ def main():
     updated_params_tax = {
         "etr_params": [[[0.35]]],
         "mtrx_params": [[[0.35]]],
-        "mtry_params": [[[0.35]]]
+        "mtry_params": [[[0.35]]],
     }
     p.update_specifications(updated_params_tax)
 
