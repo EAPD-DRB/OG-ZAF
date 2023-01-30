@@ -8,7 +8,7 @@ jupytext:
 kernelspec:
   display_name: Python 3
   language: python
-  name: ogusa-dev
+  name: ogzaf-dev
 ---
 
 (Chap_LfEarn)=
@@ -36,11 +36,11 @@ Exogenous life cycle income ability paths $\log(e_{j,s})$ with $S=80$ and $J=7$
 ```
 
 <!-- +++
-```{code-cell} ogusa-dev
+```{code-cell} ogzaf-dev
 :tags: [hide-cell]
 from myst_nb import glue
-import ogusa.parameter_plots as pp
-from ogusa import Specifications
+import ogzaf.parameter_plots as pp
+from ogzaf import Specifications
 p = Specifications()
 fig = pp.plot_ability_profiles(p)
 glue("earnings_profiles", fig, display=False)
