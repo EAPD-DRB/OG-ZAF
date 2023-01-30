@@ -8,7 +8,7 @@ jupytext:
 kernelspec:
   display_name: Python 3
   language: python
-  name: ogusa-dev
+  name: ogzaf-dev
 ---
 
 (Chap_Exog)=
@@ -19,11 +19,11 @@ kernelspec:
   In this chapter, list the exogenous inputs to the model, options, and where the values come from (weak calibration vs. strong calibration). Point to the respective chapters for some of the inputs. Mention the code in [`default_parameters.json`](https://github.com/PSLmodels/OG-USA/blob/master/ogusa/default_parameters.json) and [`parameters.py`](https://github.com/PSLmodels/OG-USA/blob/master/ogusa/parameters.py).
 
   <!-- +++
-  ```{code-cell} ogusa-dev
+  ```{code-cell} ogzaf-dev
   :tags: [hide-cell]
   from myst_nb import glue
-  import ogusa.parameter_tables as pt
-  from ogusa import Specifications
+  import ogzaf.parameter_tables as pt
+  from ogzaf import Specifications
   p = Specifications()
   table = pt.param_table(p, table_format=None, path=None)
   glue("param_table", table, display=False)

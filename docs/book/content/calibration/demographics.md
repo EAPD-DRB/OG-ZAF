@@ -8,7 +8,7 @@ jupytext:
 kernelspec:
   display_name: Python 3
   language: python
-  name: ogusa-dev
+  name: ogzaf-dev
 ---
 
 (Chap_Demog)=
@@ -82,11 +82,11 @@ We discuss the approach to estimating fertility rates $f_s$, mortality rates $\r
   ```
 
   <!-- +++
-  ```{code-cell} ogusa-dev
+  ```{code-cell} ogzaf-dev
   :tags: [hide-cell]
   from myst_nb import glue
-  import ogusa.parameter_plots as pp
-  from ogusa import Specifications
+  import ogzaf.parameter_plots as pp
+  from ogzaf import Specifications
   p = Specifications()
   fig = pp.plot_mort_rates(p)
   glue("mort_rates_plot", fig, display=False)
@@ -123,11 +123,11 @@ We discuss the approach to estimating fertility rates $f_s$, mortality rates $\r
   ```
 
   <!-- +++
-  ```{code-cell} ogusa-dev
+  ```{code-cell} ogzaf-dev
   :tags: [hide-cell]
   from myst_nb import glue
-  import ogusa.parameter_plots as pp
-  from ogusa import Specifications
+  import ogzaf.parameter_plots as pp
+  from ogzaf import Specifications
   p = Specifications()
   fig = pp.plot_imm_rates(p)
   glue("imm_rates_plot", fig, display=False)
