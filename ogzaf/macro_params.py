@@ -205,7 +205,7 @@ def get_macro_params():
     1) Generate modelled corporate yields (corp_yhat) for a range of sovereign yields (sov_y)  using the estimated equation in col 2 of table 8 (and figure 3).
     2) Estimate the OLS using sovereign yields as the dependent variable
     """
-    """     
+    """
     # # estimate r_gov_shift and r_gov_scale
     sov_y = np.arange(20, 120) / 10
     corp_yhat = 8.199 - (2.975 * sov_y) + (0.478 * sov_y**2)
@@ -219,7 +219,7 @@ def get_macro_params():
     macro_parameters["r_gov_shift"] = (-res.params[0] / 100)  # constant = 0.0337662504
     macro_parameters["r_gov_scale"] = res.params[1]  # coefficient = 0.24484764
     """
-    macro_parameters["r_gov_shift"] = -0.0337662504
-    macro_parameters["r_gov_scale"] = 0.24484764
+    macro_parameters["r_gov_shift"] = [-0.0337662504]
+    macro_parameters["r_gov_scale"] = [0.24484764]
 
     return macro_parameters
