@@ -49,8 +49,12 @@ class Calibration:
 
         # io matrix and alpha_c
         alpha_c_dict = io.get_alpha_c()
+        # check that model dimensions are consistent with alpha_c
+        assert p.I == len(list(alpha_c_dict.keys()))
         self.alpha_c = np.array(list(alpha_c_dict.values()))
         io_df = io.get_io_matrix()
+        # check that model dimensions are consistent with io_matrix
+        assert p.M == len(list(io_df.keys()))
         self.io_matrix = io_df.values
 
         # eta estimation
