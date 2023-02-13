@@ -48,14 +48,16 @@ class Calibration:
         self.macro_params = macro_params.get_macro_params()
 
         # io matrix and alpha_c
-        alpha_c_dict = io.get_alpha_c()
-        # check that model dimensions are consistent with alpha_c
-        assert p.I == len(list(alpha_c_dict.keys()))
-        self.alpha_c = np.array(list(alpha_c_dict.values()))
-        io_df = io.get_io_matrix()
-        # check that model dimensions are consistent with io_matrix
-        assert p.M == len(list(io_df.keys()))
-        self.io_matrix = io_df.values
+        if p.I > 1:  # no need if just one consumption good
+            alpha_c_dict = io.get_alpha_c()
+            # check that model dimensions are consistent with alpha_c
+            assert p.I == len(list(alpha_c_dict.keys()))
+            self.alpha_c = np.array(list(alpha_c_dict.values()))
+        if p.M > 1:  # no need if just one production good
+            io_df = io.get_io_matrix()
+            # check that model dimensions are consistent with io_matrix
+            assert p.M == len(list(io_df.keys()))
+            self.io_matrix = io_df.values
 
         # eta estimation
         # self.eta = transfer_distribution.get_transfer_matrix()
