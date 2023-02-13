@@ -1,5 +1,6 @@
 import pandas as pd
-from ogzaf.constants import CON_DICT, PROD_DICT
+import numpy as np
+from ogzaf.constants import CONS_DICT, PROD_DICT
 
 """
 Read in SAM file
@@ -16,7 +17,7 @@ SAM = pd.read_excel(
 )
 
 
-def get_alpha_c(SAM, cons_dict=CONS_DICT):
+def get_alpha_c(SAM=SAM, cons_dict=CONS_DICT):
     """
     Calibrate the alpha_c vector, showing the shares of household
     expenditures for each consumption category
@@ -28,22 +29,23 @@ def get_alpha_c(SAM, cons_dict=CONS_DICT):
     Returns:
         alpha_c (dict): Dictionary of shares of household expenditures
     """
+    alpha_c = {}
     overall_sum = 0
     for key, value in cons_dict.items():
         # note the subtraction of the row to focus on domestic consumption
-        categroy_total = (
+        category_total = (
             SAM.loc[SAM.index.isin(value), "total"].sum()
             - SAM.loc[SAM.index.isin(value), "row"].sum()
         )
-        alpha_c[key] = categroy_total
-        overall_sum += categroy_total
+        alpha_c[key] = category_total
+        overall_sum += category_total
     for key, value in cons_dict.items():
         alpha_c[key] = alpha_c[key] / overall_sum
 
     return alpha_c
 
 
-def get_io_matrix(SAM, cons_dict=CONS_DICT, prod_dict=PROD_DICT):
+def get_io_matrix(SAM=SAM, cons_dict=CONS_DICT, prod_dict=PROD_DICT):
     """
     Calibrate the io_matrix array.  This array relates the share of each
     production category in each consumption category
