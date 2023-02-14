@@ -899,10 +899,12 @@ def get_pop_objs(E, S, T, curr_year, GraphDiag=False):
 
     """
     assert curr_year >= 2021
-    fert_rates = get_fert(E + S, start_year=curr_year)
-    mort_rates, infmort_rate = get_mort(E + S, start_year=curr_year)
+    most_recent_data_year = 2021
+    hardcode_start_year = min(curr_year, most_recent_data_year)
+    fert_rates = get_fert(E + S, start_year=hardcode_start_year)
+    mort_rates, infmort_rate = get_mort(E + S, start_year=hardcode_start_year)
     mort_rates_S = mort_rates[-S:]
-    imm_rates_orig = get_imm_resid(E + S, start_year=curr_year)
+    imm_rates_orig = get_imm_resid(E + S, start_year=hardcode_start_year)
     OMEGA_orig = np.zeros((E + S, E + S))
     OMEGA_orig[0, :] = (1 - infmort_rate) * fert_rates
     OMEGA_orig[1:, :-1] += np.diag(1 - mort_rates[:-1])
@@ -948,7 +950,6 @@ def get_pop_objs(E, S, T, curr_year, GraphDiag=False):
     pop_2021_EpS = pop_rebin(pop_2021, E + S)
     pop_2021_pct = pop_2021_EpS / pop_2021_EpS.sum()
     # Age most recent population data to the current year of analysis
-    most_recent_data_year = 2021
     pop_curr = pop_2020_EpS.copy()
     # pop_past = pop_2020_EpS.copy()
     if curr_year == most_recent_data_year:
