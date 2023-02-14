@@ -26,10 +26,10 @@ def main():
     # Directories to save data
     CUR_DIR = os.path.dirname(os.path.realpath(__file__))
     base_dir = os.path.join(
-        CUR_DIR, "OG-ZAF-Z_shock_Example", "OUTPUT_BASELINE"
+        CUR_DIR, "OG-ZAF-CIT_Example", "OUTPUT_BASELINE"
     )
     reform_dir = os.path.join(
-        CUR_DIR, "OG-ZAF-Z_shock_Example", "OUTPUT_REFORM"
+        CUR_DIR, "OG-ZAF-CIT_Example", "OUTPUT_REFORM"
     )
 
     """
@@ -64,7 +64,7 @@ def main():
         "etr_params": [[[0.35]]],
         "mtrx_params": [[[0.35]]],
         "mtry_params": [[[0.35]]],
-        "cit_rate": [[0.24, 0.24, 0.24, 0.24]],
+        "cit_rate": [[0.28, 0.28, 0.28, 0.28]],
         # order of industries is primary, energy, tertiary, secondary ex energy
         "Z": [[0.5, 0.4, 1.7, 1.0]],
         # Rick had good suggestion of using last successful run to find starting values and then keep churning.
@@ -94,15 +94,7 @@ def main():
 
     # additional parameters to change
     updated_params_ref = {
-        # "cit_rate": [[0.30]],
-        "Z": [
-            [1.0, 1.0, 1.0, 1.0],
-            [0.9, 1.0, 1.0, 1.0],
-            [0.9, 1.0, 1.0, 1.0],
-            [0.9, 1.0, 1.0, 1.0],
-            [0.95, 1.0, 1.0, 1.0],
-            [1.0, 1.0, 1.0, 1.0],
-        ],
+        "cit_rate": [[0.28, 0.28, 0.28, 0.28], [0.28, 0.28, 0.28, 0.28], [0.27, 0.27, 0.27, 0.27]],
     }
     p2.update_specifications(updated_params_ref)
 
@@ -140,12 +132,12 @@ def main():
     op.plot_all(
         base_dir,
         reform_dir,
-        os.path.join(CUR_DIR, "OG-ZAF_multi_industry_plots"),
+        os.path.join(CUR_DIR, "OG-ZAF_CIT_multi_industry_plots"),
     )
 
     print("Percentage changes in aggregates:", ans)
     # save percentage change output to csv file
-    ans.to_csv("ogzaf_multi_industry_output.csv")
+    ans.to_csv("ogzaf_CIT_multi_industry_output.csv")
 
 
 if __name__ == "__main__":
