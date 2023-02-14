@@ -1,6 +1,7 @@
 from ogzaf import demographics
 from ogzaf import macro_params
 from ogzaf import income
+from ogzaf import input_output as io
 import os
 import numpy as np
 from ogcore import txfunc
@@ -45,6 +46,22 @@ class Calibration:
 
         # Macro estimation
         self.macro_params = macro_params.get_macro_params()
+
+        # io matrix and alpha_c
+        if p.I > 1:  # no need if just one consumption good
+            alpha_c_dict = io.get_alpha_c()
+            # check that model dimensions are consistent with alpha_c
+            assert p.I == len(list(alpha_c_dict.keys()))
+            self.alpha_c = np.array(list(alpha_c_dict.values()))
+        else:
+            self.alpha_c = np.array([1.0])
+        if p.M > 1:  # no need if just one production good
+            io_df = io.get_io_matrix()
+            # check that model dimensions are consistent with io_matrix
+            assert p.M == len(list(io_df.keys()))
+            self.io_matrix = io_df.values
+        else:
+            self.io_matrix = np.array([[1.0]])
 
         # eta estimation
         # self.eta = transfer_distribution.get_transfer_matrix()
@@ -372,6 +389,8 @@ class Calibration:
         # dict["zeta"] = self.zeta
         dict.update(self.macro_params)
         dict["e"] = self.e
+        dict["alpha_c"] = self.alpha_c
+        dict["io_matrix"] = self.io_matrix
         dict.update(self.demographic_params)
 
         return dict
