@@ -25,12 +25,8 @@ def main():
 
     # Directories to save data
     CUR_DIR = os.path.dirname(os.path.realpath(__file__))
-    base_dir = os.path.join(
-        CUR_DIR, "OG-ZAF-CIT_Example", "OUTPUT_BASELINE"
-    )
-    reform_dir = os.path.join(
-        CUR_DIR, "OG-ZAF-CIT_Example", "OUTPUT_REFORM"
-    )
+    base_dir = os.path.join(CUR_DIR, "OG-ZAF-CIT_Example", "OUTPUT_BASELINE")
+    reform_dir = os.path.join(CUR_DIR, "OG-ZAF-CIT_Example", "OUTPUT_REFORM")
 
     """
     ---------------------------------------------------------------------------
@@ -94,7 +90,11 @@ def main():
 
     # additional parameters to change
     updated_params_ref = {
-        "cit_rate": [[0.28, 0.28, 0.28, 0.28], [0.28, 0.28, 0.28, 0.28], [0.27, 0.27, 0.27, 0.27]],
+        "cit_rate": [
+            [0.28, 0.28, 0.28, 0.28],
+            [0.28, 0.28, 0.28, 0.28],
+            [0.27, 0.27, 0.27, 0.27],
+        ],
     }
     p2.update_specifications(updated_params_ref)
 
