@@ -95,6 +95,7 @@ def main():
             [0.28, 0.28, 0.28, 0.28],
             [0.27, 0.27, 0.27, 0.27],
         ],
+        "baseline_spending": True,
     }
     p2.update_specifications(updated_params_ref)
 
