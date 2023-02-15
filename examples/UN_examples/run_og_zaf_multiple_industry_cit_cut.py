@@ -45,8 +45,11 @@ def main():
         json.load(
             open(
                 os.path.join(
-                    CUR_DIR, "..", "..", "ogzaf",
-                    "ogzaf_default_parameters.json"
+                    CUR_DIR,
+                    "..",
+                    "..",
+                    "ogzaf",
+                    "ogzaf_default_parameters.json",
                 )
             )
         )
