@@ -1709,7 +1709,7 @@
     "replacement_rate_adjust": [1.0],
     "budget_balance": false,
     "baseline_spending": false,
-    "start_year": 2021,
+    "start_year": 2023,
     "tax_func_type": "linear",
     "nu": 0.4,
     "maxiter": 250,
