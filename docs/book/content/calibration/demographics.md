@@ -59,7 +59,7 @@ We discuss the approach to estimating fertility rates $f_s$, mortality rates $\r
 (SecDemogMort)=
 ## Mortality rates
 
-  The mortality rates in our model $\rho_s$ are a one-period hazard rate and represent the probability of dying within one year, given that an household is alive at the beginning of period $s$. We assume that the mortality rates for each age cohort $\rho_s$ are constant across time. These data come from the United Nations Population Data Portal API for UN population data (see https://population.un.org/dataportal/about/dataapi). The model uses neonatal mortality rates (deaths per 1,000 live births, divided by 1,0000) from World Bank World Development Indicators, available at https://data.worldbank.org/indicator/SH.DYN.NMRT
+  The mortality rates in our model $\rho_s$ are a one-period hazard rate and represent the probability of dying within one year, given that an household is alive at the beginning of period $s$. We assume that the mortality rates for each age cohort $\rho_s$ are constant across time. These data come from the United Nations Population Data Portal API for UN population data (see https://population.un.org/dataportal/about/dataapi). The model uses neonatal mortality rates (deaths per 1,000 live births, divided by 1,000) from World Bank World Development Indicators, available at https://data.worldbank.org/indicator/SH.DYN.NMRT
   
   The mortality rates are a population-weighted average of the male and female mortality rates reported by United Nations. The maximum age in years in our model is truncated to 100-years old. In addition, we constrain the mortality rate to be 1.0 or 100 percent at the maximum age of 100.
 
