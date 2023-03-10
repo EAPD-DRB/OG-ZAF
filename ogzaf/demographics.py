@@ -46,6 +46,7 @@ def get_un_fert_data(
     country_id: str = "710",
     start_year: int = 2021,
     end_year: int = None,
+    variant: int = 4,
     download: bool = True,
 ) -> pd.DataFrame:
     """
@@ -58,6 +59,7 @@ def get_un_fert_data(
         country_id (str): 3-digit country id (numerical)
         start_year (int): beginning year of the data
         end_year (int or None): end year of the data
+        variant (int): model variant used by the UN to generate forecasted data. Default is "median" (4).
         download (bool): whether to download the data from the UN Data Portal.
             If False, a path must be specified in the path_folder argument.
         path_folder (None or str): string path to folder where data are stored
@@ -104,16 +106,27 @@ def get_un_fert_data(
         pop_target,
         sep="|",
         header=1,
-        usecols=["TimeLabel", "SexId", "Sex", "AgeStart", "Value"],
+        usecols=[
+            "TimeLabel",
+            "SexId",
+            "Sex",
+            "AgeStart",
+            "Value",
+            "VariantId",
+        ],
         float_precision="round_trip",
     )
     fert_rates_df = pd.read_csv(
         fert_target,
         sep="|",
         header=1,
-        usecols=["TimeLabel", "AgeStart", "Value"],
+        usecols=["TimeLabel", "AgeStart", "Value", "VariantId"],
         float_precision="round_trip",
     )
+
+    # Filter pop_df and fert_rates_df to only keep observations where VariantId=variant
+    pop_df = pop_df.loc[pop_df["VariantId"] == variant]
+    fert_rates_df = fert_rates_df.loc[fert_rates_df["VariantId"] == variant]
 
     # Rename variables in the population and fertility rates data
     pop_df.rename(
@@ -165,6 +178,7 @@ def get_un_mort_data(
     country_id: str = "710",
     start_year: int = 2021,
     end_year: int = None,
+    variant: int = 4,
     download: bool = True,
 ) -> pd.DataFrame:
     """
@@ -178,6 +192,7 @@ def get_un_mort_data(
         country_id (str): 3-digit country id (numerical)
         start_year (int): beginning year of the data
         end_year (int or None): end year of the data
+        variant (int): model variant used by the UN to generate forecasted data. Default is "median" (4).
         download (bool): whether to download the data from the UN Data Portal.
             If False, a path must be specified in the path_folder argument.
         path_folder (None or str): string path to folder where data are stored
@@ -243,23 +258,44 @@ def get_un_mort_data(
         pop_target,
         sep="|",
         header=1,
-        usecols=["TimeLabel", "SexId", "Sex", "AgeStart", "Value"],
+        usecols=[
+            "TimeLabel",
+            "SexId",
+            "Sex",
+            "AgeStart",
+            "Value",
+            "VariantId",
+        ],
         float_precision="round_trip",
     )
     infmort_rate_df = pd.read_csv(
         infmort_target,
         sep="|",
         header=1,
-        usecols=["TimeLabel", "SexId", "Sex", "Value"],
+        usecols=["TimeLabel", "SexId", "Sex", "Value", "VariantId"],
         float_precision="round_trip",
     )
     deaths_df = pd.read_csv(
         deaths_target,
         sep="|",
         header=1,
-        usecols=["TimeLabel", "SexId", "Sex", "AgeStart", "Value"],
+        usecols=[
+            "TimeLabel",
+            "SexId",
+            "Sex",
+            "AgeStart",
+            "Value",
+            "VariantId",
+        ],
         float_precision="round_trip",
     )
+
+    # Filter pop_df, infmort_rate_df, and deaths_df to only keep observations where VariantId=variant
+    pop_df = pop_df.loc[pop_df["VariantId"] == variant]
+    infmort_rate_df = infmort_rate_df.loc[
+        infmort_rate_df["VariantId"] == variant
+    ]
+    deaths_df = deaths_df.loc[deaths_df["VariantId"] == variant]
 
     # Rename variables in the population and mortality rates data
     pop_df.rename(
@@ -327,7 +363,7 @@ def get_wb_infmort_rate(
 ) -> np.float64:
     """
     Get World Bank infant mortality rate measure from neonatal mortality rate
-    (deaths per 1,000 live births, divided by 1,0000)
+    (deaths per 1,000 live births, divided by 1,000)
     https://data.worldbank.org/indicator/SH.DYN.NMRT
 
     Args:
@@ -364,6 +400,7 @@ def get_un_pop_data(
     country_id: str = "710",
     start_year: int = 2021,
     end_year: int = None,
+    variant: int = 4,
     download: bool = True,
 ) -> pd.DataFrame:
     """
@@ -376,6 +413,7 @@ def get_un_pop_data(
         country_id (str): 3-digit country id (numerical)
         start_year (int): beginning year of the data
         end_year (int): end year of the data
+        variant (int): model variant used by the UN to generate forecasted data. Default is "median" (4).
         download (bool): whether to download the data from the UN Data Portal.
             If False, a path must be specified in the path_folder argument.
         path_folder (None or str): string path to folder where data are stored
@@ -408,9 +446,19 @@ def get_un_pop_data(
         pop_target,
         sep="|",
         header=1,
-        usecols=["TimeLabel", "SexId", "Sex", "AgeStart", "Value"],
+        usecols=[
+            "TimeLabel",
+            "SexId",
+            "Sex",
+            "AgeStart",
+            "Value",
+            "VariantId",
+        ],
         float_precision="round_trip",
     )
+
+    # Filter pop_df to only keep observations where VariantId=variant
+    pop_df = pop_df.loc[pop_df["VariantId"] == variant]
 
     # Rename variables in the population and fertility rates data
     pop_df.rename(
