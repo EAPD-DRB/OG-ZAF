@@ -25,14 +25,15 @@ Differences among workers' productivity in terms of ability is one of the key di
 
 In this specification, $w_t$ is an equilibrium wage representing a portion of labor income that is common to all workers. Individual quantity of labor supply is $n_{j,s,t}$, and $e_{j,s}$ represents a labor productivity factor that augments or diminishes the productivity of a worker's labor supply relative to average productivity.
 
-We calibrate deterministic ability paths such that each lifetime income group has a different life-cycle profile of earnings. The distribution on income and wealth are often focal components of macroeconomic models.These calibrations require the use of micro data of incomes, but this level of data is not readily available for South Africa from public sources or surveys. To overcome this, we start with the proposition that estimated productivity curves calibrated for USA, generated from micro-level earnings data, represent a generalized relationship between age and lifetime income {cite}`DeBackerEtAl:2017`. As such, our objective is to generate the curves for the U.S. and then adjust their generalized shapes to produce those for South Africa. In other words, our strategic approach is to apply South Africa's national distribution of income by age to the estimated U.S. data on income by age, and then use these re-distributed data to re-estimate the earning profile curves and use them for South Africa. This is done in two ways (in this order): 
-  1. Adjustment by income (J): adjust the gaps between the U.S. curves to match South Africa's distribution between the J-income groups, using data from the World Inequality Database (WID);
-  1. Adjustment by age (S): adjust the shape of all the U.S. curves to match South Africa's national distribution of income per capita for each age year, using data from the National Transfer Accounts database (NTA).
+We calibrate deterministic ability paths such that each lifetime income group has a different life-cycle profile of earnings. The distribution of income and wealth are often focal components of macroeconomic models. These calibrations require the use of microeconomic data on household incomes, but this level of data is not readily available for South Africa from public sources or surveys. To overcome this, we start with the proposition that estimated productivity curves calibrated for the [OG-USA](https://pslmodels.github.io/OG-USA/content/calibration/earnings.html) model, generated from micro-level earnings data, represent a generalized relationship between age and lifetime income {cite}`DeBackerEtAl:2017`. As such, our objective is to generate the curves for the U.S. and then adjust their generalized shapes to produce those for South Africa. In other words, our strategic approach is to apply South Africa's national distribution of income by age to the estimated U.S. data on income by age, and then use these re-distributed data to re-estimate the earning profile curves and use them for South Africa. This is done in two ways (in this order):
+  1. Adjustment by income ($J$): adjust the gaps between the U.S. curves to match South Africa's distribution between the $J$-income groups, using data from the World Inequality Database (WID);
+  2. Adjustment by age ($S$): adjust the shape of all the U.S. curves to match South Africa's national distribution of income per capita for each age year, using data from the National Transfer Accounts database (NTA).
+
 The data for the U.S. come from the U.S. Internal Revenue Services's (IRS) Statistics of Income program (SOI) Continuous Work History Sample (CWHS). {cite}`DeBackerEtAl:2017` match the SOI data with Social Security Administration (SSA) data on age and Current Population Survey (CPS) data on hours in order to generate a non-top-coded measure of hourly wage. See {cite}`DeBackerRamnath:2017` for a detailed description of the methodology.
 
 ```{figure} ./images/ability_log_2D_ZAF.png
 ---
-height: 500px
+height: 350px
 name: FigLogAbil
 ---
 Exogenous life cycle income ability paths $\log(e_{j,s})$ with $S=80$ and $J=7$
@@ -155,7 +156,7 @@ We calibrate the model such that each lifetime income group has a different life
     \lambda_{j}=[0.25, 0.25, 0.2, 0.1, 0.1, 0.09, 0.01]
   ```
 
-  That is, lifetime income group one includes those in below the 25th percentile, group two includes those from the 25th to the median, group three includes those from the median to the 70th percentile, group four includes those from the 70th to the 80th percentile, group 5 includes those from the 80th to 90th percentile, group 6 includes those from the 90th to 99th percentile, and group 7 consists of the top one percent in the lifetime income distribution. 
+  That is, lifetime income group one includes those in below the 25th percentile, group two includes those from the 25th to the median, group three includes those from the median to the 70th percentile, group four includes those from the 70th to the 80th percentile, group 5 includes those from the 80th to 90th percentile, group 6 includes those from the 90th to 99th percentile, and group 7 consists of the top one percent in the lifetime income distribution.
 
 
   To get a life-cycle profile of effective labor units for each group, we estimate the wage profile for each lifetime income group. We do this by estimating the following regression model Equation {eq}`` separately for each lifetime income group using data on actual (not imputed) wages:
