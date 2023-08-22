@@ -27,6 +27,10 @@ import scipy.optimize as opt
 from ogcore import parameter_plots as pp
 from pandas_datareader import wb
 import matplotlib.pyplot as plt
+import requests
+import urllib3
+import ssl
+from io import StringIO
 
 # create output director for figures
 CUR_PATH = os.path.split(os.path.abspath(__file__))[0]
@@ -40,6 +44,35 @@ if os.access(OUTPUT_DIR, os.F_OK) is False:
 Define functions
 ------------------------------------------------------------------------
 """
+
+"""
+The UN Data Portal server doesn't support "RFC 5746 secure renegotiation". This causes and error when the client is using OpenSSL 3, which enforces that standard by default.
+The fix is to create a custom SSL context that allows for legacy connections. This defines a function get_legacy_session() that should be used instead of requests().
+"""
+
+
+class CustomHttpAdapter(requests.adapters.HTTPAdapter):
+    # "Transport adapter" that allows us to use custom ssl_context.
+
+    def __init__(self, ssl_context=None, **kwargs):
+        self.ssl_context = ssl_context
+        super().__init__(**kwargs)
+
+    def init_poolmanager(self, connections, maxsize, block=False):
+        self.poolmanager = urllib3.poolmanager.PoolManager(
+            num_pools=connections,
+            maxsize=maxsize,
+            block=block,
+            ssl_context=self.ssl_context,
+        )
+
+
+def get_legacy_session():
+    ctx = ssl.create_default_context(ssl.Purpose.SERVER_AUTH)
+    ctx.options |= 0x4  # OP_LEGACY_SERVER_CONNECT  #in Python 3.12 you will be able to switch from 0x4 to ssl.OP_LEGACY_SERVER_CONNECT.
+    session = requests.session()
+    session.mount("https://", CustomHttpAdapter(ctx))
+    return session
 
 
 def get_un_fert_data(
@@ -73,7 +106,7 @@ def get_un_fert_data(
     fert_code = "68"
 
     if download:
-        pop_target = (
+        pop_url = (
             "https://population.un.org/dataportalapi/api/v1/data/indicators/"
             + pop_code
             + "/locations/"
@@ -84,7 +117,16 @@ def get_un_fert_data(
             + str(end_year)
             + "?format=csv"
         )
-        fert_target = (
+        response = get_legacy_session().get(pop_url)
+        # Check if the request was successful before processing
+        if response.status_code == 200:
+            pop_target = StringIO(response.text)
+        else:
+            print(
+                f"Failed to retrieve population data. HTTP status code: {response.status_code}"
+            )
+
+        fert_url = (
             "https://population.un.org/dataportalapi/api/v1/data/indicators/"
             + fert_code
             + "/locations/"
@@ -95,6 +137,14 @@ def get_un_fert_data(
             + str(end_year)
             + "?format=csv"
         )
+        response = get_legacy_session().get(fert_url)
+        # Check if the request was successful before processing
+        if response.status_code == 200:
+            fert_target = StringIO(response.text)
+        else:
+            print(
+                f"Failed to retrieve fertility data. HTTP status code: {response.status_code}"
+            )
     else:
         pop_target = os.path.join(DATA_DIR, "un_zaf_pop.csv")
         fert_target = os.path.join(DATA_DIR, "un_zaf_fert.csv")
@@ -200,7 +250,7 @@ def get_un_mort_data(
     infmort_code = "22"
 
     if download:
-        pop_target = (
+        pop_url = (
             "https://population.un.org/dataportalapi/api/v1/data/indicators/"
             + pop_code
             + "/locations/"
@@ -211,7 +261,16 @@ def get_un_mort_data(
             + str(end_year)
             + "?format=csv"
         )
-        infmort_target = (
+        response = get_legacy_session().get(pop_url)
+        # Check if the request was successful before processing
+        if response.status_code == 200:
+            pop_target = StringIO(response.text)
+        else:
+            print(
+                f"Failed to retrieve population data. HTTP status code: {response.status_code}"
+            )
+
+        infmort_url = (
             "https://population.un.org/dataportalapi/api/v1/data/indicators/"
             + infmort_code
             + "/locations/"
@@ -222,7 +281,16 @@ def get_un_mort_data(
             + str(end_year)
             + "?format=csv"
         )
-        deaths_target = (
+        response = get_legacy_session().get(infmort_url)
+        # Check if the request was successful before processing
+        if response.status_code == 200:
+            infmort_target = StringIO(response.text)
+        else:
+            print(
+                f"Failed to retrieve infant mortality data. HTTP status code: {response.status_code}"
+            )
+
+        deaths_url = (
             "https://population.un.org/dataportalapi/api/v1/data/indicators/"
             + deaths_code
             + "/locations/"
@@ -233,6 +301,14 @@ def get_un_mort_data(
             + str(end_year)
             + "?format=csv"
         )
+        response = get_legacy_session().get(deaths_url)
+        # Check if the request was successful before processing
+        if response.status_code == 200:
+            deaths_target = StringIO(response.text)
+        else:
+            print(
+                f"Failed to retrieve death data. HTTP status code: {response.status_code}"
+            )
     else:
         pop_target = os.path.join(DATA_DIR, "un_zaf_pop.csv")
         infmort_target = os.path.join(DATA_DIR, "un_zaf_infmort.csv")
@@ -389,7 +465,7 @@ def get_un_pop_data(
     pop_code = "47"
 
     if download:
-        pop_target = (
+        pop_url = (
             "https://population.un.org/dataportalapi/api/v1/data/indicators/"
             + pop_code
             + "/locations/"
@@ -400,6 +476,14 @@ def get_un_pop_data(
             + str(end_year)
             + "?format=csv"
         )
+        response = get_legacy_session().get(pop_url)
+        # Check if the request was successful before processing
+        if response.status_code == 200:
+            pop_target = StringIO(response.text)
+        else:
+            print(
+                f"Failed to retrieve population data. HTTP status code: {response.status_code}"
+            )
     else:
         pop_target = os.path.join(DATA_DIR, "un_zaf_pop.csv")
 
@@ -412,7 +496,7 @@ def get_un_pop_data(
         float_precision="round_trip",
     )
 
-    # Rename variables in the population and fertility rates data
+    # Rename variables in the population data
     pop_df.rename(
         columns={
             "TimeLabel": "year",
