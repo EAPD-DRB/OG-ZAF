@@ -11,6 +11,8 @@ import pandas as pd
 import numpy as np
 import datetime
 import statsmodels.api as sm
+from ogzaf import utils
+from io import StringIO
 
 
 def get_macro_params():
@@ -96,7 +98,16 @@ def get_macro_params():
         + "&format=csv"
     )
 
-    df_temp = pd.read_csv(target)
+    response = get_legacy_session().get(target)
+
+    # Check if the request was successful before processing
+    if response.status_code == 200:
+        csv_content = StringIO(response.text)
+        df_temp = pd.read_csv(csv_content)
+    else:
+        print(
+            f"Failed to retrieve data. HTTP status code: {response.status_code}"
+        )
 
     un_data_a = df_temp[["TIME_PERIOD", "OBS_VALUE"]]
 
