@@ -6,6 +6,7 @@ import os
 import json
 import time
 import copy
+import numpy as np
 
 # from taxcalc import Calculator
 from ogzaf.calibrate import Calibration
@@ -54,9 +55,9 @@ def main():
     updated_params = c.get_dict()
     p.update_specifications(updated_params)
     updated_params_tax = {
-        "etr_params": [[[0.35]]],
-        "mtrx_params": [[[0.35]]],
-        "mtry_params": [[[0.35]]],
+        "etr_params": (np.ones((1, p.S, 1)) * 0.35).tolist(),
+        "mtrx_params": (np.ones((1, p.S, 1)) * 0.35).tolist(),
+        "mtry_params": (np.ones((1, p.S, 1)) * 0.35).tolist(),
     }
     p.update_specifications(updated_params_tax)
 
