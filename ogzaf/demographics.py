@@ -27,8 +27,7 @@ import scipy.optimize as opt
 from ogcore import parameter_plots as pp
 from pandas_datareader import wb
 import matplotlib.pyplot as plt
-import requests
-from ogzaf import utils
+from ogzaf.utils import get_legacy_session
 from io import StringIO
 
 # create output director for figures
