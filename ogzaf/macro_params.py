@@ -11,7 +11,7 @@ import pandas as pd
 import numpy as np
 import datetime
 import statsmodels.api as sm
-from ogzaf import utils
+from ogzaf.utils import get_legacy_session
 from io import StringIO
 
 
