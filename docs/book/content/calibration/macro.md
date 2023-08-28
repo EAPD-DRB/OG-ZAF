@@ -30,8 +30,7 @@ The [OG-Core firm theory documentation](https://pslmodels.github.io/OG-Core/cont
 
 ### Capital's share of output
 
-Here, we use a value of $\gamma =1.0$ from the UN Data Portal API (see https://data.un.org).
-
+Here, we use a default value of $\gamma =0.61$.
 
 ## Open Economy Parameters
 
