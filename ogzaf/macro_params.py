@@ -88,7 +88,7 @@ def get_macro_params():
     """
 
     target = (
-        "https://data.un.org/ws/rest/data/IAEG-SDGs,DF_SDG_GLH,1.10/"
+        "https://data.un.org/ws/rest/data/IAEG-SDGs,DF_SDG_GLH/"
         + "..SL_EMP_GTOTL.710..........."
         + "?startPeriod="
         + str(start.year)

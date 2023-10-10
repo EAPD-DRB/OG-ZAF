@@ -2,11 +2,11 @@ name: ogzaf-dev
 channels:
 - conda-forge
 dependencies:
-- python>=3.7.7, <=3.11  # This restriction can be removed as soon as these packages support Python 3.10
+- python>=3.7.7
 - ipython
 - setuptools
 - psutil
-- numpy<=1.21.2  # This restriction can be removed as soon as Numba supports NumPy 1.22
+- numpy
 - scipy>=1.7.1
 - pandas>=1.2.5
 - matplotlib
@@ -25,7 +25,7 @@ dependencies:
 - coverage
 - requests
 - xlwt
-- openpyxl=3.1.0
+- openpyxl>=3.1.2
 - statsmodels
 - linearmodels
 - black
