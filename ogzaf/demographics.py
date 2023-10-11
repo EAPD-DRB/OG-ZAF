@@ -479,7 +479,9 @@ def get_un_pop_data(
     return pop_df
 
 
-def get_fert(totpers, start_year=2021, end_year=None, download=False, graph=False):
+def get_fert(
+    totpers, start_year=2021, end_year=None, download=False, graph=False
+):
     """
     This function generates a vector of fertility rates by model period
     age that corresponds to the fertility rate data by age in years.
@@ -589,7 +591,9 @@ def get_fert(totpers, start_year=2021, end_year=None, download=False, graph=Fals
     return fert_rates
 
 
-def get_mort(totpers, start_year=2021, end_year=None, download=True, graph=False):
+def get_mort(
+    totpers, start_year=2021, end_year=None, download=True, graph=False
+):
     """
     This function generates a vector of mortality rates by model period
     age. Source: UN Population Data portal.
@@ -948,8 +952,12 @@ def get_pop_objs(E, S, T, curr_year, download=False, GraphDiag=False):
     assert curr_year >= 2021
     most_recent_data_year = 2021
     hardcode_start_year = min(curr_year, most_recent_data_year)
-    fert_rates = get_fert(E + S, start_year=hardcode_start_year, download=download)
-    mort_rates, infmort_rate = get_mort(E + S, start_year=hardcode_start_year, download=download)
+    fert_rates = get_fert(
+        E + S, start_year=hardcode_start_year, download=download
+    )
+    mort_rates, infmort_rate = get_mort(
+        E + S, start_year=hardcode_start_year, download=download
+    )
     mort_rates_S = mort_rates[-S:]
     imm_rates_orig = get_imm_resid(E + S, start_year=hardcode_start_year)
     OMEGA_orig = np.zeros((E + S, E + S))
