@@ -479,7 +479,9 @@ def get_un_pop_data(
     return pop_df
 
 
-def get_fert(totpers, start_year=2021, end_year=None, graph=False):
+def get_fert(
+    totpers, start_year=2021, end_year=None, download=False, graph=False
+):
     """
     This function generates a vector of fertility rates by model period
     age that corresponds to the fertility rate data by age in years.
@@ -503,7 +505,7 @@ def get_fert(totpers, start_year=2021, end_year=None, graph=False):
     ages_15_49 = np.arange(15, 50)
     fert_rates_15_49 = (
         get_un_fert_data(
-            start_year=start_year, end_year=end_year, download=False
+            start_year=start_year, end_year=end_year, download=download
         )["fert_rate"]
         .to_numpy()
         .flatten()
@@ -539,7 +541,7 @@ def get_fert(totpers, start_year=2021, end_year=None, graph=False):
         # Create population weighted average fertility rates across bins
         # Get population data for ages 1-100
         pop_df = get_un_pop_data(
-            start_year=start_year, end_year=end_year, download=False
+            start_year=start_year, end_year=end_year, download=download
         )
         pop_1_100 = (
             pop_df[((pop_df["age"] < 100) & (pop_df["sex_num"] == 3))]["pop"]
@@ -589,7 +591,9 @@ def get_fert(totpers, start_year=2021, end_year=None, graph=False):
     return fert_rates
 
 
-def get_mort(totpers, start_year=2021, end_year=None, graph=False):
+def get_mort(
+    totpers, start_year=2021, end_year=None, download=True, graph=False
+):
     """
     This function generates a vector of mortality rates by model period
     age. Source: UN Population Data portal.
@@ -612,7 +616,7 @@ def get_mort(totpers, start_year=2021, end_year=None, graph=False):
 
     # Get UN infant mortality and mortality rate data by age
     un_infmort_rate_df, mort_rates_df = get_un_mort_data(
-        start_year=start_year, end_year=end_year, download=False
+        start_year=start_year, end_year=end_year, download=download
     )
     un_infmort_rate = un_infmort_rate_df["infmort_rate"][
         un_infmort_rate_df["sex_num"] == 3
@@ -623,11 +627,11 @@ def get_mort(totpers, start_year=2021, end_year=None, graph=False):
     most_recent_wb_infmort_datayear = 2020
     if start_year > most_recent_wb_infmort_datayear:
         wb_infmort_rate = get_wb_infmort_rate(
-            start_year=most_recent_wb_infmort_datayear, download=False
+            start_year=most_recent_wb_infmort_datayear, download=download
         )
     else:
         wb_infmort_rate = get_wb_infmort_rate(
-            start_year=start_year, download=False
+            start_year=start_year, download=download
         )
     infmort_rate = wb_infmort_rate
     if totpers == 100:
@@ -913,7 +917,7 @@ def immsolve(imm_rates, *args):
     return omega_errs
 
 
-def get_pop_objs(E, S, T, curr_year, GraphDiag=False):
+def get_pop_objs(E, S, T, curr_year, download=False, GraphDiag=False):
     """
     This function produces the demographics objects to be used in the OG-ZAF
     model package.
@@ -948,8 +952,12 @@ def get_pop_objs(E, S, T, curr_year, GraphDiag=False):
     assert curr_year >= 2021
     most_recent_data_year = 2021
     hardcode_start_year = min(curr_year, most_recent_data_year)
-    fert_rates = get_fert(E + S, start_year=hardcode_start_year)
-    mort_rates, infmort_rate = get_mort(E + S, start_year=hardcode_start_year)
+    fert_rates = get_fert(
+        E + S, start_year=hardcode_start_year, download=download
+    )
+    mort_rates, infmort_rate = get_mort(
+        E + S, start_year=hardcode_start_year, download=download
+    )
     mort_rates_S = mort_rates[-S:]
     imm_rates_orig = get_imm_resid(E + S, start_year=hardcode_start_year)
     OMEGA_orig = np.zeros((E + S, E + S))
@@ -969,7 +977,7 @@ def get_pop_objs(E, S, T, curr_year, GraphDiag=False):
 
     # Generate time path of the nonstationary population distribution
     omega_path_lev = np.zeros((E + S, T + S))
-    pop_df = get_un_pop_data(start_year=2019, end_year=2021, download=False)
+    pop_df = get_un_pop_data(start_year=2019, end_year=2021, download=download)
     pop_2020 = (
         pop_df["pop"][
             (
