@@ -6,7 +6,7 @@ install:
 	pip install -e .
 test:
 	pip install pytest-cov
-    pip install pytest-pycodestyle
+	pip install pytest-pycodestyle
 	pytest -m 'not local' --cov=./ --cov-report=xml
 documentation:
 	jupyter-book clean docs/book
