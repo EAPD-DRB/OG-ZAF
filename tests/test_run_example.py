@@ -12,7 +12,7 @@ from pathlib import Path
 import pytest
 
 
-def call_run_og_usa():
+def call_run_og_zaf():
     cur_path = os.path.split(os.path.abspath(__file__))[0]
     path = Path(cur_path)
     roe_fldr = os.path.join(path, "..", "examples")
@@ -27,7 +27,7 @@ def call_run_og_usa():
 
 
 @pytest.mark.local
-def test_run_og_usa(f=call_run_og_zaf):
+def test_run_og_zaf(f=call_run_og_zaf):
     p = multiprocessing.Process(target=f, name="run_og_zaf", args=())
     p.start()
     time.sleep(300)
