@@ -38,6 +38,7 @@ envs/
 *dask-worker-space*
 .ipynb_checkpoints*
 */__pycache__/*
+*.coverage*
 docs/book/_build/*
 */OG-ZAF_example_plots/*
 *ogzaf_example_output.csv
