@@ -26,7 +26,6 @@ dependencies:
 - statsmodels
 - linearmodels
 - black
-- linecheck
 - jupyter
 - ipython
 - setuptools
@@ -34,4 +33,5 @@ dependencies:
   - jupyter-book>=0.9.1
   - openpyxl>=3.1.2
   - pandas-datareader
+  - linecheck
   - ogcore
