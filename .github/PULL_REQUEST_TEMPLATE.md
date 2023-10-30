@@ -2,17 +2,6 @@ Thanks for contributing! Please remove any top-level sections that do not apply 
 
 - [ ] `make format` and `make documentation` has been run. (You may also want to run `make test`.)
 
-# New variable
-
-- [ ] Label field added
-- [ ] Documentation field added
-- [ ] Unit field added
-- [ ] Default value field added if relevant
-- [ ] Variable name follows conventions
-- [ ] Unit test(s) added
-- [ ] Integration test(s) added if relevant
-- [ ] Issues this PR fixes linked
-
 ## What's changed
 
 Description of the changes here.
