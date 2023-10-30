@@ -33,12 +33,7 @@ setup(
         "Issue Tracker": "https://github.com/EAPD-DRB/OG-ZAF/issues",
     },
     packages=["ogzaf"],
-    package_data={
-        "ogzaf": [
-            "ogusa_default_parameters.json",
-            "data/*"
-        ]
-    },
+    package_data={"ogzaf": ["ogusa_default_parameters.json", "data/*"]},
     include_packages=True,
     python_requires=">=3.7.7",
     install_requires=[
