@@ -1,48 +1,60 @@
 
+
 <!DOCTYPE html>
 
-<html>
+
+<html lang="en" >
+
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
     <title>Demographics Functions &#8212; OG-ZAF</title>
-    
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
-<link href="../../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+  <link href="../../_static/styles/theme.css?digest=c5ced968eda925caa686" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=c5ced968eda925caa686" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=c5ced968eda925caa686" rel="stylesheet" />
 
-    
-  <link rel="stylesheet"
-    href="../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
-  <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
-  <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+  
+  <link href="../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=c5ced968eda925caa686" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
 
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" href="../../_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" href="../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
-    
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=c5ced968eda925caa686" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=c5ced968eda925caa686" />
+  <script src="../../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=c5ced968eda925caa686"></script>
 
     <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
     <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../../_static/doctools.js"></script>
     <script src="../../_static/clipboard.min.js"></script>
     <script src="../../_static/copybutton.js"></script>
-    <script src="../../_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
     <script src="../../_static/togglebutton.js"></script>
-    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="../../_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
 const thebe_selector = ".thebe,.cell"
@@ -50,61 +62,103 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'content/api/demographics';</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Macro Parameter Estimation Functions" href="macro_params.html" />
     <link rel="prev" title="Main Calibration Functions" href="calibrate.html" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="docsearch:language" content="None">
-    
-
-    <!-- Google Analytics -->
-    
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
   </head>
-  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
-<!-- Checkboxes to toggle the left sidebar -->
-<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
-<label class="overlay overlay-navbar" for="__navigation">
-    <div class="visually-hidden">Toggle navigation sidebar</div>
-</label>
-<!-- Checkboxes to toggle the in-page toc -->
-<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
-<label class="overlay overlay-pagetoc" for="__page-toc">
-    <div class="visually-hidden">Toggle in-page Table of Contents</div>
-</label>
-<!-- Headers at the top -->
-<div class="announcement header-item noprint"></div>
-<div class="header header-item noprint"></div>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
 
-    
-    <div class="container-fluid" id="banner"></div>
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
 
-    
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
 
-    <div class="container-xl">
-      <div class="row">
-          
-<!-- Sidebar -->
-<div class="bd-sidebar noprint" id="site-navigation">
-    <div class="bd-sidebar__content">
-        <div class="bd-sidebar__top"><div class="navbar-brand-box">
-    <a class="navbar-brand text-wrap" href="../../index.html">
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
       
-        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+      <div class="bd-sidebar-primary bd-sidebar">
         
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="../intro/intro.html">
+  
+  
+  
+  
+  
+    
+    
       
-      
-      <img src="../../_static/OG-ZAF_logo.png" class="logo" alt="logo">
-      
-      
-      <h1 class="site-logo" id="site-title">OG-ZAF</h1>
-      
-    </a>
-</div><form class="bd-search d-flex align-items-center" action="../../search.html" method="get">
-  <i class="icon fas fa-search"></i>
-  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
-</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
-    <div class="bd-toc-item active">
+    
+    
+    <img src="../../_static/OG-ZAF_logo.png" class="logo__image only-light" alt="OG-ZAF - Home"/>
+    <script>document.write(`<img src="../../_static/OG-ZAF_logo.png" class="logo__image only-dark" alt="OG-ZAF - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
         
         <ul class="nav bd-sidenav bd-sidenav__home-link">
             <li class="toctree-l1">
@@ -113,371 +167,384 @@ const thebe_selector_output = ".output, .cell_output"
                 </a>
             </li>
         </ul>
-        <p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Contributing to OG-ZAF
- </span>
-</p>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contributing to OG-ZAF</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../contributing/contributor_guide.html">
-   Contributor Guide
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing/contributor_guide.html">Contributor Guide</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  OG-ZAF API
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">OG-ZAF API</span></p>
 <ul class="current nav bd-sidenav">
- <li class="toctree-l1 current active has-children">
-  <a class="reference internal" href="public_api.html">
-   API
-  </a>
-  <input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
-  <label for="toctree-checkbox-1">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul class="current">
-   <li class="toctree-l2">
-    <a class="reference internal" href="calibrate.html">
-     Main Calibration Functions
-    </a>
-   </li>
-   <li class="toctree-l2 current active">
-    <a class="current reference internal" href="#">
-     Demographics Functions
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="macro_params.html">
-     Macro Parameter Estimation Functions
-    </a>
-   </li>
-  </ul>
- </li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="public_api.html">API</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="calibrate.html">Main Calibration Functions</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Demographics Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="macro_params.html">Macro Parameter Estimation Functions</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Calibration
- </span>
-</p>
-<ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../calibration/exogenous_parameters.html">
-   Exogenous Parameters
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../calibration/macro.html">
-   Calibration of Macroeconomic Parameters
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../calibration/demographics.html">
-   Demographics
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../calibration/earnings.html">
-   Lifetime Earnings Profiles
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../calibration/tax_functions.html">
-   Tax Functions
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../calibration/bequests.html">
-   Bequest Process Calibration
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../calibration/UBI.html">
-   Universal Basic Income (UBI)
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../calibration/matching_lwi.html">
-   Matching Labor, Wealth, and Income Moments
-  </a>
- </li>
+</li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  References
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Calibration</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../OGZAF_references.html">
-   References
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../calibration/exogenous_parameters.html">Exogenous Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../calibration/macro.html">Calibration of Macroeconomic Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../calibration/demographics.html">Demographics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../calibration/earnings.html">Lifetime Earnings Profiles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../calibration/tax_functions.html">Tax Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../calibration/bequests.html">Bequest Process Calibration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../calibration/UBI.html">Universal Basic Income (UBI)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../calibration/matching_lwi.html">Matching Labor, Wealth, and Income Moments</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Citations of OG-ZAF
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">References</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../citations.html">
-   Citations and use cases of OG-ZAF
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../OGZAF_references.html">References</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Citations of OG-ZAF</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../citations.html">Citations and use cases of OG-ZAF</a></li>
 </ul>
 
     </div>
 </nav></div>
-        <div class="bd-sidebar__bottom">
-             <!-- To handle the deprecated key -->
-            
-            <div class="navbar_extra_footer">
-            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
-            </div>
-            
-        </div>
     </div>
-    <div id="rtd-footer-container"></div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/EAPD-DRB/OG-ZAF" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/EAPD-DRB/OG-ZAF/issues/new?title=Issue%20on%20page%20%2Fcontent/api/demographics.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
 </div>
 
 
-          
-
-
-          
-<!-- A tiny helper pixel to detect if we've scrolled -->
-<div class="sbt-scroll-pixel-helper"></div>
-<!-- Main content -->
-<div class="col py-0 content-container">
-    
-    <div class="header-article row sticky-top noprint">
-        
 
 
 
-<div class="col py-1 d-flex header-article-main">
-    <div class="header-article__left">
-        
-        <label for="__navigation"
-  class="headerbtn"
-  data-toggle="tooltip"
-data-placement="right"
-title="Toggle navigation"
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/content/api/demographics.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
 >
   
 
-<span class="headerbtn__icon-container">
-  <i class="fas fa-bars"></i>
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
   </span>
-
-</label>
-
-        
-    </div>
-    <div class="header-article__right">
-<button onclick="toggleFullScreen()"
-  class="headerbtn"
-  data-toggle="tooltip"
-data-placement="bottom"
-title="Fullscreen mode"
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
 >
   
 
-<span class="headerbtn__icon-container">
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
   <i class="fas fa-expand"></i>
   </span>
 
 </button>
 
-<div class="menu-dropdown menu-dropdown-repository-buttons">
-  <button class="headerbtn menu-dropdown__trigger"
-      aria-label="Source repositories">
-      <i class="fab fa-github"></i>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
   </button>
-  <div class="menu-dropdown__content">
-    <ul>
-      <li>
-        <a href="https://github.com/EAPD-DRB/OG-ZAF"
-   class="headerbtn"
-   data-toggle="tooltip"
-data-placement="left"
-title="Source repository"
->
-  
+`);
+</script>
 
-<span class="headerbtn__icon-container">
-  <i class="fab fa-github"></i>
-  </span>
-<span class="headerbtn__text-container">repository</span>
-</a>
-
-      </li>
-      
-      <li>
-        <a href="https://github.com/EAPD-DRB/OG-ZAF/issues/new?title=Issue%20on%20page%20%2Fcontent/api/demographics.html&body=Your%20issue%20content%20here."
-   class="headerbtn"
-   data-toggle="tooltip"
-data-placement="left"
-title="Open an issue"
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-lightbulb"></i>
-  </span>
-<span class="headerbtn__text-container">open issue</span>
-</a>
-
-      </li>
-      
-    </ul>
-  </div>
-</div>
-
-<div class="menu-dropdown menu-dropdown-download-buttons">
-  <button class="headerbtn menu-dropdown__trigger"
-      aria-label="Download this page">
-      <i class="fas fa-download"></i>
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
   </button>
-  <div class="menu-dropdown__content">
-    <ul>
-      <li>
-        <a href="../../_sources/content/api/demographics.rst"
-   class="headerbtn"
-   data-toggle="tooltip"
-data-placement="left"
-title="Download source file"
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-file"></i>
-  </span>
-<span class="headerbtn__text-container">.rst</span>
-</a>
-
-      </li>
-      
-      <li>
-        
-<button onclick="printPdf(this)"
-  class="headerbtn"
-  data-toggle="tooltip"
-data-placement="left"
-title="Print to PDF"
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-file-pdf"></i>
-  </span>
-<span class="headerbtn__text-container">.pdf</span>
-</button>
-
-      </li>
-      
-    </ul>
-  </div>
-</div>
-<label for="__page-toc"
-  class="headerbtn headerbtn-page-toc"
-  
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-list"></i>
-  </span>
-
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
 </label>
-
+</div></div>
+      
     </div>
+  
 </div>
-
-<!-- Table of contents -->
-<div class="col-md-3 bd-toc show noprint">
-    <div class="tocsection onthispage pt-5 pb-3">
-        <i class="fas fa-list"></i> Contents
-    </div>
-    <nav id="bd-toc-nav" aria-label="Page">
-        <ul class="visible nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#module-ogzaf.demographics">
-   ogzaf.demographics
-  </a>
- </li>
-</ul>
-
-    </nav>
 </div>
-    </div>
-    <div class="article row">
-        <div class="col pl-md-3 pl-lg-5 content-container">
-            <!-- Table of contents that is only displayed when printing the page -->
-            <div id="jb-print-docs-body" class="onlyprint">
-                <h1>Demographics Functions</h1>
-                <!-- Table of contents -->
-                <div id="print-main-content">
-                    <div id="jb-print-toc">
-                        
-                        <div>
-                            <h2> Contents </h2>
-                        </div>
-                        <nav aria-label="Page">
-                            <ul class="visible nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#module-ogzaf.demographics">
-   ogzaf.demographics
-  </a>
- </li>
-</ul>
+              
+              
 
-                        </nav>
-                    </div>
-                </div>
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Demographics Functions</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
             </div>
-            <main id="main-content" role="main">
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-ogzaf.demographics">ogzaf.demographics</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
                 
-              <div>
-                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
   <section id="demographics-functions">
-<span id="demographics"></span><h1>Demographics Functions<a class="headerlink" href="#demographics-functions" title="Permalink to this headline">#</a></h1>
+<span id="demographics"></span><h1>Demographics Functions<a class="headerlink" href="#demographics-functions" title="Permalink to this heading">#</a></h1>
 <p><strong>demographics.py modules</strong></p>
 <section id="module-ogzaf.demographics">
-<span id="ogzaf-demographics"></span><h2>ogzaf.demographics<a class="headerlink" href="#module-ogzaf.demographics" title="Permalink to this headline">#</a></h2>
+<span id="ogzaf-demographics"></span><h2>ogzaf.demographics<a class="headerlink" href="#module-ogzaf.demographics" title="Permalink to this heading">#</a></h2>
+<dl class="simple">
+<dt>This module contains the following functions:</dt><dd><p>get_un_fert_data()
+get_un_mort_data()
+get_wb_infmort_rate()
+get_un_pop_data()
+get_fert()
+get_mort()
+pop_rebin()
+get_imm_resid()
+immsolve()
+get_pop_objs()
+extrap_exp_3()
+extrap_arctan_3()
+ab_zero_eqs_exp_func()
+b_zero_eq_artctan_func()</p>
+</dd>
+</dl>
 <hr class="docutils" />
 <dl class="py function">
-<dt class="sig sig-object py" id="ogzaf.demographics.get_fert">
-<span class="sig-prename descclassname"><span class="pre">ogzaf.demographics.</span></span><span class="sig-name descname"><span class="pre">get_fert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">totpers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_yr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_yr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">graph</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/ogzaf/demographics.html#get_fert"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ogzaf.demographics.get_fert" title="Permalink to this definition">#</a></dt>
-<dd><p>This function generates a vector of fertility rates by model period
-age that corresponds to the fertility rate data by age in years.
-(Source: Office of the Registrar General &amp; Census Commissioner: See
-Statement [Table] 19 of
-<a class="reference external" href="http://www.censusindia.gov.in/vital_statistics/SRS_Report_2016/">http://www.censusindia.gov.in/vital_statistics/SRS_Report_2016/</a>
-7.Chap_3-Fertility_Indicators-2016.pdf)</p>
+<dt class="sig sig-object py" id="ogzaf.demographics.ab_zero_eqs_exp_func">
+<span class="sig-prename descclassname"><span class="pre">ogzaf.demographics.</span></span><span class="sig-name descname"><span class="pre">ab_zero_eqs_exp_func</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ab_vals</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/ogzaf/demographics.html#ab_zero_eqs_exp_func"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ogzaf.demographics.ab_zero_eqs_exp_func" title="Permalink to this definition">#</a></dt>
+<dd><p>”
+This function returns a vector of error values for the two zero equations
+in terms of parameters a and b for given values of a and b.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ogzaf.demographics.b_zero_eq_arctan_func">
+<span class="sig-prename descclassname"><span class="pre">ogzaf.demographics.</span></span><span class="sig-name descname"><span class="pre">b_zero_eq_arctan_func</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/ogzaf/demographics.html#b_zero_eq_arctan_func"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ogzaf.demographics.b_zero_eq_arctan_func" title="Permalink to this definition">#</a></dt>
+<dd><p>”
+This function returns a scalar error value of the univariate error function
+in parameter b for given values of b.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ogzaf.demographics.extrap_arctan_3">
+<span class="sig-prename descclassname"><span class="pre">ogzaf.demographics.</span></span><span class="sig-name descname"><span class="pre">extrap_arctan_3</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x_vals</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">con_slope</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_con</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_con</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_eps</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">low</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/ogzaf/demographics.html#extrap_arctan_3"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ogzaf.demographics.extrap_arctan_3" title="Permalink to this definition">#</a></dt>
+<dd><p>This function fits an arctangent function to extrapolate data that
+monotonically decrease to zero and start with small absolute slope, then
+absolute slope increases, then absolute slope decreases to zero. The
+arctangent function is the following with the three following identifying
+conditions:</p>
+<p>if extrapolating to the low end of the data:
+f(x) = (a / pi) * arctan(b * x + c) + (a / 2) s.t. a, b &gt; 0
+where f’(x) =  (a * b) / (pi * (1 + (b * x + c)^2))</p>
+<p>if extrapolating to the high end of the data:
+f(x) = (-a / pi) * arctan(b * x + c) + (a / 2) s.t. a, b &gt; 0
+where f’(x) =  (-a * b) / (pi * (1 + (b * x + c)^2))</p>
+<p>s.t.   (i) f(x_con) = y_con
+and   (ii) f’(x_con) = con_slope
+and  (iii) b * (2/3 * x_con + 1/3 * x_eps) + c = 0</p>
+<p>The solution to this problem can be reduced to finding the root of a
+univariate equation in the parameter b.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x_vals</strong> (<em>array_like</em>) – array of x values to be extrapolated</p></li>
+<li><p><strong>con_slope</strong> (<em>float</em>) – slope of the data at the connecting value</p></li>
+<li><p><strong>x_con</strong> (<em>float</em>) – x value at which the function must connect to the data</p></li>
+<li><p><strong>y_con</strong> (<em>float</em>) – y value at which the function must connect to the data</p></li>
+<li><p><strong>x_eps</strong> (<em>float</em>) – x value at which the function must be close to zero</p></li>
+<li><p><strong>low</strong> (<em>bool</em>) – If True, the function is fit to the low end of the data.
+If False, the function is fit to the high end of the data.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>extrapolated y values corresponding to x values</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>y_vals (array_like)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ogzaf.demographics.extrap_exp_3">
+<span class="sig-prename descclassname"><span class="pre">ogzaf.demographics.</span></span><span class="sig-name descname"><span class="pre">extrap_exp_3</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x_vals</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">con_val</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">con_slope</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps_val</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">low</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/ogzaf/demographics.html#extrap_exp_3"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ogzaf.demographics.extrap_exp_3" title="Permalink to this definition">#</a></dt>
+<dd><p>This function fits a smooth exponential extrapolation to either the low end
+of data or the high end of data, both of which are monotonically
+asymptoting to zero. For the exponential function extrapolation on both
+ends of the distribution, we use the function:</p>
+<p>f(x) = e ** (a * (x ** 2) + b * x + c)
+s.t.    (i) f(x_con) = y_con</p>
+<blockquote>
+<div><blockquote>
+<div><ol class="lowerroman simple" start="2">
+<li><p>f’(x_con) = con_slope</p></li>
+</ol>
+</div></blockquote>
+<ol class="lowerroman simple" start="3">
+<li><p>f’(x_eps) = eps_low (&gt;0) or eps_high (&lt;0)</p></li>
+</ol>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x_vals</strong> (<em>array_like</em>) – array of x values to be extrapolated</p></li>
+<li><p><strong>con_val</strong> (<em>tuple</em>) – (x, y) coordinate at which the function must connect
+to the data</p></li>
+<li><p><strong>con_slope</strong> (<em>float</em>) – slope of the data at the connecting value</p></li>
+<li><p><strong>eps_val</strong> (<em>tuple</em>) – (x, y) coordinate at which the function must be close
+to zero</p></li>
+<li><p><strong>low</strong> (<em>bool</em>) – If True, the function is fit to the low end of the data.
+If False, the function is fit to the high end of the data.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>extrapolated y values corresponding to x values</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>y_vals (array_like)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ogzaf.demographics.get_fert">
+<span class="sig-prename descclassname"><span class="pre">ogzaf.demographics.</span></span><span class="sig-name descname"><span class="pre">get_fert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">totpers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_year</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2021</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_year</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">download</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">graph</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/ogzaf/demographics.html#get_fert"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ogzaf.demographics.get_fert" title="Permalink to this definition">#</a></dt>
+<dd><p>This function generates a vector of fertility rates by model period
+age that corresponds to the fertility rate data by age in years.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>totpers</strong> (<em>int</em>) – total number of agent life periods (E+S), &gt;= 3</p></li>
-<li><p><strong>min_yr</strong> (<em>int</em>) – age in years at which agents are born, &gt;= 0</p></li>
-<li><p><strong>max_yr</strong> (<em>int</em>) – age in years at which agents die with certainty,
-&gt;= 4</p></li>
+<li><p><strong>start_year</strong> (<em>int</em>) – first year data to download</p></li>
+<li><p><strong>end_year</strong> (<em>int</em><em> or </em><em>None</em>) – end year data to download</p></li>
 <li><p><strong>graph</strong> (<em>bool</em>) – =True if want graphical output</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><dl class="simple">
 <dt>fertility rates for each model period</dt><dd><p>of life</p>
 </dd>
 </dl>
 </p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>fert_rates (Numpy array)</p>
 </dd>
 </dl>
@@ -485,30 +552,28 @@ Statement [Table] 19 of
 
 <dl class="py function">
 <dt class="sig sig-object py" id="ogzaf.demographics.get_imm_resid">
-<span class="sig-prename descclassname"><span class="pre">ogzaf.demographics.</span></span><span class="sig-name descname"><span class="pre">get_imm_resid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">totpers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_yr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_yr</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/ogzaf/demographics.html#get_imm_resid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ogzaf.demographics.get_imm_resid" title="Permalink to this definition">#</a></dt>
-<dd><p>Calculate immigration rates by age as a residual given population
-levels in different periods, then output average calculated
-immigration rate. We have to replace the first mortality rate in
-this function in order to adjust the first implied immigration rate
-Source: India Census, 2001 and 2011</p>
+<span class="sig-prename descclassname"><span class="pre">ogzaf.demographics.</span></span><span class="sig-name descname"><span class="pre">get_imm_resid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">totpers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_year</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2021</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_year</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">graph</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/ogzaf/demographics.html#get_imm_resid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ogzaf.demographics.get_imm_resid" title="Permalink to this definition">#</a></dt>
+<dd><p>Calculate immigration rates by age as a residual given population levels in
+different periods, then output average calculated immigration rate. We have
+to replace the first mortality rate in this function in order to adjust the
+first implied immigration rate. Source: UN Population Data portal.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>totpers</strong> (<em>int</em>) – total number of agent life periods (E+S), &gt;= 3</p></li>
-<li><p><strong>min_yr</strong> (<em>int</em>) – age in years at which agents are born, &gt;= 0</p></li>
-<li><p><strong>max_yr</strong> (<em>int</em>) – age in years at which agents die with certainty,
-&gt;= 4</p></li>
+<li><p><strong>start_year</strong> (<em>int</em>) – first year data to download</p></li>
+<li><p><strong>end_year</strong> (<em>int</em><em> or </em><em>None</em>) – end year data to download</p></li>
 <li><p><strong>graph</strong> (<em>bool</em>) – =True if want graphical output</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><dl class="simple">
 <dt>immigration rates that correspond to</dt><dd><p>each period of life, length E+S</p>
 </dd>
 </dl>
 </p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>imm_rates (Numpy array)</p>
 </dd>
 </dl>
@@ -516,21 +581,19 @@ Source: India Census, 2001 and 2011</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="ogzaf.demographics.get_mort">
-<span class="sig-prename descclassname"><span class="pre">ogzaf.demographics.</span></span><span class="sig-name descname"><span class="pre">get_mort</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">totpers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_yr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_yr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">graph</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/ogzaf/demographics.html#get_mort"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ogzaf.demographics.get_mort" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">ogzaf.demographics.</span></span><span class="sig-name descname"><span class="pre">get_mort</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">totpers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_year</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2021</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_year</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">download</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">graph</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/ogzaf/demographics.html#get_mort"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ogzaf.demographics.get_mort" title="Permalink to this definition">#</a></dt>
 <dd><p>This function generates a vector of mortality rates by model period
-age.
-Source: Census of India, 2011</p>
+age. Source: UN Population Data portal.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>totpers</strong> (<em>int</em>) – total number of agent life periods (E+S), &gt;= 3</p></li>
-<li><p><strong>min_yr</strong> (<em>int</em>) – age in years at which agents are born, &gt;= 0</p></li>
-<li><p><strong>max_yr</strong> (<em>int</em>) – age in years at which agents die with certainty,
-&gt;= 4</p></li>
+<li><p><strong>start_year</strong> (<em>int</em>) – first year data to download</p></li>
+<li><p><strong>end_year</strong> (<em>int</em><em> or </em><em>None</em>) – end year data to download</p></li>
 <li><p><strong>graph</strong> (<em>bool</em>) – =True if want graphical output</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><dl class="simple">
 <dt>mort_rates (Numpy array) mortality rates that correspond to each</dt><dd><p>period of life</p>
 </dd>
@@ -543,41 +606,36 @@ Source: Census of India, 2011</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="ogzaf.demographics.get_pop_objs">
-<span class="sig-prename descclassname"><span class="pre">ogzaf.demographics.</span></span><span class="sig-name descname"><span class="pre">get_pop_objs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">E</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">S</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_yr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_yr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">curr_year</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">GraphDiag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/ogzaf/demographics.html#get_pop_objs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ogzaf.demographics.get_pop_objs" title="Permalink to this definition">#</a></dt>
-<dd><p>This function produces the demographics objects to be used in the
-OG-ZAF model package.</p>
+<span class="sig-prename descclassname"><span class="pre">ogzaf.demographics.</span></span><span class="sig-name descname"><span class="pre">get_pop_objs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">E</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">S</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">curr_year</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">download</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">GraphDiag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/ogzaf/demographics.html#get_pop_objs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ogzaf.demographics.get_pop_objs" title="Permalink to this definition">#</a></dt>
+<dd><p>This function produces the demographics objects to be used in the OG-ZAF
+model package.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>E</strong> (<em>int</em>) – number of model periods in which agent is not
 economically active, &gt;= 1</p></li>
 <li><p><strong>S</strong> (<em>int</em>) – number of model periods in which agent is economically
 active, &gt;= 3</p></li>
 <li><p><strong>T</strong> (<em>int</em>) – number of periods to be simulated in TPI, &gt; 2*S</p></li>
-<li><p><strong>min_yr</strong> (<em>int</em>) – age in years at which agents are born, &gt;= 0</p></li>
-<li><p><strong>max_yr</strong> (<em>int</em>) – age in years at which agents die with certainty,
-&gt;= 4</p></li>
 <li><p><strong>curr_year</strong> (<em>int</em>) – current year for which analysis will begin,
 &gt;= 2016</p></li>
 <li><p><strong>GraphDiag</strong> (<em>bool</em>) – =True if want graphical output and printed
 diagnostics</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><dl>
 <dt>includes:</dt><dd><dl class="simple">
 <dt>omega_path_S (Numpy array), time path of the population</dt><dd><p>distribution from the current state to the steady-state,
 size T+S x S</p>
 </dd>
 </dl>
-<p>g_n_SS (scalar): steady-state population growth rate
+<p>g_n_ss (scalar): steady-state population growth rate
 omega_SS (Numpy array): normalized steady-state population</p>
 <blockquote>
 <div><p>distribution, length S</p>
 </div></blockquote>
 <dl class="simple">
-<dt>surv_rates (Numpy array): survival rates that correspond to</dt><dd><p>each model period of life, length S</p>
-</dd>
 <dt>mort_rates (Numpy array): mortality rates that correspond to</dt><dd><p>each model period of life, length S</p>
 </dd>
 <dt>g_n_path (Numpy array): population growth rates over the time</dt><dd><p>path, length T + S</p>
@@ -587,32 +645,116 @@ omega_SS (Numpy array): normalized steady-state population</p>
 </dl>
 </p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>pop_dict (dict)</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="ogzaf.demographics.get_un_data">
-<span class="sig-prename descclassname"><span class="pre">ogzaf.demographics.</span></span><span class="sig-name descname"><span class="pre">get_un_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">variable_code</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">country_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'710'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_year</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2022</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_year</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2022</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/ogzaf/demographics.html#get_un_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ogzaf.demographics.get_un_data" title="Permalink to this definition">#</a></dt>
-<dd><p>This function retrieves data from the United Nations Data Portal API
-for UN population data (see
+<dt class="sig sig-object py" id="ogzaf.demographics.get_un_fert_data">
+<span class="sig-prename descclassname"><span class="pre">ogzaf.demographics.</span></span><span class="sig-name descname"><span class="pre">get_un_fert_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">country_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'710'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_year</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2021</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_year</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">download</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="../../_modules/ogzaf/demographics.html#get_un_fert_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ogzaf.demographics.get_un_fert_data" title="Permalink to this definition">#</a></dt>
+<dd><p>Get UN fertility rate data for a country for some range of years (at least
+one year) and by age. The country_id=710 is for South Africa. These data
+come from the United Nations Data Portal API for UN population data (see
 <a class="reference external" href="https://population.un.org/dataportal/about/dataapi">https://population.un.org/dataportal/about/dataapi</a>)</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>variable_code</strong> (<em>str</em>) – variable code for UN data</p></li>
-<li><p><strong>country_id</strong> (<em>str</em>) – country id for UN data</p></li>
-<li><p><strong>start_year</strong> (<em>int</em>) – start year for UN data</p></li>
-<li><p><strong>end_year</strong> (<em>int</em>) – end year for UN data</p></li>
+<li><p><strong>country_id</strong> (<em>str</em>) – 3-digit country id (numerical)</p></li>
+<li><p><strong>start_year</strong> (<em>int</em>) – beginning year of the data</p></li>
+<li><p><strong>end_year</strong> (<em>int</em><em> or </em><em>None</em>) – end year of the data</p></li>
+<li><p><strong>download</strong> (<em>bool</em>) – whether to download the data from the UN Data Portal.
+If False, a path must be specified in the path_folder argument.</p></li>
+<li><p><strong>path_folder</strong> (<em>None</em><em> or </em><em>str</em>) – string path to folder where data are stored</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>DataFrame of UN data</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>dataset with fertility rates by age</p>
 </dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>df (Pandas DataFrame)</p>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>fert_rates_df (DataFrame)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ogzaf.demographics.get_un_mort_data">
+<span class="sig-prename descclassname"><span class="pre">ogzaf.demographics.</span></span><span class="sig-name descname"><span class="pre">get_un_mort_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">country_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'710'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_year</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2021</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_year</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">download</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="../../_modules/ogzaf/demographics.html#get_un_mort_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ogzaf.demographics.get_un_mort_data" title="Permalink to this definition">#</a></dt>
+<dd><p>Get UN mortality rate data for a country for some range of years (at least
+one year) and by age, and get infant mortality rate data. The
+country_id=710 is for South Africa. These data come from the United Nations
+Population Data Portal API for UN population data (see
+<a class="reference external" href="https://population.un.org/dataportal/about/dataapi">https://population.un.org/dataportal/about/dataapi</a>)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>country_id</strong> (<em>str</em>) – 3-digit country id (numerical)</p></li>
+<li><p><strong>start_year</strong> (<em>int</em>) – beginning year of the data</p></li>
+<li><p><strong>end_year</strong> (<em>int</em><em> or </em><em>None</em>) – end year of the data</p></li>
+<li><p><strong>download</strong> (<em>bool</em>) – whether to download the data from the UN Data Portal.
+If False, a path must be specified in the path_folder argument.</p></li>
+<li><p><strong>path_folder</strong> (<em>None</em><em> or </em><em>str</em>) – string path to folder where data are stored</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>dataset with infant mortality rates by yr
+mort_rates_df(DataFrame): dataset with mortality rates by age</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>infmort_rate_df (DataFrame)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ogzaf.demographics.get_un_pop_data">
+<span class="sig-prename descclassname"><span class="pre">ogzaf.demographics.</span></span><span class="sig-name descname"><span class="pre">get_un_pop_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">country_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'710'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_year</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2021</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_year</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">download</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="../../_modules/ogzaf/demographics.html#get_un_pop_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ogzaf.demographics.get_un_pop_data" title="Permalink to this definition">#</a></dt>
+<dd><p>Get UN population data for a country for some range of years (at least
+one year) and by age. The country_id=710 is for South Africa. These data
+come from the United Nations Data Portal API for UN population data (see
+<a class="reference external" href="https://population.un.org/dataportal/about/dataapi">https://population.un.org/dataportal/about/dataapi</a>)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>country_id</strong> (<em>str</em>) – 3-digit country id (numerical)</p></li>
+<li><p><strong>start_year</strong> (<em>int</em>) – beginning year of the data</p></li>
+<li><p><strong>end_year</strong> (<em>int</em>) – end year of the data</p></li>
+<li><p><strong>download</strong> (<em>bool</em>) – whether to download the data from the UN Data Portal.
+If False, a path must be specified in the path_folder argument.</p></li>
+<li><p><strong>path_folder</strong> (<em>None</em><em> or </em><em>str</em>) – string path to folder where data are stored</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>dataset with total population by age</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pop_df (DataFrame)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ogzaf.demographics.get_wb_infmort_rate">
+<span class="sig-prename descclassname"><span class="pre">ogzaf.demographics.</span></span><span class="sig-name descname"><span class="pre">get_wb_infmort_rate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">country</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'ZAF'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_year</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2020</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_year</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">download</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float64</span></span></span><a class="reference internal" href="../../_modules/ogzaf/demographics.html#get_wb_infmort_rate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ogzaf.demographics.get_wb_infmort_rate" title="Permalink to this definition">#</a></dt>
+<dd><p>Get World Bank infant mortality rate measure from neonatal mortality rate
+(deaths per 1,000 live births, divided by 1,0000)
+<a class="reference external" href="https://data.worldbank.org/indicator/SH.DYN.NMRT">https://data.worldbank.org/indicator/SH.DYN.NMRT</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>country</strong> (<em>str</em>) – 3-digit country id (alphabetic)</p></li>
+<li><p><strong>start_year</strong> (<em>int</em>) – beginning year of the data</p></li>
+<li><p><strong>end_year</strong> (<em>int</em><em> or </em><em>None</em>) – end year of the data</p></li>
+<li><p><strong>download</strong> (<em>bool</em>) – whether to download the data from the UN Data Portal.
+If False, a path must be specified in the path_folder argument.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>neonatal infant mortality rate</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>wb_infmort_rate (float)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -628,22 +770,22 @@ the original immigration rates vector from get_imm_resid(), that
 sets the steady-state population distribution by age equal to the
 population distribution in period int(1.5*S)</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>imm_rates</strong> (<em>Numpy array</em>) – immigration rates that correspond to
 each period of life, length E+S</p></li>
 <li><p><strong>args</strong> (<em>tuple</em>) – (fert_rates, mort_rates, infmort_rate, omega_cur,
-g_n_SS)</p></li>
+g_n_ss)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><dl class="simple">
 <dt>difference between omega_new and</dt><dd><p>omega_cur_pct, length E+S</p>
 </dd>
 </dl>
 </p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>omega_errs (Numpy array)</p>
 </dd>
 </dl>
@@ -656,7 +798,7 @@ g_n_SS)</p></li>
 in the population distribution data, this function calculates a new
 population distribution vector with totpers (E+S) elements.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>curr_pop_dist</strong> (<em>Numpy array</em>) – population distribution over N
 periods</p></li>
@@ -664,14 +806,14 @@ periods</p></li>
 transforming the population distribution, &gt;= 3</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><dl class="simple">
 <dt>new population distribution over</dt><dd><p>totpers (E+S) periods that approximates curr_pop_dist</p>
 </dd>
 </dl>
 </p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>curr_pop_new (Numpy array)</p>
 </dd>
 </dl>
@@ -692,7 +834,7 @@ transforming the population distribution, &gt;= 3</p></li>
             mode: "python"
         },
         kernelOptions: {
-            kernelName: "python3",
+            name: "python3",
             path: "./content/api"
         },
         predefinedOutput: true
@@ -700,50 +842,101 @@ transforming the population distribution, &gt;= 3</p></li>
     </script>
     <script>kernelName = 'python3'</script>
 
-              </div>
+                </article>
               
-            </main>
-            <footer class="footer-article noprint">
-                
-    <!-- Previous / next buttons -->
-<div class='prev-next-area'>
-    <a class='left-prev' id="prev-link" href="calibrate.html" title="previous page">
-        <i class="fas fa-angle-left"></i>
-        <div class="prev-next-info">
-            <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">Main Calibration Functions</p>
-        </div>
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  <!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="calibrate.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Main Calibration Functions</p>
+      </div>
     </a>
-    <a class='right-next' id="next-link" href="macro_params.html" title="next page">
-    <div class="prev-next-info">
+    <a class="right-next"
+       href="macro_params.html"
+       title="next page">
+      <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
         <p class="prev-next-title">Macro Parameter Estimation Functions</p>
-    </div>
-    <i class="fas fa-angle-right"></i>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
     </a>
 </div>
-            </footer>
-        </div>
-    </div>
-    <div class="footer-content row">
-        <footer class="col footer"><p>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-ogzaf.demographics">ogzaf.demographics</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
   
-    By Marcelo LaFleur and Richard W. Evans<br/>
-  
-      &copy; Copyright 2022.<br/>
-</p>
-        </footer>
-    </div>
+  <div class="footer-item">
     
+<p class="component-author">
+By Marcelo LaFleur and Richard W. Evans
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
 </div>
+          </footer>
+        
 
-
-      </div>
+      </main>
     </div>
+  </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+  <script src="../../_static/scripts/bootstrap.js?digest=c5ced968eda925caa686"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=c5ced968eda925caa686"></script>
 
-
+  <footer class="bd-footer">
+  </footer>
   </body>
 </html>
