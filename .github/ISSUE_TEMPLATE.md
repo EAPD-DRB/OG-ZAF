@@ -5,15 +5,3 @@ Please characterize the problem concisely and precisely. You may want to include
 
 # Question
 Please ask the question with clear context and any potential answer directions you can think of.
-
-# Variable to add: name
-Description of new variable (function) and references regarding its characteristics and origin.
-
-# Variable to amend: name
-Description of variable (function) to amend.
-
-# Parameter to add: name
-Description of new parameter and references regarding its characteristics and origin.
-
-# Parameter to amend: name
-Description of parameter to amend.
