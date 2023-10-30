@@ -3,10 +3,8 @@ channels:
 - conda-forge
 dependencies:
 - python>=3.7.7
-- ipython
-- setuptools
-- psutil
 - numpy
+- numba>=0.54
 - scipy>=1.7.1
 - pandas>=1.2.5
 - matplotlib
@@ -25,12 +23,15 @@ dependencies:
 - coverage
 - requests
 - xlwt
-- openpyxl>=3.1.2
 - statsmodels
 - linearmodels
 - black
 - jupyter
+- ipython
+- setuptools
 - pip:
   - jupyter-book>=0.9.1
+  - openpyxl>=3.1.2
   - pandas-datareader
+  - linecheck
   - ogcore
