@@ -790,7 +790,7 @@ def pop_rebin(curr_pop_dist, totpers_new):
     return curr_pop_new
 
 
-def get_imm_resid(totpers, start_year=2021, end_year=None, graph=False):
+def get_imm_resid(totpers, start_year=2021, end_year=None, download=False, graph=False):
     """
     Calculate immigration rates by age as a residual given population levels in
     different periods, then output average calculated immigration rate. We have
@@ -808,7 +808,7 @@ def get_imm_resid(totpers, start_year=2021, end_year=None, graph=False):
             each period of life, length E+S
 
     """
-    pop_df = get_un_pop_data(start_year=2019, end_year=2021, download=False)
+    pop_df = get_un_pop_data(start_year=2019, end_year=2021, download=download)
     pop_2019 = (
         pop_df["pop"][
             (
@@ -846,9 +846,9 @@ def get_imm_resid(totpers, start_year=2021, end_year=None, graph=False):
     pop_2020_EpS = pop_rebin(pop_2020, totpers)
     pop_2021_EpS = pop_rebin(pop_2021, totpers)
 
-    fert_rates = get_fert(totpers, start_year=start_year, end_year=end_year)
+    fert_rates = get_fert(totpers, start_year=start_year, end_year=end_year, download=download)
     mort_rates, infmort_rate = get_mort(
-        totpers, start_year=start_year, end_year=end_year
+        totpers, start_year=start_year, end_year=end_year, download=download
     )
 
     imm_rate_1_2020 = (
@@ -957,7 +957,7 @@ def get_pop_objs(E, S, T, curr_year, download=False, GraphDiag=False):
         E + S, start_year=hardcode_start_year, download=download
     )
     mort_rates_S = mort_rates[-S:]
-    imm_rates_orig = get_imm_resid(E + S, start_year=hardcode_start_year)
+    imm_rates_orig = get_imm_resid(E + S, start_year=hardcode_start_year, download=download)
     OMEGA_orig = np.zeros((E + S, E + S))
     OMEGA_orig[0, :] = (1 - infmort_rate) * fert_rates
     OMEGA_orig[1:, :-1] += np.diag(1 - mort_rates[:-1])
