@@ -1,0 +1,39 @@
+name: Build and Deploy Jupyter Book documentation
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build-and-deploy:
+    if: github.repository == 'EAPD-DRB/OG-ZAF'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Setup Miniconda
+        uses: conda-incubator/setup-miniconda@v2
+        with:
+          miniforge-variant: Mambaforge
+          activate-environment: ogzaf-dev
+          environment-file: environment.yml
+          python-version: "3.10"
+          auto-activate-base: false
+
+      - name: Build # Build Jupyter Book
+        shell: bash -l {0}
+        run: |
+          pip install jupyter-book>=0.11.3
+          pip install sphinxcontrib-bibtex>=2.0.0
+          pip install -e .
+          python -m ipykernel install --user --name=ogzaf-dev
+          jb build ./docs/book
+
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@releases/v4
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: gh-pages # The branch the action should deploy to.
+          FOLDER: docs/book/_build/html # The folder the action should deploy.

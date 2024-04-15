@@ -5,6 +5,9 @@ from distributed import Client
 import os
 import json
 import time
+import copy
+import numpy as np
+
 # from taxcalc import Calculator
 from ogzaf.calibrate import Calibration
 from ogcore.parameters import Specifications
@@ -47,6 +50,16 @@ def main():
             )
         )
     )
+    # Update parameters from calibrate.py Calibration class
+    c = Calibration(p)
+    updated_params = c.get_dict()
+    p.update_specifications(updated_params)
+    updated_params_tax = {
+        "etr_params": (np.ones((1, p.S, 1)) * 0.35).tolist(),
+        "mtrx_params": (np.ones((1, p.S, 1)) * 0.35).tolist(),
+        "mtry_params": (np.ones((1, p.S, 1)) * 0.35).tolist(),
+    }
+    p.update_specifications(updated_params_tax)
 
     # Run model
     start_time = time.time()
@@ -60,27 +73,16 @@ def main():
     """
 
     # create new Specifications object for reform simulation
-    p2 = Specifications(
-        baseline=False,
-        num_workers=num_workers,
-        baseline_dir=base_dir,
-        output_base=reform_dir,
-    )
-    # Update parameters for baseline from default json file
-    p2.update_specifications(
-        json.load(
-            open(
-                os.path.join(
-                    CUR_DIR, "..", "ogzaf", "ogzaf_default_parameters.json"
-                )
-            )
-        )
-    )
+    p2 = copy.deepcopy(p)
+    p2.baseline = False
+    p2.output_base = reform_dir
+
     # additional parameters to change
-    updated_params = {
-        "cit_rate": [[0.35]],
+    updated_params_ref = {
+        "cit_rate": [[0.30]],
     }
-    p2.update_specifications(updated_params)
+    p2.update_specifications(updated_params_ref)
+
     # Run model
     start_time = time.time()
     runner(p2, time_path=True, client=client)
@@ -118,7 +120,7 @@ def main():
 
     print("Percentage changes in aggregates:", ans)
     # save percentage change output to csv file
-    ans.to_csv("ogind_example_output.csv")
+    ans.to_csv("ogzaf_example_output.csv")
 
 
 if __name__ == "__main__":
