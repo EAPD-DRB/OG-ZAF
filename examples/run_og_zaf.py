@@ -51,8 +51,14 @@ def main():
         )
     )
     # Update parameters from calibrate.py Calibration class
-    c = Calibration(p)
+    c = Calibration(p, estimate_pop=True)
     updated_params = c.get_dict()
+    print(type(updated_params["rho"]))
+    print(len(updated_params["rho"]))
+    print(len(updated_params["rho"][0]))
+    print(len(updated_params["rho"][0][0]))
+    # update rho in updated_params
+    updated_params["rho"] = updated_params["rho"][0]
     p.update_specifications(updated_params)
     updated_params_tax = {
         "etr_params": (np.ones((1, p.S, 1)) * 0.35).tolist(),
