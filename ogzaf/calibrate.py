@@ -16,6 +16,7 @@ class Calibration:
         estimate_tax_functions=False,
         estimate_beta=False,
         estimate_chi_n=False,
+        estimate_pop=False,
         tax_func_path=None,
         iit_reform={},
         guid="",
@@ -26,6 +27,7 @@ class Calibration:
         self.estimate_tax_functions = estimate_tax_functions
         self.estimate_beta = estimate_beta
         self.estimate_chi_n = estimate_chi_n
+        self.estimate_pop = estimate_pop
         if estimate_tax_functions:
             self.tax_function_params = self.get_tax_function_parameters(
                 p,
@@ -43,7 +45,7 @@ class Calibration:
         #     chi_n = self.get_chi_n()
 
         # Macro estimation
-        self.macro_params = macro_params.get_macro_params()
+        # self.macro_params = macro_params.get_macro_params()
 
         # io matrix and alpha_c
         if p.I > 1:  # no need if just one consumption good
@@ -68,27 +70,30 @@ class Calibration:
         # self.zeta = bequest_transmission.get_bequest_matrix()
 
         # demographics
-        self.demographic_params = demographics.get_pop_objs(
-            p.E,
-            p.S,
-            p.T,
-            0,
-            99,
-            country_id="710",  # UN code for ZAF
-            initial_data_year=p.start_year - 1,
-            final_data_year=p.start_year,
-        )
-        # demographics for 80 period lives (needed for getting e below)
-        demog80 = demographics.get_pop_objs(
-            20,
-            80,
-            p.T,
-            0,
-            99,
-            country_id="710",  # UN code for ZAF
-            initial_data_year=p.start_year - 1,
-            final_data_year=p.start_year,
-        )
+        if estimate_pop:
+            self.demographic_params = demographics.get_pop_objs(
+                p.E,
+                p.S,
+                p.T,
+                0,
+                99,
+                country_id="710",  # UN code for ZAF
+                initial_data_year=p.start_year - 1,
+                final_data_year=p.start_year,
+                GraphDiag=False,
+            )
+            # demographics for 80 period lives (needed for getting e below)
+            demog80 = demographics.get_pop_objs(
+                20,
+                80,
+                p.T,
+                0,
+                99,
+                country_id="710",  # UN code for ZAF
+                initial_data_year=p.start_year - 1,
+                final_data_year=p.start_year,
+                GraphDiag=False,
+            )
 
         # earnings profiles
         self.e = income.get_e_interp(
@@ -401,10 +406,11 @@ class Calibration:
         #     dict["chi_n"] = self.chi_n
         # dict["eta"] = self.eta
         # dict["zeta"] = self.zeta
-        dict.update(self.macro_params)
+        # dict.update(self.macro_params)
         dict["e"] = self.e
         dict["alpha_c"] = self.alpha_c
         dict["io_matrix"] = self.io_matrix
-        dict.update(self.demographic_params)
+        if self.estimate_pop:
+            dict.update(self.demographic_params)
 
         return dict
