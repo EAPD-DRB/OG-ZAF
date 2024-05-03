@@ -24,6 +24,28 @@ class Calibration:
         client=None,
         num_workers=1,
     ):
+        """
+        Constructor for the Calibration class.
+
+        Args:
+            p (OG-Core Specifications object): model parameters
+            estimate_tax_functions (bool): whether to estimate tax
+                function parameters
+            estimate_beta (bool): whether to estimate beta
+            estimate_chi_n (bool): whether to estimate chi_n
+            estimate_pop (bool): whether to estimate population
+            tax_func_path (str): path to tax function parameter
+                estimates
+            iit_reform (dict): IIT reform dictionary
+            guid (str): unique identifier for reform
+            data (str): type of data to use in tax function
+            client (Dask client object): client
+            num_workers (int): number of workers
+
+        Returns:
+            None
+
+        """
         self.estimate_tax_functions = estimate_tax_functions
         self.estimate_beta = estimate_beta
         self.estimate_chi_n = estimate_chi_n
@@ -121,7 +143,12 @@ class Calibration:
         parameters from microsimulation model output.
 
         Args:
+            p (OG-Core Specifications object): model parameters
+            iit_reform (dict): IIT reform dictionary
+            guid (string): unique identifier for reform
+            data (string): type of data to use in tax function
             client (Dask client object): client
+            num_workers (int): number of workers
             run_micro (bool): whether to estimate parameters from
                 microsimulation model
             tax_func_path (string): path where find or save tax
@@ -330,6 +357,7 @@ class Calibration:
         files.
 
         Args:
+            p (OG-Core Specifications object): model parameters
             tax_func_path (str): path to pickle with tax function
                 parameter estimates
 
