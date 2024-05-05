@@ -67,7 +67,7 @@ class Calibration:
         #     chi_n = self.get_chi_n()
 
         # Macro estimation
-        # self.macro_params = macro_params.get_macro_params()
+        self.macro_params = macro_params.get_macro_params()
 
         # io matrix and alpha_c
         if p.I > 1:  # no need if just one consumption good

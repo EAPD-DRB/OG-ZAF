@@ -87,29 +87,30 @@ def get_macro_params():
     (see https://data.un.org)
     """
 
-    target = (
-        "https://data.un.org/ws/rest/data/IAEG-SDGs,DF_SDG_GLH/"
-        + "..SL_EMP_GTOTL.710..........."
-        + "?startPeriod="
-        + str(start.year)
-        + "&"
-        + "endPeriod="
-        + str(end.year)
-        + "&format=csv"
-    )
+    # target = (
+    #     "https://data.un.org/ws/rest/data/IAEG-SDGs,DF_SDG_GLH/"
+    #     + "..SL_EMP_GTOTL.710..........."
+    #     + "?startPeriod="
+    #     + str(start.year)
+    #     + "&"
+    #     + "endPeriod="
+    #     + str(end.year)
+    #     + "&format=csv"
+    # )
 
-    response = get_legacy_session().get(target)
+    # response = get_legacy_session().get(target)
+    # print("TaRGET = ", target)
 
-    # Check if the request was successful before processing
-    if response.status_code == 200:
-        csv_content = StringIO(response.text)
-        df_temp = pd.read_csv(csv_content)
-    else:
-        print(
-            f"Failed to retrieve data. HTTP status code: {response.status_code}"
-        )
+    # # Check if the request was successful before processing
+    # if response.status_code == 200:
+    #     csv_content = StringIO(response.text)
+    #     df_temp = pd.read_csv(csv_content)
+    # else:
+    #     print(
+    #         f"Failed to retrieve data. HTTP status code: {response.status_code}"
+    #     )
 
-    un_data_a = df_temp[["TIME_PERIOD", "OBS_VALUE"]]
+    # un_data_a = df_temp[["TIME_PERIOD", "OBS_VALUE"]]
 
     """
     This retrieves data from FRED.
@@ -122,6 +123,7 @@ def get_macro_params():
         "Total gov transfer payments": "B087RC1Q027SBEA",
         "Social Security payments": "W823RC1",
         "Gov interest payments": "A091RC1Q027SBEA",
+        "Labor share of income": "LABSHPZAA156NRUG",
     }
 
     # pull series of interest using pandas_datareader
@@ -193,15 +195,19 @@ def get_macro_params():
 
     # find gamma
     macro_parameters["gamma"] = [
+        # 1
+        # - (
+        #     (
+        #         un_data_a.loc[
+        #             un_data_a["TIME_PERIOD"] == baseline_date.year, "OBS_VALUE"
+        #         ].squeeze()
+        #     )
+        #     / 100
+        # )
         1
-        - (
-            (
-                un_data_a.loc[
-                    un_data_a["TIME_PERIOD"] == baseline_date.year, "OBS_VALUE"
-                ].squeeze()
-            )
-            / 100
-        )
+        - pd.Series(
+            (fred_data["Labor share of income"]).loc[baseline_yearquarter]
+        ).mean()
     ]
 
     # find g_y
