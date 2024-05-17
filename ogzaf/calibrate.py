@@ -103,7 +103,7 @@ class Calibration:
                 99,
                 country_id="710",  # UN code for ZAF
                 initial_data_year=p.start_year - 1,
-                final_data_year=p.start_year,
+                final_data_year=2100,
                 GraphDiag=False,
                 download_path=os.path.join(CUR_DIR, "data", "demographic"),
             )
