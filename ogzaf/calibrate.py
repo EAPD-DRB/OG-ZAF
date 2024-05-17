@@ -6,6 +6,8 @@ from ogcore import txfunc, demographics
 from ogcore.utils import safe_read_pickle, mkdirs
 import pkg_resources
 
+CUR_DIR = os.path.dirname(os.path.realpath(__file__))
+
 
 class Calibration:
     """OG-ZAF calibration class"""
@@ -103,14 +105,55 @@ class Calibration:
                 initial_data_year=p.start_year - 1,
                 final_data_year=p.start_year,
                 GraphDiag=False,
+                download_path=os.path.join(CUR_DIR, "data", "demographic"),
             )
             # demographics for 80 period lives (needed for getting e below)
+            # read in data downloaded above:
+            fert_rates = np.genfromtxt(
+                os.path.join(CUR_DIR, "data", "demographic", "fert_rates.csv"),
+                delimiter=",",
+            )
+            mort_rates = np.genfromtxt(
+                os.path.join(CUR_DIR, "data", "demographic", "mort_rates.csv"),
+                delimiter=",",
+            )
+            infmort_rates = np.genfromtxt(
+                os.path.join(
+                    CUR_DIR, "data", "demographic", "infmort_rates.csv"
+                ),
+                delimiter=",",
+            )
+            pop_dist = np.genfromtxt(
+                os.path.join(
+                    CUR_DIR,
+                    "data",
+                    "demographic",
+                    "population_distribution.csv",
+                ),
+                delimiter=",",
+            )
+            pre_pop_dist = np.genfromtxt(
+                os.path.join(
+                    CUR_DIR,
+                    "data",
+                    "demographic",
+                    "pre_period_population_distribution.csv",
+                ),
+                delimiter=",",
+            )
             demog80 = demographics.get_pop_objs(
                 20,
                 80,
                 p.T,
                 0,
                 99,
+                fert_rates=fert_rates,
+                mort_rates=mort_rates,
+                infmort_rates=infmort_rates,
+                imm_rates=None,
+                infer_pop=False,
+                pop_dist=pop_dist,
+                pre_pop_dist=pre_pop_dist,
                 country_id="710",  # UN code for ZAF
                 initial_data_year=p.start_year - 1,
                 final_data_year=p.start_year,
@@ -257,7 +300,7 @@ class Calibration:
                 )
         if p.S != S_in_tax_params:
             print(
-                "Warning: There is a discrepency between the ages"
+                "Warning: There is a discrepancy between the ages"
                 + " used in the model and those in the tax functions!!"
             )
         # After printing warning, make it work by tiling
