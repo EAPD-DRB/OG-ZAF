@@ -83,34 +83,32 @@ def get_macro_params():
     wb_data_q = wb_data_q.set_index("year")
 
     """
-    This retrieves labour share data from the United Nations Data Portal API
-    (see https://data.un.org)
+    This retrieves labour share data from the ILOSTAT Data API
+    (see https://rshiny.ilo.org/dataexplorer9/?lang=en)
     """
 
-    # target = (
-    #     "https://data.un.org/ws/rest/data/IAEG-SDGs,DF_SDG_GLH/"
-    #     + "..SL_EMP_GTOTL.710..........."
-    #     + "?startPeriod="
-    #     + str(start.year)
-    #     + "&"
-    #     + "endPeriod="
-    #     + str(end.year)
-    #     + "&format=csv"
-    # )
+    target = (
+        "https://rplumber.ilo.org/data/indicator/"
+        + "?id=LAP_2GDP_NOC_RT_A"
+        + "&ref_area="
+        + str(country_iso)
+        + "&timefrom="
+        + str(start.year)
+        + "&timeto="
+        + str(end.year)
+        + "&type=both&format=.csv"
+    )
 
-    # response = get_legacy_session().get(target)
-    # print("TaRGET = ", target)
+    response = requests.get(target)
+    if response.status_code == 200:
+        csv_content = StringIO(response.text)
+        df_temp = pd.read_csv(csv_content)
+    else:
+        print(
+            f"Failed to retrieve data. HTTP status code: {response.status_code}"
+        )
 
-    # # Check if the request was successful before processing
-    # if response.status_code == 200:
-    #     csv_content = StringIO(response.text)
-    #     df_temp = pd.read_csv(csv_content)
-    # else:
-    #     print(
-    #         f"Failed to retrieve data. HTTP status code: {response.status_code}"
-    #     )
-
-    # un_data_a = df_temp[["TIME_PERIOD", "OBS_VALUE"]]
+    ilo_data = df_temp[["time", "obs_value"]]
 
     """
     This retrieves data from FRED.
@@ -127,11 +125,11 @@ def get_macro_params():
     }
 
     # pull series of interest using pandas_datareader
-    fred_data = web.DataReader(fred_variable_dict.values(), "fred", start, end)
-    fred_data.rename(
-        columns=dict((y, x) for x, y in fred_variable_dict.items()),
-        inplace=True,
-    )
+    # fred_data = web.DataReader(fred_variable_dict.values(), "fred", start, end)
+    # fred_data.rename(
+    #     columns=dict((y, x) for x, y in fred_variable_dict.items()),
+    #     inplace=True,
+    # )
 
     # Separate quartely, monthly, and annual FRED dataseries
 
@@ -195,19 +193,19 @@ def get_macro_params():
 
     # find gamma
     macro_parameters["gamma"] = [
-        # 1
-        # - (
-        #     (
-        #         un_data_a.loc[
-        #             un_data_a["TIME_PERIOD"] == baseline_date.year, "OBS_VALUE"
-        #         ].squeeze()
-        #     )
-        #     / 100
-        # )
         1
-        - pd.Series(
-            (fred_data["Labor share of income"]).loc[baseline_yearquarter]
-        ).mean()
+        - (
+            (
+                ilo_data.loc[
+                    ilo_data["time"] == baseline_date.year, "obs_value"
+                ].squeeze()
+            )
+            / 100
+        )
+        # 1
+        # - pd.Series(
+        #     (fred_data["Labor share of income"]).loc[baseline_yearquarter]
+        # ).mean()
     ]
 
     # find g_y
