@@ -9,6 +9,7 @@ import pandas_datareader.data as web
 from pandas_datareader import wb
 import pandas as pd
 import numpy as np
+import requests
 import datetime
 import statsmodels.api as sm
 from ogzaf.utils import get_legacy_session
