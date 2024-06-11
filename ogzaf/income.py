@@ -414,7 +414,6 @@ def get_e_orig(age_wgts, abil_wgts, plot_path=None):
         + (two * (ages_short**2))
         + (three * (ages_short**3))
     )
-    abil_paths = np.exp(log_abil_paths)
 
     # New estimated coefficients for ZAF after adjustment by income (J) and by age (S)
     const = np.array(

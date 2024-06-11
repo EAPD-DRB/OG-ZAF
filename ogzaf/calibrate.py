@@ -16,13 +16,8 @@ class Calibration:
         self,
         p,
         estimate_tax_functions=False,
-        estimate_beta=False,
         estimate_chi_n=False,
         estimate_pop=False,
-        tax_func_path=None,
-        iit_reform={},
-        guid="",
-        data="cps",
         client=None,
         num_workers=1,
         demographic_data_path=None,
@@ -35,14 +30,8 @@ class Calibration:
             p (OG-Core Specifications object): model parameters
             estimate_tax_functions (bool): whether to estimate tax
                 function parameters
-            estimate_beta (bool): whether to estimate beta
             estimate_chi_n (bool): whether to estimate chi_n
             estimate_pop (bool): whether to estimate population
-            tax_func_path (str): path to tax function parameter
-                estimates
-            iit_reform (dict): IIT reform dictionary
-            guid (str): unique identifier for reform
-            data (str): type of data to use in tax function
             client (Dask client object): client
             num_workers (int): number of workers
             demographic_data_path (str): path to save demographic data
@@ -57,24 +46,8 @@ class Calibration:
             if not os.path.exists(output_path):
                 os.makedirs(output_path)
         self.estimate_tax_functions = estimate_tax_functions
-        self.estimate_beta = estimate_beta
         self.estimate_chi_n = estimate_chi_n
         self.estimate_pop = estimate_pop
-        if estimate_tax_functions:
-            self.tax_function_params = self.get_tax_function_parameters(
-                p,
-                iit_reform,
-                guid,
-                data,
-                client,
-                num_workers,
-                run_micro=True,
-                tax_func_path=tax_func_path,
-            )
-        # if estimate_beta:
-        #     self.beta_j = estimate_beta_j.beta_estimate(self)
-        # if estimate_chi_n:
-        #     chi_n = self.get_chi_n()
 
         # Macro estimation
         self.macro_params = macro_params.get_macro_params()
@@ -94,12 +67,6 @@ class Calibration:
             self.io_matrix = io_df.values
         else:
             self.io_matrix = np.array([[1.0]])
-
-        # eta estimation
-        # self.eta = transfer_distribution.get_transfer_matrix()
-
-        # zeta estimation
-        # self.zeta = bequest_transmission.get_bequest_matrix()
 
         # demographics
         if estimate_pop:
@@ -139,13 +106,9 @@ class Calibration:
     # method to return all newly calibrated parameters in a dictionary
     def get_dict(self):
         dict = {}
-        # if self.estimate_beta:
-        #     dict["beta_annual"] = self.beta
         # if self.estimate_chi_n:
         #     dict["chi_n"] = self.chi_n
-        # dict["eta"] = self.eta
-        # dict["zeta"] = self.zeta
-        # dict.update(self.macro_params)
+        dict.update(self.macro_params)
         dict["e"] = self.e
         dict["alpha_c"] = self.alpha_c
         dict["io_matrix"] = self.io_matrix
