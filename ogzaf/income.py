@@ -157,7 +157,7 @@ def arctan_fit(first_point, coef1, coef2, coef3, abil_deprec, init_guesses):
     return abil_last
 
 
-def get_e_interp(S, age_wgts, age_wgts_80, abil_wgts, plot=False):
+def get_e_interp(S, age_wgts, age_wgts_80, abil_wgts, plot_path=None):
     """
     This function takes a source matrix of lifetime earnings profiles
     (abilities, emat) of size (80, 7), where 80 is the number of ages
@@ -181,7 +181,7 @@ def get_e_interp(S, age_wgts, age_wgts_80, abil_wgts, plot=False):
             one-year age from 21 to 100, length 80
         abil_wgts (Numpy array): distribution of population in each
             ability group, length J
-        plot (bool): if True, creates plots of emat_orig and the new
+        plot_path (str)): if True, creates plots of emat_orig and the new
             interpolated emat_new
 
     Returns:
@@ -191,7 +191,7 @@ def get_e_interp(S, age_wgts, age_wgts_80, abil_wgts, plot=False):
     """
     # Get original 80 x 7 ability matrix
     abil_wgts_orig = np.array([0.25, 0.25, 0.2, 0.1, 0.1, 0.09, 0.01])
-    emat_orig = get_e_orig(age_wgts_80, abil_wgts_orig, plot)
+    emat_orig = get_e_orig(age_wgts_80, abil_wgts_orig, plot_path)
     if (
         S == 80
         and np.array_equal(
@@ -302,8 +302,8 @@ def get_e_interp(S, age_wgts, age_wgts_80, abil_wgts, plot=False):
             ).sum()
         )
 
-        if plot:
-            kwargs = {"filesuffix": "_intrp_scaled"}
+        if plot_path is not None:
+            kwargs = {"path": plot_path, "filesuffix": "_intrp_scaled"}
             pp.plot_income_data(
                 new_s_midp,
                 abil_midp,
