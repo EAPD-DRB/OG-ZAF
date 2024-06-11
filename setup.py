@@ -7,7 +7,7 @@ with open("README.md", "r") as readme_file:
 
 setup(
     name="ogzaf",
-    version="0.0.1",
+    version="0.0.2",
     author="Marcelo LaFleur, Richard W. Evans, and Jason DeBacker",
     license="CC0 1.0 Universal (CC0 1.0) Public Domain Dedication",
     description="South Africa Calibration for OG-Core",

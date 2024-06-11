@@ -53,8 +53,6 @@ def main():
     # Update parameters from calibrate.py Calibration class
     c = Calibration(p, estimate_pop=True)
     updated_params = c.get_dict()
-    # update rho in updated_params
-    # updated_params["rho"] = updated_params["rho"][0]
     p.update_specifications(updated_params)
 
     # Run model
