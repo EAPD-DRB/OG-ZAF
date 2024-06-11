@@ -3,7 +3,7 @@ import numpy as np
 from ogzaf.constants import CONS_DICT, PROD_DICT
 
 """
-Read in SAM file
+Read in Social Accounting Matrix (SAM) file
 """
 # Read in SAM file
 storage_options = {"User-Agent": "Mozilla/5.0"}
