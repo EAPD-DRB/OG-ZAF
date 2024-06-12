@@ -17,13 +17,13 @@ SAM = pd.read_excel(
 )
 
 
-def get_alpha_c(SAM=SAM, cons_dict=CONS_DICT):
+def get_alpha_c(sam=SAM, cons_dict=CONS_DICT):
     """
     Calibrate the alpha_c vector, showing the shares of household
     expenditures for each consumption category
 
     Args:
-        SAM (pd.DataFrame): SAM file
+        sam (pd.DataFrame): SAM file
         cons_dict (dict): Dictionary of consumption categories
 
     Returns:
@@ -34,8 +34,8 @@ def get_alpha_c(SAM=SAM, cons_dict=CONS_DICT):
     for key, value in cons_dict.items():
         # note the subtraction of the row to focus on domestic consumption
         category_total = (
-            SAM.loc[SAM.index.isin(value), "total"].sum()
-            - SAM.loc[SAM.index.isin(value), "row"].sum()
+            sam.loc[sam.index.isin(value), "total"].sum()
+            - sam.loc[sam.index.isin(value), "row"].sum()
         )
         alpha_c[key] = category_total
         overall_sum += category_total
@@ -45,13 +45,13 @@ def get_alpha_c(SAM=SAM, cons_dict=CONS_DICT):
     return alpha_c
 
 
-def get_io_matrix(SAM=SAM, cons_dict=CONS_DICT, prod_dict=PROD_DICT):
+def get_io_matrix(sam=SAM, cons_dict=CONS_DICT, prod_dict=PROD_DICT):
     """
     Calibrate the io_matrix array.  This array relates the share of each
     production category in each consumption category
 
     Args:
-        SAM (pd.DataFrame): SAM file
+        sam (pd.DataFrame): SAM file
         cons_dict (dict): Dictionary of consumption categories
         prod_dict (dict): Dictionary of production categories
 
@@ -71,10 +71,10 @@ def get_io_matrix(SAM=SAM, cons_dict=CONS_DICT, prod_dict=PROD_DICT):
     # the production categories from columns
     for ck, cv in cons_dict.items():
         for pk, pv in prod_dict.items():
-            io_df.loc[io_df.index == ck, pk] = SAM.loc[
-                SAM.index.isin(cv), pv
+            io_df.loc[io_df.index == ck, pk] = sam.loc[
+                sam.index.isin(cv), pv
             ].values.sum()
-    # change from levesl to share (where each row sums to one)
+    # change from levels to share (where each row sums to one)
     io_df = io_df.div(io_df.sum(axis=1), axis=0)
 
     return io_df
