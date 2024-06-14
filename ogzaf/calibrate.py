@@ -2,9 +2,7 @@ from ogzaf import macro_params, income
 from ogzaf import input_output as io
 import os
 import numpy as np
-from ogcore import txfunc, demographics
-from ogcore.utils import safe_read_pickle, mkdirs
-import pkg_resources
+from ogcore import demographics
 
 
 class Calibration:
