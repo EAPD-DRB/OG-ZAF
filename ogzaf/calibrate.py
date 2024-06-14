@@ -6,8 +6,6 @@ from ogcore import txfunc, demographics
 from ogcore.utils import safe_read_pickle, mkdirs
 import pkg_resources
 
-CUR_DIR = os.path.dirname(os.path.realpath(__file__))
-
 
 class Calibration:
     """OG-ZAF calibration class"""
@@ -17,9 +15,6 @@ class Calibration:
         p,
         estimate_tax_functions=False,
         estimate_chi_n=False,
-        estimate_pop=False,
-        client=None,
-        num_workers=1,
         demographic_data_path=None,
         output_path=None,
     ):
@@ -31,9 +26,6 @@ class Calibration:
             estimate_tax_functions (bool): whether to estimate tax
                 function parameters
             estimate_chi_n (bool): whether to estimate chi_n
-            estimate_pop (bool): whether to estimate population
-            client (Dask client object): client
-            num_workers (int): number of workers
             demographic_data_path (str): path to save demographic data
             output_path (str): path to save output to
 
@@ -47,7 +39,6 @@ class Calibration:
                 os.makedirs(output_path)
         self.estimate_tax_functions = estimate_tax_functions
         self.estimate_chi_n = estimate_chi_n
-        self.estimate_pop = estimate_pop
 
         # Macro estimation
         self.macro_params = macro_params.get_macro_params()
@@ -69,30 +60,29 @@ class Calibration:
             self.io_matrix = np.array([[1.0]])
 
         # demographics
-        if estimate_pop:
-            self.demographic_params = demographics.get_pop_objs(
-                p.E,
-                p.S,
-                p.T,
-                0,
-                99,
-                initial_data_year=p.start_year - 1,
-                final_data_year=p.start_year,
-                GraphDiag=False,
-                download_path=demographic_data_path,
-            )
+        self.demographic_params = demographics.get_pop_objs(
+            p.E,
+            p.S,
+            p.T,
+            0,
+            99,
+            initial_data_year=p.start_year - 1,
+            final_data_year=p.start_year + 1,
+            GraphDiag=False,
+            download_path=demographic_data_path,
+        )
 
-            # demographics for 80 period lives (needed for getting e below)
-            demog80 = demographics.get_pop_objs(
-                20,
-                80,
-                p.T,
-                0,
-                99,
-                initial_data_year=p.start_year - 1,
-                final_data_year=p.start_year,
-                GraphDiag=False,
-            )
+        # demographics for 80 period lives (needed for getting e below)
+        demog80 = demographics.get_pop_objs(
+            20,
+            80,
+            p.T,
+            0,
+            99,
+            initial_data_year=p.start_year - 1,
+            final_data_year=p.start_year + 1,
+            GraphDiag=False,
+        )
 
         # earnings profiles
         self.e = income.get_e_interp(
@@ -112,7 +102,6 @@ class Calibration:
         dict["e"] = self.e
         dict["alpha_c"] = self.alpha_c
         dict["io_matrix"] = self.io_matrix
-        if self.estimate_pop:
-            dict.update(self.demographic_params)
+        dict.update(self.demographic_params)
 
         return dict
