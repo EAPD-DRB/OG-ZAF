@@ -10,10 +10,6 @@ import numpy as np
 import scipy.optimize as opt
 import scipy.interpolate as si
 from ogcore import parameter_plots as pp
-import os
-
-CUR_PATH = os.path.abspath(os.path.dirname(__file__))
-OUTPUT_DIR = os.path.join(CUR_PATH, "OUTPUT", "ability")
 
 
 def arctan_func(xvals, a, b, c):
@@ -309,7 +305,7 @@ def get_e_interp(S, age_wgts, age_wgts_80, abil_wgts, plot_path=None):
                 abil_midp,
                 abil_wgts,
                 emat_new_scaled,
-                OUTPUT_DIR,
+                plot_path,
                 **kwargs,
             )
 
@@ -518,9 +514,7 @@ def get_e_orig(age_wgts, abil_wgts, plot_path=None):
         abil_midp = np.array([12.5, 37.5, 60.0, 75.0, 85.0, 94.5, 99.5])
         # Plot original unscaled 80 x 7 ability matrix
         kwargs = {"path": plot_path, "filesuffix": "_orig_unscaled"}
-        pp.plot_income_data(
-            ages_long, abil_midp, abil_wgts, e_orig, OUTPUT_DIR, **kwargs
-        )
+        pp.plot_income_data(ages_long, abil_midp, abil_wgts, e_orig, **kwargs)
 
         # Plot original scaled 80 x 7 ability matrix
         kwargs = {"path": plot_path, "filesuffix": "_orig_scaled"}
@@ -529,7 +523,6 @@ def get_e_orig(age_wgts, abil_wgts, plot_path=None):
             abil_midp,
             abil_wgts,
             e_orig_scaled,
-            OUTPUT_DIR,
             **kwargs,
         )
 
