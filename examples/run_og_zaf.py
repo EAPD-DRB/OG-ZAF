@@ -6,21 +6,26 @@ import os
 import json
 import time
 import copy
-import numpy as np
-
-# from taxcalc import Calculator
+import matplotlib.pyplot as plt
 from ogzaf.calibrate import Calibration
 from ogcore.parameters import Specifications
 from ogcore import output_tables as ot
 from ogcore import output_plots as op
 from ogcore.execute import runner
-from ogcore.utils import safe_read_pickle
+from ogcore.utils import safe_read_pickle, param_dump_json
+
+# Use a custom matplotlib style file for plots
+style_file_url = (
+    "https://raw.githubusercontent.com/PSLmodels/OG-Core/"
+    + "master/ogcore/OGcorePlots.mplstyle"
+)
+plt.style.use(style_file_url)
 
 
 def main():
     # Define parameters to use for multiprocessing
-    client = Client()
     num_workers = min(multiprocessing.cpu_count(), 7)
+    client = Client(n_workers=num_workers, threads_per_worker=1)
     print("Number of workers = ", num_workers)
 
     # Directories to save data
@@ -51,9 +56,21 @@ def main():
         )
     )
     # Update parameters from calibrate.py Calibration class
-    c = Calibration(p, estimate_pop=True)
+    c = Calibration(p)
     updated_params = c.get_dict()
     p.update_specifications(updated_params)
+    # set tax rates
+    p.update_specifications(
+        {
+            "cit_rate": [[0.27]],
+            "tax_func_type": "linear",
+            "age_specific": False,
+            "etr_params": [[[0.22]]],
+            "mtrx_params": [[[0.31]]],
+            "mtry_params": [[[0.25]]],
+            "tau_c": [[0.15]],
+        }
+    )
 
     # Run model
     start_time = time.time()
