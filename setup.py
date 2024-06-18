@@ -1,41 +1,31 @@
-"""This file contains the OG-ZAF package's metadata and dependencies."""
-
-from setuptools import find_packages, setup
+import setuptools
 
 with open("README.md", "r") as readme_file:
-    readme = readme_file.read()
+    longdesc = readme_file.read()
 
-setup(
+setuptools.setup(
     name="ogzaf",
     version="0.0.2",
     author="Marcelo LaFleur, Richard W. Evans, and Jason DeBacker",
     license="CC0 1.0 Universal (CC0 1.0) Public Domain Dedication",
     description="South Africa Calibration for OG-Core",
-    long_description=readme,
     long_description_content_type="text/markdown",
-    classifiers=[
-        "Development Status :: 5 - Production/Stable",
-        "Intended Audience :: Developers",
-        "Natural Language :: English",
-        "License :: OSI Approved :: Common Public License",
-        "Operating System :: POSIX",
-        "Programming Language :: Python",
-        "Programming Language :: Python :: 3.9",
-        "Programming Language :: Python :: 3.10",
-        "Programming Language :: Python :: 3.11",
-        "Topic :: Scientific/Engineering :: Information Analysis",
-        "Topic :: Software Development :: Libraries :: Python Modules",
-    ],
-    keywords="South Africa calibration of large scale overlapping generations model of fiscal policy",
+    long_description=longdesc,
+    keywords="ZAF South Africa calibration of large scale overlapping generations model of fiscal policy",
     url="https://github.com/EAPD-DRB/OG-ZAF/",
     download_url="https://github.com/EAPD-DRB/OG-ZAF/",
     project_urls={
         "Issue Tracker": "https://github.com/EAPD-DRB/OG-ZAF/issues",
     },
     packages=["ogzaf"],
-    package_data={"ogzaf": ["ogusa_default_parameters.json", "data/*"]},
+    package_data={
+        "ogzaf": [
+            "ogzaf_default_parameters.json",
+            "data/*"
+        ]
+    },
     include_packages=True,
-    python_requires=">=3.7.7",
+    python_requires=">=3.7.7, <3.12",
     install_requires=[
         "numpy",
         "psutil",
@@ -51,9 +41,22 @@ setup(
         "openpyxl>=3.1.2",
         "statsmodels",
         "linearmodels",
+        "wheel",
         "black",
         "linecheck",
         "ogcore",
+    ],
+    classifiers=[
+        "Development Status :: 5 - Production/Stable",
+        "Intended Audience :: Developers",
+        "Natural Language :: English",
+        "License :: OSI Approved :: Common Public License",
+        "Operating System :: POSIX",
+        "Programming Language :: Python",
+        "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
+        "Topic :: Scientific/Engineering :: Information Analysis",
+        "Topic :: Software Development :: Libraries :: Python Modules",
     ],
     tests_require=["pytest"],
 )
