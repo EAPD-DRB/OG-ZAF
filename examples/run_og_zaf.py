@@ -65,9 +65,9 @@ def main():
             "cit_rate": [[0.27]],
             "tax_func_type": "linear",
             "age_specific": False,
-            "etr_params": [[[0.22]]],
-            "mtrx_params": [[[0.31]]],
-            "mtry_params": [[[0.25]]],
+            # "etr_params": [[[0.22]]],
+            # "mtrx_params": [[[0.31]]],
+            # "mtry_params": [[[0.25]]],
             "tau_c": [[0.15]],
         }
     )
