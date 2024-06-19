@@ -1,5 +1,15 @@
 name: Check that docs build
-on: [push, pull_request]
+on:
+  pull_request:
+    paths:
+      - './docs/**.png'
+      - './docs/book/content/calibration/images/**.png'
+      - './docs/README.md'
+      - './docs/book/**.yml'
+      - './docs/book/**.bib'
+      - '**.md'
+      - './docs/book/content/api/**.rst'
+      - './ogzaf/**.py'
 
 jobs:
   build:
@@ -11,12 +21,12 @@ jobs:
           persist-credentials: false
 
       - name: Setup Miniconda
-        uses: conda-incubator/setup-miniconda@v2
+        uses: conda-incubator/setup-miniconda@v3
         with:
           miniforge-variant: Mambaforge
           activate-environment: ogzaf-dev
           environment-file: environment.yml
-          python-version: "3.10"
+          python-version: "3.11"
           auto-activate-base: false
 
       - name: Build # Build Jupyter Book

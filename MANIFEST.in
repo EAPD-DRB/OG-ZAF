@@ -1,5 +1,1 @@
-include ogzaf/data/demographic/un_zaf_deaths.csv
-include ogzaf/data/demographic/un_zaf_fert.csv
-include ogzaf/data/demographic/un_zaf_infmort.csv
-include ogzaf/data/demographic/un_zaf_mort.csv
-include ogzaf/data/demographic/un_zaf_pop.csv
+include ogzaf/ogzaf_default_parameters.json

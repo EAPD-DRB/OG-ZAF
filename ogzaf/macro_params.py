@@ -1,7 +1,7 @@
 """
-This module uses data from World Bank WDI, World Bank Quarterly Public Sector Debt (QPSD) database,
-UN Data Portal, and FRED to find values for parameters for the
-OG-ZAF model that rely on macro data for calibration.
+This module uses data from World Bank WDI, World Bank Quarterly Public
+Sector Debt (QPSD) database, UN Data Portal, and FRED to find values for
+parameters for the OG-ZAF model that rely on macro data for calibration.
 """
 
 # imports
@@ -9,9 +9,9 @@ import pandas_datareader.data as web
 from pandas_datareader import wb
 import pandas as pd
 import numpy as np
+import requests
 import datetime
 import statsmodels.api as sm
-from ogzaf.utils import get_legacy_session
 from io import StringIO
 
 
@@ -38,6 +38,7 @@ def get_macro_params():
         "GDP per capita (constant 2015 US$)": "NY.GDP.PCAP.KD",
         "Real GDP (constant 2015 US$)": "NY.GDP.MKTP.KD",
         "Nominal GDP (current US$)": "NY.GDP.MKTP.CD",
+        "General government final consumption expenditure (current US$)": "NE.CON.GOVT.CD",
         # "General government debt (percentage of GDP)": "GC.DOD.TOTL.GD.ZS",
         # "GDP per capita (current US$)": "NY.GDP.PCAP.CD",
         # "GDP per person employed (constant 2017 PPP$)": "SL.GDP.PCAP.EM.KD",
@@ -83,24 +84,23 @@ def get_macro_params():
     wb_data_q = wb_data_q.set_index("year")
 
     """
-    This retrieves labour share data from the United Nations Data Portal API
-    (see https://data.un.org)
+    This retrieves labour share data from the ILOSTAT Data API
+    (see https://rshiny.ilo.org/dataexplorer9/?lang=en)
     """
 
     target = (
-        "https://data.un.org/ws/rest/data/IAEG-SDGs,DF_SDG_GLH/"
-        + "..SL_EMP_GTOTL.710..........."
-        + "?startPeriod="
+        "https://rplumber.ilo.org/data/indicator/"
+        + "?id=LAP_2GDP_NOC_RT_A"
+        + "&ref_area="
+        + str(country_iso)
+        + "&timefrom="
         + str(start.year)
-        + "&"
-        + "endPeriod="
+        + "&timeto="
         + str(end.year)
-        + "&format=csv"
+        + "&type=both&format=.csv"
     )
 
-    response = get_legacy_session().get(target)
-
-    # Check if the request was successful before processing
+    response = requests.get(target)
     if response.status_code == 200:
         csv_content = StringIO(response.text)
         df_temp = pd.read_csv(csv_content)
@@ -109,7 +109,7 @@ def get_macro_params():
             f"Failed to retrieve data. HTTP status code: {response.status_code}"
         )
 
-    un_data_a = df_temp[["TIME_PERIOD", "OBS_VALUE"]]
+    ilo_data = df_temp[["time", "obs_value"]]
 
     """
     This retrieves data from FRED.
@@ -119,9 +119,12 @@ def get_macro_params():
         # "Labor share": "LABSHPINA156NRUG",
         # "BAA Corp Bond Rates": "DBAA",
         # "10 year govt bond rate": "IRLTLT01ZAM156N",
+        # "Nominal GDP": "MKTGDPZAA646NWDB",
+        "Total Expenditure to GDP": "ZAFGGXG01GDPPT",
         "Total gov transfer payments": "B087RC1Q027SBEA",
         "Social Security payments": "W823RC1",
         "Gov interest payments": "A091RC1Q027SBEA",
+        "Labor share of income": "LABSHPZAA156NRUG",
     }
 
     # pull series of interest using pandas_datareader
@@ -130,6 +133,8 @@ def get_macro_params():
         columns=dict((y, x) for x, y in fred_variable_dict.items()),
         inplace=True,
     )
+    # make data quarterly
+    fred_data_q = fred_data.resample("Q").mean()
 
     # Separate quartely, monthly, and annual FRED dataseries
 
@@ -179,7 +184,7 @@ def get_macro_params():
     # ]
 
     # find alpha_G
-    macro_parameters["alpha_G"] = [0.27]
+    # macro_parameters["alpha_G"] = [0.27]
     # macro_parameters["alpha_G"] = [
     #     pd.Series(
     #         (
@@ -196,12 +201,16 @@ def get_macro_params():
         1
         - (
             (
-                un_data_a.loc[
-                    un_data_a["TIME_PERIOD"] == baseline_date.year, "OBS_VALUE"
+                ilo_data.loc[
+                    ilo_data["time"] == baseline_date.year, "obs_value"
                 ].squeeze()
             )
             / 100
         )
+        # 1
+        # - pd.Series(
+        #     (fred_data["Labor share of income"]).loc[baseline_yearquarter]
+        # ).mean()
     ]
 
     # find g_y
@@ -216,7 +225,7 @@ def get_macro_params():
     1) Generate modelled corporate yields (corp_yhat) for a range of sovereign yields (sov_y)  using the estimated equation in col 2 of table 8 (and figure 3).
     2) Estimate the OLS using sovereign yields as the dependent variable
     """
-    """
+
     # # estimate r_gov_shift and r_gov_scale
     sov_y = np.arange(20, 120) / 10
     corp_yhat = 8.199 - (2.975 * sov_y) + (0.478 * sov_y**2)
@@ -227,10 +236,14 @@ def get_macro_params():
     )
     res = mod.fit()
     # first term is the constant and needs to be divided by 100 to have the correct unit. Second term is the coefficient
-    macro_parameters["r_gov_shift"] = (-res.params[0] / 100)  # constant = 0.0337662504
-    macro_parameters["r_gov_scale"] = res.params[1]  # coefficient = 0.24484764
-    """
-    macro_parameters["r_gov_shift"] = [-0.0337662504]
-    macro_parameters["r_gov_scale"] = [0.24484764]
+    macro_parameters["r_gov_shift"] = [
+        (-res.params[0] / 100)
+    ]  # constant = 0.0337662504
+    macro_parameters["r_gov_scale"] = [
+        res.params[1]
+    ]  # coefficient = 0.24484764
+
+    # macro_parameters["r_gov_shift"] = [-0.0337662504]
+    # macro_parameters["r_gov_scale"] = [0.24484764]
 
     return macro_parameters
