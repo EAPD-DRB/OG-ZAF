@@ -1,14 +1,13 @@
 ---
 jupytext:
+  formats: md:myst
   text_representation:
     extension: .md
     format_name: myst
-    format_version: '0.8'
-    jupytext_version: '1.4.1'
 kernelspec:
   display_name: Python 3
   language: python
-  name: ogzaf-dev
+  name: python3
 ---
 
 (Chap_Demog)=
@@ -18,7 +17,7 @@ We start the `OG-ZAF` section on modeling the household with a description of th
 
 In this chapter, we characterize the equations and parameters that govern the transition dynamics of the population distribution by age. In `OG-ZAF`, we take the approach of taking mortality rates and fertility rates from outside estimates. But we estimate our immigration rates as residuals using the mortality rates, fertility rates, and at least two consecutive periods of population distribution data. This approach makes sense if one is modeling a country in which one is not confident in the immigration rate data. If the country has good immigration data, then the immigration residual approach we describe below can be skipped.
 
-We define $\omega_{s,t}$ as the number of households of age $s$ alive at time $t$. A measure $\omega_{1,t}$ of households is born in each period $t$ and live for up to $E+S$ periods, with $S\geq 4$.[^calibage_note] Households are termed ``youth'', and do not participate in market activity during ages $1\leq s\leq E$. The households enter the workforce and economy in period $E+1$ and remain in the workforce until they unexpectedly die or live until age $s=E+S$. We model the population with households age $s\leq E$ outside of the workforce and economy in order most closely match the empirical population dynamics.
+We define $\omega_{s,t}$ as the number of households of age $s$ alive at time $t$. A measure $\omega_{1,t}$ of households is born in each period $t$ and live for up to $E+S$ periods, with $S\geq 4$.[^calibage_note] Households are termed "youth", and do not participate in market activity during ages $1\leq s\leq E$. The households enter the workforce and economy in period $E+1$ and remain in the workforce until they unexpectedly die or live until age $s=E+S$. We model the population with households age $s\leq E$ outside of the workforce and economy in order most closely match the empirical population dynamics.
 
 The population of agents of each age in each period $\omega_{s,t}$ evolves according to the following function,
 ```{math}
@@ -56,12 +55,106 @@ We discuss the approach to estimating fertility rates $f_s$, mortality rates $\r
 
   In `OG-ZAF`, we assume that the fertility rates for each age cohort $f_s$ are constant across time. However, this assumption is conceptually straightforward to relax. Our data for South Africa fertility rates by age come from United Nations fertility rate data for a country for some range of years (at least one year) and by age. The country_id=710 is for South Africa. These data come from the United Nations Data Portal API for UN population data (see https://population.un.org/dataportal/about/dataapi). The UN variable code for Population by 1-year age groups and sex is "47" and that for Fertility rates by age of mother (1-year) is "68".
 
+  {numref}`Figure %s <FigFertRatesZAF>` was created using the [`ogcore.demographics.get_fert()`](https://github.com/PSLmodels/OG-Core/blob/master/ogcore/demographics.py#L146) function, which downloaded the data from the United National Data Portal API and plotted it in Python.[^un_data_portal]
+
+  ```{code-cell} ipython3
+  :tags: ["hide-input", "remove-output"]
+
+  import numpy as np
+  import matplotlib.pyplot as plt
+  import ogcore.demographics as demog
+
+  fert_rates = demog.get_fert(
+      totpers=100,
+      min_age=0,
+      max_age=99,
+      country_id="710",
+      start_year=2023,
+      end_year=2023,
+      graph=False,
+      plot_path=None,
+      download_path=None,
+  )
+  plt.plot(
+      np.arange(1, 101), np.squeeze(fert_rates), linestyle="-", linewidth=1,
+      color="black"
+  )
+  plt.scatter(
+      np.arange(1, 101), np.squeeze(fert_rates), color="red", marker="o", s=4
+  )
+  plt.grid(
+      visible=True, which='major', axis='both', color='0.5', linestyle='--',
+      linewidth=0.3
+  )
+  plt.xlabel(r"Age ($s$)")
+  plt.ylabel(r"Fertility rate ($f_s$)")
+  plt.savefig('fert_rates_zaf.png')
+  plt.show()
+  ```
+
+  ```{figure} ./images/fert_rates_zaf.png
+  ---
+  height: 400px
+  name: FigFertRatesZAF
+  ---
+  South Africa fertility rates by age $\left(f_s\right)$ for $E+S=100$: year 2023
+  ```
+
+  The fertility rates in the UN data are births per 1,000 women of age-$s$. We adjust the units of those rates to represent the number of births per total population of both men and women of age-$s$.
+
+
 (SecDemogMort)=
 ## Mortality rates
 
-  The mortality rates in our model $\rho_s$ are a one-period hazard rate and represent the probability of dying within one year, given that an household is alive at the beginning of period $s$. We assume that the mortality rates for each age cohort $\rho_s$ are constant across time. These data come from the United Nations Population Data Portal API for UN population data (see https://population.un.org/dataportal/about/dataapi). The model uses neonatal mortality rates (deaths per 1,000 live births, divided by 1,000) from World Bank World Development Indicators, available at https://data.worldbank.org/indicator/SH.DYN.NMRT
-  
-  The mortality rates are a population-weighted average of the male and female mortality rates reported by United Nations. The maximum age in years in our model is truncated to 100-years old. In addition, we constrain the mortality rate to be 1.0 or 100 percent at the maximum age of 100.
+  The mortality rates in our model $\rho_s$ are a one-period hazard rate and represent the probability of dying within one year, given that an household is alive at the beginning of the period in which they are age-$s$. We assume that the mortality rates for each age cohort $\rho_s$ are constant across time. But this assumption can be relaxed. These data come from the United Nations Population Data Portal API for UN population data (see https://population.un.org/dataportal/about/dataapi). The model uses neonatal mortality rates (deaths per 1,000 live births, divided by 1,000) for the infant mortality rate from World Bank World Development Indicators, available at https://data.worldbank.org/indicator/SH.DYN.NMRT
+
+  The mortality rates are a population-weighted average of the male and female mortality rates by one-year age increments reported by United Nations. The maximum age in years in our model is truncated to 100-years old. In addition, we constrain the mortality rate to be 1.0 or 100 percent at the maximum age of 100.
+
+  ```{code-cell} ipython3
+  :tags: ["hide-input", "remove-output"]
+
+  import numpy as np
+  import matplotlib.pyplot as plt
+  import ogcore.demographics as demog
+
+  mort_rates, inf_mort_rate = demog.get_mort(
+      totpers=100,
+      min_age=0,
+      max_age=99,
+      country_id="710",
+      start_year=2023,
+      end_year=2023,
+      graph=False,
+      plot_path=None,
+      download_path=None,
+  )
+
+  plt.plot(
+      np.arange(0, 101), np.hstack((inf_mort_rate, np.squeeze(mort_rates))),
+      linestyle="-", linewidth=1, color="black"
+  )
+  plt.scatter(
+      np.arange(0, 101), np.hstack((inf_mort_rate, np.squeeze(mort_rates))),
+      color="red", marker="o", s=4
+  )
+  plt.grid(
+      visible=True, which='major', axis='both', color='0.5', linestyle='--',
+      linewidth=0.3
+  )
+  plt.xlabel(r"Age ($s$)")
+  plt.ylabel(r"Mortality rate ($\rho_s$)")
+  plt.savefig('mort_rates_zaf.png')
+  plt.show()
+  ```
+
+  ```{figure} ./images/mort_rates_zaf.png
+  ---
+  height: 400px
+  name: FigMortRatesZAF
+  ---
+  South Africa mortility rates by age $\left(\rho_s\right)$ for $E+S=100$: year 2023
+  ```
+
 
 (SecDemogImm)=
 ## Immigration rates
@@ -74,9 +167,55 @@ We discuss the approach to estimating fertility rates $f_s$, mortality rates $\r
       i_{s+1} &= \frac{\omega_{s+1,t+1} - (1 - \rho_s)\omega_{s,t}}{\omega_{s+1,t}}\qquad\qquad\forall t\quad\text{and}\quad 1\leq s \leq E+S-1
   ```
 
-  
+  ```{code-cell} ipython3
+  :tags: ["hide-input", "remove-output"]
 
-  We calculate our immigration rates for three different consecutive-year-periods of population distribution data (2010 through 2013). Our four years of population distribution by age data come from {cite}`Census:2015`. The immigration rates $i_s$ that we use in our model are the the residuals described in {eq}`EqPopImmRates` averaged across the three periods. {numref}`Figure %s <FigImmRates>` shows the estimated immigration rates for $E+S=100$ and given the fertility rates from Section {ref}`SecDemogFert` and the mortality rates from Section {ref}`SecDemogMort`.
+  import numpy as np
+  import matplotlib.pyplot as plt
+  import ogcore.demographics as demog
+
+  imm_rates = demog.get_imm_rates(
+      totpers=100,
+      min_age=0,
+      max_age=99,
+      fert_rates=None,
+      mort_rates=None,
+      infmort_rates=None,
+      pop_dist=None,
+      country_id="710",
+      start_year=2023,
+      end_year=2023,
+      graph=False,
+      plot_path=None,
+      download_path=None,
+  )
+
+  plt.plot(
+      np.arange(1, 101), np.squeeze(imm_rates), linestyle="-", linewidth=1,
+      color="black"
+  )
+  plt.scatter(
+      np.arange(1, 101), np.squeeze(imm_rates), color="red", marker="o", s=4
+  )
+  plt.grid(
+      visible=True, which='major', axis='both', color='0.5', linestyle='--',
+      linewidth=0.3
+  )
+  plt.xlabel(r"Age ($s$)")
+  plt.ylabel(r"Immigration rate ($i_s$)")
+  plt.savefig('imm_rates_zaf.png')
+  plt.show()
+  ```
+
+  ```{figure} ./images/imm_rates_zaf.png
+  ---
+  height: 400px
+  name: FigImmRatesZAF
+  ---
+  South Africa immigration rates by age $\left(\rho_s\right)$ for $E+S=100$: year 2023
+  ```
+
+  We calculate our immigration rates for the consecutive-year-periods of population distribution data 2022 and 2023. The immigration rates $i_s$ that we use in our model are the the residuals described in {eq}`EqPopImmRates` implied by these two consecutive periods. {numref}`Figure %s <FigImmRatesZAF>` shows the estimated immigration rates for $E+S=100$ and given the fertility rates from Section {ref}`SecDemogFert` and the mortality rates from Section {ref}`SecDemogMort`. These immigration rates show large out-migration from South Africa.[^out_migration]
 
   At the end of Section {ref}`SecDemogPopSSTP`, we describe a small adjustment that we make to the immigration rates after a certain number of periods in order to make computation of the transition path equilibrium of the model compute more robustly.
 
@@ -225,3 +364,5 @@ We discuss the approach to estimating fertility rates $f_s$, mortality rates $\r
 
 [^calibage_note]: Theoretically, the model works without loss of generality for $S\geq 3$. However, because we are calibrating the ages outside of the economy to be one-fourth of $S$ (e.g., ages 21 to 100 in the economy, and ages 1 to 20 outside of the economy), it is convenient for $S$ to be at least 4.
 [^houseprob_note]: The parameter $\rho_s$ is the probability that a household of age $s$ dies before age $s+1$.
+[^un_data_portal]: Note that you might need a UN Data Portal API token to download the data directly from the United Nations Data Portal site. But the [`demographics.py`](https://github.com/PSLmodels/OG-Core/blob/master/ogcore/demographics.py) module will take the data from a pre-downloaded site if the API token is missing or fails.
+[^out_migration]: Out migration in South Africa is clearly a significant trend. {cite}`BusinessTech:2024` reports that "since 2000, around 413,000 South Africans have emigrated to other countries - and in 2022, just under 28,000 made their way back."
