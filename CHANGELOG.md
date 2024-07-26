@@ -9,8 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Removed incorrect references in documentation to OG-USA, and changed to OG-ZAF
--
+- Updates the `.gitignore` to ignore any `un_api_token.txt` files
+- Adds a reference to `OGZAF_references.bib`
+- Changes all references to OG-USA in the documentation to OG-ZAF
+- Updates `demographics.md` documentation to include better South Africa images, although we still need to finish the last three population images
 
 
 ## [0.0.2] - 2024-06-18 12:00:00
