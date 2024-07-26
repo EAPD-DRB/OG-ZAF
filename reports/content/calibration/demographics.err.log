@@ -1,0 +1,108 @@
+Traceback (most recent call last):
+  File "/home/runner/miniconda3/envs/ogzaf-dev/lib/python3.11/site-packages/jupyter_cache/executors/utils.py", line 58, in single_nb_execution
+    executenb(
+  File "/home/runner/miniconda3/envs/ogzaf-dev/lib/python3.11/site-packages/nbclient/client.py", line 1314, in execute
+    return NotebookClient(nb=nb, resources=resources, km=km, **kwargs).execute()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/miniconda3/envs/ogzaf-dev/lib/python3.11/site-packages/jupyter_core/utils/__init__.py", line 165, in wrapped
+    return loop.run_until_complete(inner)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/miniconda3/envs/ogzaf-dev/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/home/runner/miniconda3/envs/ogzaf-dev/lib/python3.11/site-packages/nbclient/client.py", line 709, in async_execute
+    await self.async_execute_cell(
+  File "/home/runner/miniconda3/envs/ogzaf-dev/lib/python3.11/site-packages/nbclient/client.py", line 1062, in async_execute_cell
+    await self._check_raise_for_error(cell, cell_index, exec_reply)
+  File "/home/runner/miniconda3/envs/ogzaf-dev/lib/python3.11/site-packages/nbclient/client.py", line 918, in _check_raise_for_error
+    raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
+nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
+------------------
+import numpy as np
+import matplotlib.pyplot as plt
+import ogcore.demographics as demog
+
+fert_rates = demog.get_fert(
+    totpers=100,
+    min_age=0,
+    max_age=99,
+    country_id="710",
+    start_year=2023,
+    end_year=2023,
+    graph=False,
+    plot_path=None,
+    download_path=None,
+)
+plt.plot(
+    np.arange(1, 101), np.squeeze(fert_rates), linestyle="-", linewidth=1,
+    color="black"
+)
+plt.scatter(
+    np.arange(1, 101), np.squeeze(fert_rates), color="red", marker="o", s=4
+)
+plt.grid(
+    visible=True, which='major', axis='both', color='0.5', linestyle='--',
+    linewidth=0.3
+)
+plt.xlabel(r"Age ($s$)")
+plt.ylabel(r"Fertility rate ($f_s$)")
+plt.savefig('fert_rates_zaf.png')
+plt.show()
+------------------
+
+
+[0;31m---------------------------------------------------------------------------[0m
+[0;31mStdinNotImplementedError[0m                  Traceback (most recent call last)
+Cell [0;32mIn[1], line 5[0m
+[1;32m      2[0m [38;5;28;01mimport[39;00m [38;5;21;01mmatplotlib[39;00m[38;5;21;01m.[39;00m[38;5;21;01mpyplot[39;00m [38;5;28;01mas[39;00m [38;5;21;01mplt[39;00m
+[1;32m      3[0m [38;5;28;01mimport[39;00m [38;5;21;01mogcore[39;00m[38;5;21;01m.[39;00m[38;5;21;01mdemographics[39;00m [38;5;28;01mas[39;00m [38;5;21;01mdemog[39;00m
+[0;32m----> 5[0m fert_rates [38;5;241m=[39m [43mdemog[49m[38;5;241;43m.[39;49m[43mget_fert[49m[43m([49m
+[1;32m      6[0m [43m    [49m[43mtotpers[49m[38;5;241;43m=[39;49m[38;5;241;43m100[39;49m[43m,[49m
+[1;32m      7[0m [43m    [49m[43mmin_age[49m[38;5;241;43m=[39;49m[38;5;241;43m0[39;49m[43m,[49m
+[1;32m      8[0m [43m    [49m[43mmax_age[49m[38;5;241;43m=[39;49m[38;5;241;43m99[39;49m[43m,[49m
+[1;32m      9[0m [43m    [49m[43mcountry_id[49m[38;5;241;43m=[39;49m[38;5;124;43m"[39;49m[38;5;124;43m710[39;49m[38;5;124;43m"[39;49m[43m,[49m
+[1;32m     10[0m [43m    [49m[43mstart_year[49m[38;5;241;43m=[39;49m[38;5;241;43m2023[39;49m[43m,[49m
+[1;32m     11[0m [43m    [49m[43mend_year[49m[38;5;241;43m=[39;49m[38;5;241;43m2023[39;49m[43m,[49m
+[1;32m     12[0m [43m    [49m[43mgraph[49m[38;5;241;43m=[39;49m[38;5;28;43;01mFalse[39;49;00m[43m,[49m
+[1;32m     13[0m [43m    [49m[43mplot_path[49m[38;5;241;43m=[39;49m[38;5;28;43;01mNone[39;49;00m[43m,[49m
+[1;32m     14[0m [43m    [49m[43mdownload_path[49m[38;5;241;43m=[39;49m[38;5;28;43;01mNone[39;49;00m[43m,[49m
+[1;32m     15[0m [43m)[49m
+[1;32m     16[0m plt[38;5;241m.[39mplot(
+[1;32m     17[0m     np[38;5;241m.[39marange([38;5;241m1[39m, [38;5;241m101[39m), np[38;5;241m.[39msqueeze(fert_rates), linestyle[38;5;241m=[39m[38;5;124m"[39m[38;5;124m-[39m[38;5;124m"[39m, linewidth[38;5;241m=[39m[38;5;241m1[39m,
+[1;32m     18[0m     color[38;5;241m=[39m[38;5;124m"[39m[38;5;124mblack[39m[38;5;124m"[39m
+[1;32m     19[0m )
+[1;32m     20[0m plt[38;5;241m.[39mscatter(
+[1;32m     21[0m     np[38;5;241m.[39marange([38;5;241m1[39m, [38;5;241m101[39m), np[38;5;241m.[39msqueeze(fert_rates), color[38;5;241m=[39m[38;5;124m"[39m[38;5;124mred[39m[38;5;124m"[39m, marker[38;5;241m=[39m[38;5;124m"[39m[38;5;124mo[39m[38;5;124m"[39m, s[38;5;241m=[39m[38;5;241m4[39m
+[1;32m     22[0m )
+
+File [0;32m~/miniconda3/envs/ogzaf-dev/lib/python3.11/site-packages/ogcore/demographics.py:180[0m, in [0;36mget_fert[0;34m(totpers, min_age, max_age, country_id, start_year, end_year, graph, plot_path, download_path)[0m
+[1;32m    178[0m fert_rates_2D [38;5;241m=[39m np[38;5;241m.[39mzeros((end_year [38;5;241m+[39m [38;5;241m1[39m [38;5;241m-[39m start_year, totpers))
+[1;32m    179[0m [38;5;66;03m# Read UN data[39;00m
+[0;32m--> 180[0m df [38;5;241m=[39m [43mget_un_data[49m[43m([49m
+[1;32m    181[0m [43m    [49m[38;5;124;43m"[39;49m[38;5;124;43m68[39;49m[38;5;124;43m"[39;49m[43m,[49m[43m [49m[43mcountry_id[49m[38;5;241;43m=[39;49m[43mcountry_id[49m[43m,[49m[43m [49m[43mstart_year[49m[38;5;241;43m=[39;49m[43mstart_year[49m[43m,[49m[43m [49m[43mend_year[49m[38;5;241;43m=[39;49m[43mend_year[49m
+[1;32m    182[0m [43m[49m[43m)[49m
+[1;32m    183[0m [38;5;66;03m# CLean and rebin data[39;00m
+[1;32m    184[0m [38;5;28;01mfor[39;00m y [38;5;129;01min[39;00m [38;5;28mrange[39m(start_year, end_year [38;5;241m+[39m [38;5;241m1[39m):
+
+File [0;32m~/miniconda3/envs/ogzaf-dev/lib/python3.11/site-packages/ogcore/demographics.py:75[0m, in [0;36mget_un_data[0;34m(variable_code, country_id, start_year, end_year)[0m
+[1;32m     73[0m [38;5;28;01melse[39;00m:  [38;5;66;03m# if file not exist, prompt user for token[39;00m
+[1;32m     74[0m     [38;5;28;01mtry[39;00m:
+[0;32m---> 75[0m         UN_TOKEN [38;5;241m=[39m [38;5;28;43minput[39;49m[43m([49m
+[1;32m     76[0m [43m            [49m[38;5;124;43m"[39;49m[38;5;124;43mPlease enter your UN API token (press return if you do not have one): [39;49m[38;5;124;43m"[39;49m
+[1;32m     77[0m [43m        [49m[43m)[49m
+[1;32m     78[0m         [38;5;66;03m# write the UN_TOKEN to a file to find in the future[39;00m
+[1;32m     79[0m         [38;5;28;01mwith[39;00m [38;5;28mopen[39m(os[38;5;241m.[39mpath[38;5;241m.[39mjoin([38;5;124m"[39m[38;5;124mun_api_token.txt[39m[38;5;124m"[39m), [38;5;124m"[39m[38;5;124mw[39m[38;5;124m"[39m) [38;5;28;01mas[39;00m file:
+
+File [0;32m~/miniconda3/envs/ogzaf-dev/lib/python3.11/site-packages/ipykernel/kernelbase.py:1281[0m, in [0;36mKernel.raw_input[0;34m(self, prompt)[0m
+[1;32m   1279[0m [38;5;28;01mif[39;00m [38;5;129;01mnot[39;00m [38;5;28mself[39m[38;5;241m.[39m_allow_stdin:
+[1;32m   1280[0m     msg [38;5;241m=[39m [38;5;124m"[39m[38;5;124mraw_input was called, but this frontend does not support input requests.[39m[38;5;124m"[39m
+[0;32m-> 1281[0m     [38;5;28;01mraise[39;00m StdinNotImplementedError(msg)
+[1;32m   1282[0m [38;5;28;01mreturn[39;00m [38;5;28mself[39m[38;5;241m.[39m_input_request(
+[1;32m   1283[0m     [38;5;28mstr[39m(prompt),
+[1;32m   1284[0m     [38;5;28mself[39m[38;5;241m.[39m_parent_ident[[38;5;124m"[39m[38;5;124mshell[39m[38;5;124m"[39m],
+[1;32m   1285[0m     [38;5;28mself[39m[38;5;241m.[39mget_parent([38;5;124m"[39m[38;5;124mshell[39m[38;5;124m"[39m),
+[1;32m   1286[0m     password[38;5;241m=[39m[38;5;28;01mFalse[39;00m,
+[1;32m   1287[0m )
+
+[0;31mStdinNotImplementedError[0m: raw_input was called, but this frontend does not support input requests.
+

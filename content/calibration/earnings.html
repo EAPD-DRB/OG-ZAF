@@ -18,12 +18,12 @@
   </script>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../_static/styles/theme.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
-<link href="../../_static/styles/bootstrap.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
-<link href="../../_static/styles/pydata-sphinx-theme.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
 
   
-  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
   <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
@@ -37,9 +37,9 @@
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=87e54e7c" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
-<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341" />
-  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=3ee479438cf8b5e0d341"></script>
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
     <script src="../../_static/documentation_options.js?v=9eb32ce0"></script>
     <script src="../../_static/doctools.js?v=9a2dae69"></script>
@@ -141,6 +141,8 @@
         <div class="sidebar-primary-item">
 
   
+    
+  
 
 <a class="navbar-brand logo" href="../intro/intro.html">
   
@@ -162,7 +164,7 @@
 
  <script>
  document.write(`
-   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass"></i>
     <span class="search-button__default-text">Search</span>
     <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
@@ -366,10 +368,10 @@
 
 <script>
 document.write(`
-  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
-    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
-    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
   </button>
 `);
 </script>
@@ -377,7 +379,7 @@ document.write(`
 
 <script>
 document.write(`
-  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
   </button>
 `);
@@ -426,16 +428,16 @@ document.write(`
 <div class="math notranslate nohighlight" id="equation-eqlaborincome">
 <span class="eqno">(11)<a class="headerlink" href="#equation-eqlaborincome" title="Link to this equation">#</a></span>\[  \text{labor income:}\quad x_{j,s,t}\equiv w_t e_{j,s}n_{j,s,t} \quad\forall j,t \quad\text{and}\quad E+1\leq s\leq E+S\]</div>
 <p>In this specification, <span class="math notranslate nohighlight">\(w_t\)</span> is an equilibrium wage representing a portion of labor income that is common to all workers. Individual quantity of labor supply is <span class="math notranslate nohighlight">\(n_{j,s,t}\)</span>, and <span class="math notranslate nohighlight">\(e_{j,s}\)</span> represents a labor productivity factor that augments or diminishes the productivity of a worker’s labor supply relative to average productivity.</p>
-<p>We calibrate deterministic ability paths such that each lifetime income group has a different life-cycle profile of earnings. The distribution of income and wealth are often focal components of macroeconomic models. These calibrations require the use of microeconomic data on household incomes, but this level of data is not readily available for South Africa from public sources or surveys. To overcome this, we start with the proposition that estimated productivity curves calibrated for the <a class="reference external" href="https://pslmodels.github.io/OG-USA/content/calibration/earnings.html">OG-USA</a> model, generated from micro-level earnings data, represent a generalized relationship between age and lifetime income <span id="id1">[<a class="reference internal" href="../OGZAF_references.html#id24" title="Jason DeBacker, Richard W. Evans, Evan Magnusson, Kerk L. Phillips, Shanthi Ramnath, and Isaac Swift. The distributional effects of redistributional tax policy. mimeo, Open Source Macroeconomics Laboratory, January 2017.">DeBacker <em>et al.</em>, 2017</a>]</span>. As such, our objective is to generate the curves for the U.S. and then adjust their generalized shapes to produce those for South Africa. In other words, our strategic approach is to apply South Africa’s national distribution of income by age to the estimated U.S. data on income by age, and then use these re-distributed data to re-estimate the earning profile curves and use them for South Africa. This is done in two ways (in this order):</p>
+<p>We calibrate deterministic ability paths such that each lifetime income group has a different life-cycle profile of earnings. The distribution of income and wealth are often focal components of macroeconomic models. These calibrations require the use of microeconomic data on household incomes, but this level of data is not readily available for South Africa from public sources or surveys. To overcome this, we start with the proposition that estimated productivity curves calibrated for the <a class="reference external" href="https://pslmodels.github.io/OG-USA/content/calibration/earnings.html">OG-USA</a> model, generated from micro-level earnings data, represent a generalized relationship between age and lifetime income <span id="id1">[<a class="reference internal" href="../OGZAF_references.html#id25" title="Jason DeBacker, Richard W. Evans, Evan Magnusson, Kerk L. Phillips, Shanthi Ramnath, and Isaac Swift. The distributional effects of redistributional tax policy. mimeo, Open Source Macroeconomics Laboratory, January 2017.">DeBacker <em>et al.</em>, 2017</a>]</span>. As such, our objective is to generate the curves for the U.S. and then adjust their generalized shapes to produce those for South Africa. In other words, our strategic approach is to apply South Africa’s national distribution of income by age to the estimated U.S. data on income by age, and then use these re-distributed data to re-estimate the earning profile curves and use them for South Africa. This is done in two ways (in this order):</p>
 <ol class="arabic simple">
 <li><p>Adjustment by income (<span class="math notranslate nohighlight">\(J\)</span>): adjust the gaps between the U.S. curves to match South Africa’s distribution between the <span class="math notranslate nohighlight">\(J\)</span>-income groups, using data from the World Inequality Database (WID);</p></li>
 <li><p>Adjustment by age (<span class="math notranslate nohighlight">\(S\)</span>): adjust the shape of all the U.S. curves to match South Africa’s national distribution of income per capita for each age year, using data from the National Transfer Accounts database (NTA).</p></li>
 </ol>
-<p>The data for the U.S. come from the U.S. Internal Revenue Services’s (IRS) Statistics of Income program (SOI) Continuous Work History Sample (CWHS). <span id="id2">[<a class="reference internal" href="../OGZAF_references.html#id24" title="Jason DeBacker, Richard W. Evans, Evan Magnusson, Kerk L. Phillips, Shanthi Ramnath, and Isaac Swift. The distributional effects of redistributional tax policy. mimeo, Open Source Macroeconomics Laboratory, January 2017.">DeBacker <em>et al.</em>, 2017</a>]</span> match the SOI data with Social Security Administration (SSA) data on age and Current Population Survey (CPS) data on hours in order to generate a non-top-coded measure of hourly wage. See <span id="id3">[<a class="reference internal" href="../OGZAF_references.html#id23" title="Jason DeBacker and Shanthi Ramnath. Estimating the hourly earnings processes of top earners. Technical Report, Mimeo, 2017.">DeBacker and Ramnath, 2017</a>]</span> for a detailed description of the methodology.</p>
+<p>The data for the U.S. come from the U.S. Internal Revenue Services’s (IRS) Statistics of Income program (SOI) Continuous Work History Sample (CWHS). <span id="id2">[<a class="reference internal" href="../OGZAF_references.html#id25" title="Jason DeBacker, Richard W. Evans, Evan Magnusson, Kerk L. Phillips, Shanthi Ramnath, and Isaac Swift. The distributional effects of redistributional tax policy. mimeo, Open Source Macroeconomics Laboratory, January 2017.">DeBacker <em>et al.</em>, 2017</a>]</span> match the SOI data with Social Security Administration (SSA) data on age and Current Population Survey (CPS) data on hours in order to generate a non-top-coded measure of hourly wage. See <span id="id3">[<a class="reference internal" href="../OGZAF_references.html#id24" title="Jason DeBacker and Shanthi Ramnath. Estimating the hourly earnings processes of top earners. Technical Report, Mimeo, 2017.">DeBacker and Ramnath, 2017</a>]</span> for a detailed description of the methodology.</p>
 <figure class="align-default" id="figlogabil">
 <a class="reference internal image-reference" href="../../_images/ability_log_2D_ZAF.png"><img alt="../../_images/ability_log_2D_ZAF.png" src="../../_images/ability_log_2D_ZAF.png" style="height: 350px;" /></a>
 <figcaption>
-<p><span class="caption-number">Fig. 5 </span><span class="caption-text">Exogenous life cycle income ability paths <span class="math notranslate nohighlight">\(\log(e_{j,s})\)</span> with <span class="math notranslate nohighlight">\(S=80\)</span> and <span class="math notranslate nohighlight">\(J=7\)</span></span><a class="headerlink" href="#figlogabil" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 8 </span><span class="caption-text">Exogenous life cycle income ability paths <span class="math notranslate nohighlight">\(\log(e_{j,s})\)</span> with <span class="math notranslate nohighlight">\(S=80\)</span> and <span class="math notranslate nohighlight">\(J=7\)</span></span><a class="headerlink" href="#figlogabil" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <!-- +++
@@ -456,7 +458,7 @@ glue("earnings_profiles", fig, display=False)
 Exogenous life cycle income ability paths $\log(e_{j,s})$ with $S=80$ and $J=7$
 ```
 -->
-<p><a class="reference internal" href="#figlogabil"><span class="std std-numref">Figure 5</span></a> shows a calibration for <span class="math notranslate nohighlight">\(J=7\)</span> deterministic lifetime ability paths <span class="math notranslate nohighlight">\(e_{j,s}\)</span> corresponding to labor income percentiles <span class="math notranslate nohighlight">\(\boldsymbol{\lambda}=[0.25, 0.25, 0.20, 0.10, 0.10, 0.09, 0.01]\)</span>. Because there are few individuals above age 80 in the data, <span id="id4">[<a class="reference internal" href="../OGZAF_references.html#id24" title="Jason DeBacker, Richard W. Evans, Evan Magnusson, Kerk L. Phillips, Shanthi Ramnath, and Isaac Swift. The distributional effects of redistributional tax policy. mimeo, Open Source Macroeconomics Laboratory, January 2017.">DeBacker <em>et al.</em>, 2017</a>]</span> extrapolate these estimates for model ages 80-100 using an arctan function.</p>
+<p><a class="reference internal" href="#figlogabil"><span class="std std-numref">Figure 8</span></a> shows a calibration for <span class="math notranslate nohighlight">\(J=7\)</span> deterministic lifetime ability paths <span class="math notranslate nohighlight">\(e_{j,s}\)</span> corresponding to labor income percentiles <span class="math notranslate nohighlight">\(\boldsymbol{\lambda}=[0.25, 0.25, 0.20, 0.10, 0.10, 0.09, 0.01]\)</span>. Because there are few individuals above age 80 in the data, <span id="id4">[<a class="reference internal" href="../OGZAF_references.html#id25" title="Jason DeBacker, Richard W. Evans, Evan Magnusson, Kerk L. Phillips, Shanthi Ramnath, and Isaac Swift. The distributional effects of redistributional tax policy. mimeo, Open Source Macroeconomics Laboratory, January 2017.">DeBacker <em>et al.</em>, 2017</a>]</span> extrapolate these estimates for model ages 80-100 using an arctan function.</p>
 <p>We calibrate the model such that each lifetime income group has a different life-cycle profile of earnings. Since the distribution on income and wealth are key aspects of our model, we calibrate these processes so that we can represent earners in the top 1 percent of the distribution of lifetime income.</p>
 <section id="lifetime-income">
 <span id="seclfearnlifinc"></span><h2>Lifetime Income<a class="headerlink" href="#lifetime-income" title="Link to this heading">#</a></h2>
@@ -552,7 +554,7 @@ Exogenous life cycle income ability paths $\log(e_{j,s})$ with $S=80$ and $J=7$
 <p>To get a life-cycle profile of effective labor units for each group, we estimate the wage profile for each lifetime income group. We do this by estimating the following regression model Equation {eq}`` separately for each lifetime income group using data on actual (not imputed) wages:</p>
 <div class="math notranslate nohighlight" id="equation-eqwage-profile">
 <span class="eqno">(15)<a class="headerlink" href="#equation-eqwage-profile" title="Link to this equation">#</a></span>\[  ln(w_{j,t}) = \alpha_{j} + \beta_{1}age_{j,t} + \beta_{2}age_{j,t}^{2} + \beta_{3}*age_{j,t}^{3} + \varepsilon_{j,t}\]</div>
-<p>Life-cycle earnings profiles are implied by the parameters estimated from equation <a class="reference internal" href="#equation-eqwage-profile">(15)</a>, and are used to plot <a class="reference internal" href="#figlogabil"><span class="std std-numref">Figure 5</span></a>. The arctan function used to extrapolate these estimates for model ages 80-100 takes the following form:</p>
+<p>Life-cycle earnings profiles are implied by the parameters estimated from equation <a class="reference internal" href="#equation-eqwage-profile">(15)</a>, and are used to plot <a class="reference internal" href="#figlogabil"><span class="std std-numref">Figure 8</span></a>. The arctan function used to extrapolate these estimates for model ages 80-100 takes the following form:</p>
 <div class="math notranslate nohighlight" id="equation-eqlfearnarctan">
 <span class="eqno">(16)<a class="headerlink" href="#equation-eqlfearnarctan" title="Link to this equation">#</a></span>\[    y = \left(\frac{-a}{\pi}\right)*arctan(bx+c)+\frac{a}{2}\]</div>
 <p>where <span class="math notranslate nohighlight">\(x\)</span> is age, and <span class="math notranslate nohighlight">\(a\)</span>, <span class="math notranslate nohighlight">\(b\)</span>, and <span class="math notranslate nohighlight">\(c\)</span> are the parameters we search over for the best fit of the function to the following three criteria: 1) the value of the function should match the value of the data at age 80, 2) the slope of the arctan should match the slope of the data at age 80, and 3) the value of the function should match the value of the data at age 100 times a constant. This constant is 0.5 for all lifetime income groups, except for the second highest ability at 0.7 (otherwise, the second highest has a lower income than the third highest ability group in the last few years).</p>
@@ -560,7 +562,7 @@ Exogenous life cycle income ability paths $\log(e_{j,s})$ with $S=80$ and $J=7$
 <section id="income-at-the-very-top">
 <h2>Income at the very top<a class="headerlink" href="#income-at-the-very-top" title="Link to this heading">#</a></h2>
 <p>In addition to lifecycle profiles of the seven percentile groups above, the model provides calibrations of income at the very top. This includes breaking out percentiles as fine as the top 0.01% of earners. The two alternative <span class="math notranslate nohighlight">\(\lambda\)</span> vectors are <span class="math notranslate nohighlight">\(\lambda_{j}=[0.25, 0.25, 0.2, 0.1, 0.1, 0.09, 0.005, 0.004, 0.001]\)</span> and <span class="math notranslate nohighlight">\(\lambda_{j}=[0.25, 0.25, 0.2, 0.1, 0.1, 0.09, 0.005, 0.004, 0.0009, 0.0001]\)</span>.</p>
-<p>Because we do not have U.S. panel data that allow us to observe such top percentile groups, we make the following assumptions in calibrating income at the very top. First, we assume the shape of the lifecycle profile of these top earners is the same as the top 1% overall. Second, we use 2018 estimates from the methodology of <span id="id5">[<a class="reference internal" href="../OGZAF_references.html#id60" title="Thomas Piketty and Emmanuel Saez. Income inequality in the united states, 1913-1998. Quarterly Journal of Economics, 118(1):1-39, February 2003.">Piketty and Saez, 2003</a>]</span> to provide factors to scale the earnings process we estimate for groups inside the top 1%.<a class="footnote-reference brackets" href="#ps-note" id="id6" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a></p>
+<p>Because we do not have U.S. panel data that allow us to observe such top percentile groups, we make the following assumptions in calibrating income at the very top. First, we assume the shape of the lifecycle profile of these top earners is the same as the top 1% overall. Second, we use 2018 estimates from the methodology of <span id="id5">[<a class="reference internal" href="../OGZAF_references.html#id61" title="Thomas Piketty and Emmanuel Saez. Income inequality in the united states, 1913-1998. Quarterly Journal of Economics, 118(1):1-39, February 2003.">Piketty and Saez, 2003</a>]</span> to provide factors to scale the earnings process we estimate for groups inside the top 1%.<a class="footnote-reference brackets" href="#ps-note" id="id6" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a></p>
 <div class="pst-scrollable-table-container"><table class="table" id="tab-top-incomes">
 <caption><span class="caption-number">Table 3 </span><span class="caption-text"><strong>Incomes at the very top</strong> Source: Piketty and Saez (2003) 2018 estimates.</span><a class="headerlink" href="#tab-top-incomes" title="Link to this table">#</a></caption>
 <thead>
@@ -722,8 +724,8 @@ By Marcelo LaFleur and Richard W. Evans
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341"></script>
-<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341"></script>
+  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
 
   <footer class="bd-footer">
   </footer>

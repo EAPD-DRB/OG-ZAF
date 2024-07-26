@@ -18,12 +18,12 @@
   </script>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../_static/styles/theme.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
-<link href="../../_static/styles/bootstrap.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
-<link href="../../_static/styles/pydata-sphinx-theme.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
 
   
-  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
   <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
@@ -37,9 +37,9 @@
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=87e54e7c" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
-<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341" />
-  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=3ee479438cf8b5e0d341"></script>
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
     <script src="../../_static/documentation_options.js?v=9eb32ce0"></script>
     <script src="../../_static/doctools.js?v=9a2dae69"></script>
@@ -141,6 +141,8 @@
         <div class="sidebar-primary-item">
 
   
+    
+  
 
 <a class="navbar-brand logo" href="../intro/intro.html">
   
@@ -162,7 +164,7 @@
 
  <script>
  document.write(`
-   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass"></i>
     <span class="search-button__default-text">Search</span>
     <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
@@ -366,10 +368,10 @@
 
 <script>
 document.write(`
-  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
-    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
-    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
   </button>
 `);
 </script>
@@ -377,7 +379,7 @@ document.write(`
 
 <script>
 document.write(`
-  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
   </button>
 `);
@@ -446,15 +448,15 @@ document.write(`
 <h2>Behavioral Assumptions<a class="headerlink" href="#behavioral-assumptions" title="Link to this heading">#</a></h2>
 <section id="elasticity-of-labor-supply">
 <h3>Elasticity of labor supply<a class="headerlink" href="#elasticity-of-labor-supply" title="Link to this heading">#</a></h3>
-<p>As discussed in the <a class="reference external" href="https://pslmodels.github.io/OG-Core/content/theory/households.html">OG-Core household theory documentation</a>, we use the elliptical disutility of labor function developed by <span id="id1">[<a class="reference internal" href="../OGZAF_references.html#id30" title="Richard W. Evans and Kerk L. Phillips. Advantages of an ellipse when modeling leisure utility. Computational Economics, 2017.">Evans and Phillips, 2017</a>]</span>.  We then fit the parameters of the elliptical utility function to match the marginal disutility from a constant Frisch elasticity function.  <code class="docutils literal notranslate"><span class="pre">OG-ZAF</span></code> users enter the constant Frisch elasticity as a parameter.  <span id="id2">[<a class="reference internal" href="../OGZAF_references.html#id59" title="William B. Peterman. Reconciling micro and macro estimates of the frisch labor supply elasticity. Economic Inquiry, 54(1):100-120, January 2016.">Peterman, 2016</a>]</span> finds a range of Frisch elasticities estimated from microeconomic and macroeconomic data.  These range from 0 to 4.  Peterman makes the case that in lifecycle models without an extensive margin for employment the  Frisch elasticity should be higher. For <code class="docutils literal notranslate"><span class="pre">OG-ZAF</span></code> we take a default value of 0.4 from <span id="id3">[<a class="reference internal" href="../OGZAF_references.html#id9" title="Joseph G Altonji. Intertemporal Substitution in Labor Supply: Evidence from Micro Data. Journal of Political Economy, 94(3):176-215, June 1986. URL: https://ideas.repec.org/a/ucp/jpolec/v94y1986i3ps176-s215.html, doi:.">Altonji, 1986</a>]</span>.</p>
+<p>As discussed in the <a class="reference external" href="https://pslmodels.github.io/OG-Core/content/theory/households.html">OG-Core household theory documentation</a>, we use the elliptical disutility of labor function developed by <span id="id1">[<a class="reference internal" href="../OGZAF_references.html#id31" title="Richard W. Evans and Kerk L. Phillips. Advantages of an ellipse when modeling leisure utility. Computational Economics, 2017.">Evans and Phillips, 2017</a>]</span>.  We then fit the parameters of the elliptical utility function to match the marginal disutility from a constant Frisch elasticity function.  <code class="docutils literal notranslate"><span class="pre">OG-ZAF</span></code> users enter the constant Frisch elasticity as a parameter.  <span id="id2">[<a class="reference internal" href="../OGZAF_references.html#id60" title="William B. Peterman. Reconciling micro and macro estimates of the frisch labor supply elasticity. Economic Inquiry, 54(1):100-120, January 2016.">Peterman, 2016</a>]</span> finds a range of Frisch elasticities estimated from microeconomic and macroeconomic data.  These range from 0 to 4.  Peterman makes the case that in lifecycle models without an extensive margin for employment the  Frisch elasticity should be higher. For <code class="docutils literal notranslate"><span class="pre">OG-ZAF</span></code> we take a default value of 0.4 from <span id="id3">[<a class="reference internal" href="../OGZAF_references.html#id10" title="Joseph G Altonji. Intertemporal Substitution in Labor Supply: Evidence from Micro Data. Journal of Political Economy, 94(3):176-215, June 1986. URL: https://ideas.repec.org/a/ucp/jpolec/v94y1986i3ps176-s215.html, doi:.">Altonji, 1986</a>]</span>.</p>
 </section>
 <section id="intertemporal-elasticity-of-substitution">
 <h3>Intertemporal elasticity of substitution<a class="headerlink" href="#intertemporal-elasticity-of-substitution" title="Link to this heading">#</a></h3>
-<p>The default value for the intertemporal elasticity of substitution, <span class="math notranslate nohighlight">\(\sigma\)</span>, is taken from <span id="id4">[<a class="reference internal" href="../OGZAF_references.html#id16" title="Orazio P. Attanasio, James Banks, Costas Meghir, and and Guglielmo Weber. Humps and Bumps in Lifetime Consumption. Journal of Business &amp; Economic Statistics, 17(1):22-35, January 1999. URL: https://ideas.repec.org/a/bes/jnlbes/v17y1999i1p22-35.html, doi:.">Attanasio <em>et al.</em>, 1999</a>]</span>.  We set <span class="math notranslate nohighlight">\(\sigma=1.5\)</span>.</p>
+<p>The default value for the intertemporal elasticity of substitution, <span class="math notranslate nohighlight">\(\sigma\)</span>, is taken from <span id="id4">[<a class="reference internal" href="../OGZAF_references.html#id17" title="Orazio P. Attanasio, James Banks, Costas Meghir, and and Guglielmo Weber. Humps and Bumps in Lifetime Consumption. Journal of Business &amp; Economic Statistics, 17(1):22-35, January 1999. URL: https://ideas.repec.org/a/bes/jnlbes/v17y1999i1p22-35.html, doi:.">Attanasio <em>et al.</em>, 1999</a>]</span>.  We set <span class="math notranslate nohighlight">\(\sigma=1.5\)</span>.</p>
 </section>
 <section id="rate-of-time-preference">
 <h3>Rate of time preference<a class="headerlink" href="#rate-of-time-preference" title="Link to this heading">#</a></h3>
-<p>We take our default value for the rate of time preference parameter, <span class="math notranslate nohighlight">\(\beta\)</span> from <span id="id5">[<a class="reference internal" href="../OGZAF_references.html#id15" title="Christopher Carroll. Precautionary saving and the marginal propensity to consume out of permanent income. Journal of Monetary Economics, 56(6):780-790, 2009. URL: https://EconPapers.repec.org/RePEc:eee:moneco:v:56:y:2009:i:6:p:780-790.">Carroll, 2009</a>]</span>.  We set the value to <span class="math notranslate nohighlight">\(\beta=0.96\)</span> (on an annual basis).</p>
+<p>We take our default value for the rate of time preference parameter, <span class="math notranslate nohighlight">\(\beta\)</span> from <span id="id5">[<a class="reference internal" href="../OGZAF_references.html#id16" title="Christopher Carroll. Precautionary saving and the marginal propensity to consume out of permanent income. Journal of Monetary Economics, 56(6):780-790, 2009. URL: https://EconPapers.repec.org/RePEc:eee:moneco:v:56:y:2009:i:6:p:780-790.">Carroll, 2009</a>]</span>.  We set the value to <span class="math notranslate nohighlight">\(\beta=0.96\)</span> (on an annual basis).</p>
 </section>
 </section>
 <section id="economic-assumptions">
@@ -643,8 +645,8 @@ By Marcelo LaFleur and Richard W. Evans
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341"></script>
-<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341"></script>
+  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
 
   <footer class="bd-footer">
   </footer>
