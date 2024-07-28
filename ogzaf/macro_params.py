@@ -5,7 +5,6 @@ parameters for the OG-ZAF model that rely on macro data for calibration.
 """
 
 # imports
-import pandas_datareader.data as web
 from pandas_datareader import wb
 import pandas as pd
 import numpy as np
@@ -111,35 +110,6 @@ def get_macro_params():
 
     ilo_data = df_temp[["time", "obs_value"]]
 
-    """
-    This retrieves data from FRED.
-    """
-
-    fred_variable_dict = {
-        # "Labor share": "LABSHPINA156NRUG",
-        # "BAA Corp Bond Rates": "DBAA",
-        # "10 year govt bond rate": "IRLTLT01ZAM156N",
-        # "Nominal GDP": "MKTGDPZAA646NWDB",
-        "Total Expenditure to GDP": "ZAFGGXG01GDPPT",
-        "Total gov transfer payments": "B087RC1Q027SBEA",
-        "Social Security payments": "W823RC1",
-        "Gov interest payments": "A091RC1Q027SBEA",
-        "Labor share of income": "LABSHPZAA156NRUG",
-    }
-
-    # pull series of interest using pandas_datareader
-    fred_data = web.DataReader(fred_variable_dict.values(), "fred", start, end)
-    fred_data.rename(
-        columns=dict((y, x) for x, y in fred_variable_dict.items()),
-        inplace=True,
-    )
-    # make data quarterly
-    fred_data_q = fred_data.resample("Q").mean()
-
-    # Separate quartely, monthly, and annual FRED dataseries
-
-    # fred_data_d = fred_data[["BAA Corp Bond Rates", "10 year govt bond rate"]]
-
     # initialize a dictionary of parameters
     macro_parameters = {}
 
@@ -171,32 +141,14 @@ def get_macro_params():
         ).loc[baseline_yearquarter]
     ]
 
-    # find alpha_T
-    macro_parameters["alpha_T"] = [0.04]
-    # macro_parameters["alpha_T"] = [
-    #     pd.Series(
-    #         (
-    #             fred_data_q["Total gov transfer payments"]
-    #             - fred_data_q["Social Security payments"]
-    #         )
-    #         / fred_data_q["Nominal GDP"]
-    #     ).loc[baseline_date]
-    # ]
+    # alpha_T, non-social security benefits as a fraction of GDP
+    # source: https://data.imf.org/?sk=b052f0f0-c166-43b6-84fa-47cccae3e219&hide_uv=1
+    macro_parameters["alpha_T"] = [0.041 - 0.0]
+    # alpha_G, gov't consumption expenditures as a fraction of GDP
+    # source: https://data.imf.org/?sk=edb0cd70-0af3-40e1-a9c3-bdef83ee4d1e&hide_uv=1
+    macro_parameters["alpha_G"] = [0.351 - 0.043 - 0.041]
 
-    # find alpha_G
-    # macro_parameters["alpha_G"] = [0.27]
-    # macro_parameters["alpha_G"] = [
-    #     pd.Series(
-    #         (
-    #             fred_data_q["Gov expenditures"]
-    #             - fred_data_q["Total gov transfer payments"]
-    #             - fred_data_q["Gov interest payments"]
-    #         )
-    #         / fred_data_q["Nominal GDP"]
-    #     ).loc[baseline_date]
-    # ]
-
-    # find gamma
+    # find gamma, capital's share of income
     macro_parameters["gamma"] = [
         1
         - (
@@ -207,10 +159,6 @@ def get_macro_params():
             )
             / 100
         )
-        # 1
-        # - pd.Series(
-        #     (fred_data["Labor share of income"]).loc[baseline_yearquarter]
-        # ).mean()
     ]
 
     # find g_y
@@ -219,11 +167,15 @@ def get_macro_params():
     )
 
     """"
-    We want to use the non linear relationship estimated by Li, Magud, Werner, Witte (2021), available here: https://www.imf.org/en/Publications/WP/Issues/2021/06/04/The-Long-Run-Impact-of-Sovereign-Yields-on-Corporate-Yields-in-Emerging-Markets-50224
+    We want to use the non linear relationship estimated by
+    Li, Magud, Werner, Witte (2021), available here:
+    https://www.imf.org/en/Publications/WP/Issues/2021/06/04/The-Long-Run-Impact-of-Sovereign-Yields-on-Corporate-Yields-in-Emerging-Markets-50224
 
     Steps:
-    1) Generate modelled corporate yields (corp_yhat) for a range of sovereign yields (sov_y)  using the estimated equation in col 2 of table 8 (and figure 3).
-    2) Estimate the OLS using sovereign yields as the dependent variable
+    1) Generate modelled corporate yields (corp_yhat) for a range of
+    sovereign yields (sov_y)  using the estimated equation in col 2 of
+    table 8 (and figure 3). 2) Estimate the OLS using sovereign yields
+    as the dependent variable
     """
 
     # # estimate r_gov_shift and r_gov_scale
@@ -235,15 +187,13 @@ def get_macro_params():
         corp_yhat,
     )
     res = mod.fit()
-    # first term is the constant and needs to be divided by 100 to have the correct unit. Second term is the coefficient
+    # first term is the constant and needs to be divided by 100 to have
+    # the correct unit. Second term is the coefficient
     macro_parameters["r_gov_shift"] = [
         (-res.params[0] / 100)
-    ]  # constant = 0.0337662504
+    ]  # constant = -0.0337662504
     macro_parameters["r_gov_scale"] = [
         res.params[1]
     ]  # coefficient = 0.24484764
-
-    # macro_parameters["r_gov_shift"] = [-0.0337662504]
-    # macro_parameters["r_gov_scale"] = [0.24484764]
 
     return macro_parameters

@@ -58,16 +58,18 @@ def main():
     # Update parameters from calibrate.py Calibration class
     c = Calibration(p)
     updated_params = c.get_dict()
+    p.tax_func_type = "linear"
+    p.age_specific = False
     p.update_specifications(updated_params)
+    # set underlying growth rate to zero, as value from data is negative
+    p.g_y = 0.0
     # set tax rates
     p.update_specifications(
         {
             "cit_rate": [[0.27]],
-            "tax_func_type": "linear",
-            "age_specific": False,
-            # "etr_params": [[[0.22]]],
-            # "mtrx_params": [[[0.31]]],
-            # "mtry_params": [[[0.25]]],
+            "etr_params": [[[0.22]]],
+            "mtrx_params": [[[0.31]]],
+            "mtry_params": [[[0.25]]],
             "tau_c": [[0.15]],
         }
     )
