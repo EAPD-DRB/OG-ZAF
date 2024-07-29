@@ -2393,7 +2393,7 @@
     "retirement_age": [
         65
     ],
-    "AIME_num_years": 35,
+    "avg_earn_num_years": 35,
     "AIME_bkt_1": 749.0,
     "AIME_bkt_2": 4517.0,
     "PIA_rate_bkt_1": 0.0,
