@@ -172,7 +172,7 @@ We discuss the approach to estimating fertility rates $f_{s,t}$, mortality rates
   height: 400px
   name: FigImmRatesZAF
   ---
-  South Africa immigration rates by age $\left(\i_s\right)$ for $E+S=100$: year 2023
+  South Africa immigration rates by age $\left(i_s\right)$ for $E+S=100$: year 2023
   ```
 
   We calculate our immigration rates for the consecutive-year-periods of population distribution data 2022 and 2023. The immigration rates $i_{s,t}$ that we use in our model are the the residuals described in {eq}`EqPopImmRates` implied by these two consecutive periods. {numref}`Figure %s <FigImmRatesZAF>` shows the estimated immigration rates for $E+S=100$ and given the fertility rates from Section {ref}`SecDemogFert` and the mortality rates from Section {ref}`SecDemogMort`. These immigration rates show large out-migration from South Africa.[^out_migration]
