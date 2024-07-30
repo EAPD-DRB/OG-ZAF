@@ -63,7 +63,7 @@
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Demographics" href="demographics.html" />
-    <link rel="prev" title="Exogenous Parameters" href="exogenous_parameters.html" />
+    <link rel="prev" title="Calibration of Firms Parameters" href="firms.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -189,21 +189,24 @@
 <ul class="nav bd-sidenav">
 <li class="toctree-l1 has-children"><a class="reference internal" href="../api/public_api.html">API</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../api/calibrate.html">Main Calibration Functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/demographics.html">Demographics Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/income.html">Life-cycle productivity profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/input_output.html">Output-Consumption Bridge</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/macro_params.html">Macro Parameter Estimation Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/utils.html">Calibration Utilities</a></li>
 </ul>
 </details></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Calibration</span></p>
 <ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="exogenous_parameters.html">Exogenous Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="households.html">Calibration of Household Preference Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="firms.html">Calibration of Firms Parameters</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Calibration of Macroeconomic Parameters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="demographics.html">Demographics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="earnings.html">Lifetime Earnings Profiles</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tax_functions.html">Tax Functions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="bequests.html">Bequest Process Calibration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="taxes.html">Taxes in OG-ZAF</a></li>
 <li class="toctree-l1"><a class="reference internal" href="UBI.html">Universal Basic Income (UBI)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="matching_lwi.html">Matching Labor, Wealth, and Income Moments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="exogenous_parameters.html">Exogenous Parameters</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">References</span></p>
 <ul class="nav bd-sidenav">
@@ -407,18 +410,7 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#behavioral-assumptions">Behavioral Assumptions</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elasticity-of-labor-supply">Elasticity of labor supply</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#intertemporal-elasticity-of-substitution">Intertemporal elasticity of substitution</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rate-of-time-preference">Rate of time preference</a></li>
-</ul>
-</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#economic-assumptions">Economic Assumptions</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#aggregate-production-function-and-capital-accumulation">Aggregate Production Function and Capital Accumulation</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elasticity-of-substitution">Elasticity of substitution</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#capital-s-share-of-output">Capital’s share of output</a></li>
-</ul>
-</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#open-economy-parameters">Open Economy Parameters</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#foreign-holding-of-government-debt-in-the-initial-period">Foreign holding of government debt in the initial period</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#foreign-purchases-of-newly-issued-debt">Foreign purchases of newly issued debt</a></li>
@@ -444,36 +436,9 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="calibration-of-macroeconomic-parameters">
 <span id="chap-macrocalib"></span><h1>Calibration of Macroeconomic Parameters<a class="headerlink" href="#calibration-of-macroeconomic-parameters" title="Link to this heading">#</a></h1>
-<section id="behavioral-assumptions">
-<h2>Behavioral Assumptions<a class="headerlink" href="#behavioral-assumptions" title="Link to this heading">#</a></h2>
-<section id="elasticity-of-labor-supply">
-<h3>Elasticity of labor supply<a class="headerlink" href="#elasticity-of-labor-supply" title="Link to this heading">#</a></h3>
-<p>As discussed in the <a class="reference external" href="https://pslmodels.github.io/OG-Core/content/theory/households.html">OG-Core household theory documentation</a>, we use the elliptical disutility of labor function developed by <span id="id1">[<a class="reference internal" href="../OGZAF_references.html#id31" title="Richard W. Evans and Kerk L. Phillips. Advantages of an ellipse when modeling leisure utility. Computational Economics, 2017.">Evans and Phillips, 2017</a>]</span>.  We then fit the parameters of the elliptical utility function to match the marginal disutility from a constant Frisch elasticity function.  <code class="docutils literal notranslate"><span class="pre">OG-ZAF</span></code> users enter the constant Frisch elasticity as a parameter.  <span id="id2">[<a class="reference internal" href="../OGZAF_references.html#id60" title="William B. Peterman. Reconciling micro and macro estimates of the frisch labor supply elasticity. Economic Inquiry, 54(1):100-120, January 2016.">Peterman, 2016</a>]</span> finds a range of Frisch elasticities estimated from microeconomic and macroeconomic data.  These range from 0 to 4.  Peterman makes the case that in lifecycle models without an extensive margin for employment the  Frisch elasticity should be higher. For <code class="docutils literal notranslate"><span class="pre">OG-ZAF</span></code> we take a default value of 0.4 from <span id="id3">[<a class="reference internal" href="../OGZAF_references.html#id10" title="Joseph G Altonji. Intertemporal Substitution in Labor Supply: Evidence from Micro Data. Journal of Political Economy, 94(3):176-215, June 1986. URL: https://ideas.repec.org/a/ucp/jpolec/v94y1986i3ps176-s215.html, doi:.">Altonji, 1986</a>]</span>.</p>
-</section>
-<section id="intertemporal-elasticity-of-substitution">
-<h3>Intertemporal elasticity of substitution<a class="headerlink" href="#intertemporal-elasticity-of-substitution" title="Link to this heading">#</a></h3>
-<p>The default value for the intertemporal elasticity of substitution, <span class="math notranslate nohighlight">\(\sigma\)</span>, is taken from <span id="id4">[<a class="reference internal" href="../OGZAF_references.html#id17" title="Orazio P. Attanasio, James Banks, Costas Meghir, and and Guglielmo Weber. Humps and Bumps in Lifetime Consumption. Journal of Business &amp; Economic Statistics, 17(1):22-35, January 1999. URL: https://ideas.repec.org/a/bes/jnlbes/v17y1999i1p22-35.html, doi:.">Attanasio <em>et al.</em>, 1999</a>]</span>.  We set <span class="math notranslate nohighlight">\(\sigma=1.5\)</span>.</p>
-</section>
-<section id="rate-of-time-preference">
-<h3>Rate of time preference<a class="headerlink" href="#rate-of-time-preference" title="Link to this heading">#</a></h3>
-<p>We take our default value for the rate of time preference parameter, <span class="math notranslate nohighlight">\(\beta\)</span> from <span id="id5">[<a class="reference internal" href="../OGZAF_references.html#id16" title="Christopher Carroll. Precautionary saving and the marginal propensity to consume out of permanent income. Journal of Monetary Economics, 56(6):780-790, 2009. URL: https://EconPapers.repec.org/RePEc:eee:moneco:v:56:y:2009:i:6:p:780-790.">Carroll, 2009</a>]</span>.  We set the value to <span class="math notranslate nohighlight">\(\beta=0.96\)</span> (on an annual basis).</p>
-</section>
-</section>
 <section id="economic-assumptions">
 <h2>Economic Assumptions<a class="headerlink" href="#economic-assumptions" title="Link to this heading">#</a></h2>
-<p>As the default rate of labor augmenting technological change, <span class="math notranslate nohighlight">\(g_y\)</span>, we use a value of 3%.  The average annual growth rate in GDP per capita in South Africa between 1961 and 2021 is 0.7% per year.</p>
-</section>
-<section id="aggregate-production-function-and-capital-accumulation">
-<h2>Aggregate Production Function and Capital Accumulation<a class="headerlink" href="#aggregate-production-function-and-capital-accumulation" title="Link to this heading">#</a></h2>
-<p>The <a class="reference external" href="https://pslmodels.github.io/OG-Core/content/theory/firms.html">OG-Core firm theory documentation</a> outlines the constant returns to scale, constant elasticity of substitution production function of the representative firm.  This function has two parameters; the elasticity of substitution and capital’s share of output.</p>
-<section id="elasticity-of-substitution">
-<h3>Elasticity of substitution<a class="headerlink" href="#elasticity-of-substitution" title="Link to this heading">#</a></h3>
-<p><code class="docutils literal notranslate"><span class="pre">OG-ZAF</span></code>’s default parameterization has an elasticity of substitution of <span class="math notranslate nohighlight">\(\varepsilon=1.0\)</span>, which implies a Cobb-Douglas production function.</p>
-</section>
-<section id="capital-s-share-of-output">
-<h3>Capital’s share of output<a class="headerlink" href="#capital-s-share-of-output" title="Link to this heading">#</a></h3>
-<p>Here, we use a default value of <span class="math notranslate nohighlight">\(\gamma =0.61\)</span>.</p>
-</section>
+<p>As the default rate of labor augmenting technological change, <span class="math notranslate nohighlight">\(g_y\)</span>, we use a value of 0%.  The average annual growth rate in GDP per capita in South Africa between 2007 and 2023 is 0.0% per year.</p>
 </section>
 <section id="open-economy-parameters">
 <h2>Open Economy Parameters<a class="headerlink" href="#open-economy-parameters" title="Link to this heading">#</a></h2>
@@ -483,28 +448,28 @@ document.write(`
 </section>
 <section id="foreign-purchases-of-newly-issued-debt">
 <h3>Foreign purchases of newly issued debt<a class="headerlink" href="#foreign-purchases-of-newly-issued-debt" title="Link to this heading">#</a></h3>
-<p>We set <span class="math notranslate nohighlight">\(\zeta_D = 0.26\)</span>.  This is the average share of foreign purchases of newly issued government debt found from the World Bank WDI.</p>
+<p>We set <span class="math notranslate nohighlight">\(\zeta_D = 0.23\)</span>.  This is the average share of foreign purchases of newly issued government debt found from the World Bank WDI.</p>
 </section>
 <section id="foreign-holdings-of-excess-capital">
 <h3>Foreign holdings of excess capital<a class="headerlink" href="#foreign-holdings-of-excess-capital" title="Link to this heading">#</a></h3>
-<p>We set <span class="math notranslate nohighlight">\(\zeta_K = 0.9\)</span>.</p>
+<p>We set <span class="math notranslate nohighlight">\(\zeta_K = 0.9\)</span>. Note, this parameter is harder to pin down from the data as foreign purchases on “excess” capital demand is not typically directly measured or reported.  A value of 0.9 implies a high degree of openness to international capital flows.</p>
 </section>
 </section>
 <section id="government-debt-spending-and-transfers">
 <h2>Government Debt, Spending and Transfers<a class="headerlink" href="#government-debt-spending-and-transfers" title="Link to this heading">#</a></h2>
 <section id="government-debt">
 <h3>Government Debt<a class="headerlink" href="#government-debt" title="Link to this heading">#</a></h3>
-<p>The path of government debt is endogenous.  But the initial value is exogenous.  To avoid converting between model units and dollars, we calibrate the initial debt to GDP ratio, rather than the dollar value of the debt.  This is the model parameter <span class="math notranslate nohighlight">\(\alpha_D\)</span>.  We compute this from the ratio of publicly held debt outstanding to GDP.  Based on 2019 values, this gives us a ratio of 0.78.</p>
+<p>The path of government debt is endogenous.  But the initial value is exogenous.  To avoid converting between model units and dollars, we calibrate the initial debt to GDP ratio, rather than the dollar value of the debt.  This is the model parameter <span class="math notranslate nohighlight">\(\alpha_D\)</span>.  We compute this from the ratio of publicly held debt outstanding to GDP.  Based on 2023 values, this gives us a ratio of 0.59.</p>
 </section>
 <section id="aggregate-transfers">
 <h3>Aggregate transfers<a class="headerlink" href="#aggregate-transfers" title="Link to this heading">#</a></h3>
-<p>Aggregate (non-Social Security) transfers to households are set as a share of GDP with the parameter <span class="math notranslate nohighlight">\(\alpha_T\)</span>. We exclude Social Security from transfers since it is modeled specifically. With this definition, the share of transfers to GDP in 2015 is 0.04 according to Federal Reserve Economic Data (FRED).</p>
+<p>Aggregate (non-Social Security) transfers to households are set as a share of GDP with the parameter <span class="math notranslate nohighlight">\(\alpha_T\)</span>. We exclude Social Security from transfers since it is modeled specifically. With this definition, the share of transfers to GDP in 2015 is 0.04 according to <a class="reference external" href="https://data.imf.org/?sk=b052f0f0-c166-43b6-84fa-47cccae3e219&amp;amp;hide_uv=1">IMF data</a>.</p>
 </section>
 <section id="government-expenditures">
 <h3>Government expenditures<a class="headerlink" href="#government-expenditures" title="Link to this heading">#</a></h3>
 <p>Government spending on goods and services are also set as a share of GDP with the parameter <span class="math notranslate nohighlight">\(\alpha_G\)</span>. We define government spending as:
 <center>Government Spending = Total Outlays - Transfers - Net Interest on Debt - Social Security</center>
-With this definition, the share of government expenditure to GDP is 0.27 based on FRED.</p>
+With this definition, the share of government expenditure to GDP is 0.267 based on <a class="reference external" href="https://data.imf.org/?sk=b052f0f0-c166-43b6-84fa-47cccae3e219&amp;amp;hide_uv=1">data from the IMF</a>.</p>
 </section>
 </section>
 </section>
@@ -540,12 +505,12 @@ With this definition, the share of government expenditure to GDP is 0.27 based o
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="exogenous_parameters.html"
+       href="firms.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Exogenous Parameters</p>
+        <p class="prev-next-title">Calibration of Firms Parameters</p>
       </div>
     </a>
     <a class="right-next"
@@ -573,18 +538,7 @@ With this definition, the share of government expenditure to GDP is 0.27 based o
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#behavioral-assumptions">Behavioral Assumptions</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elasticity-of-labor-supply">Elasticity of labor supply</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#intertemporal-elasticity-of-substitution">Intertemporal elasticity of substitution</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rate-of-time-preference">Rate of time preference</a></li>
-</ul>
-</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#economic-assumptions">Economic Assumptions</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#aggregate-production-function-and-capital-accumulation">Aggregate Production Function and Capital Accumulation</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elasticity-of-substitution">Elasticity of substitution</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#capital-s-share-of-output">Capital’s share of output</a></li>
-</ul>
-</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#open-economy-parameters">Open Economy Parameters</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#foreign-holding-of-government-debt-in-the-initial-period">Foreign holding of government debt in the initial period</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#foreign-purchases-of-newly-issued-debt">Foreign purchases of newly issued debt</a></li>
@@ -611,7 +565,7 @@ With this definition, the share of government expenditure to GDP is 0.27 based o
   <div class="footer-item">
     
 <p class="component-author">
-By Marcelo LaFleur and Richard W. Evans
+By Marcelo LaFleur, Richard W. Evans, and Jason DeBacker
 </p>
 
   </div>
@@ -621,7 +575,7 @@ By Marcelo LaFleur and Richard W. Evans
 
   <p class="copyright">
     
-      © Copyright 2022.
+      © Copyright 2024.
       <br/>
     
   </p>

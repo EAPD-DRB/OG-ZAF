@@ -186,21 +186,24 @@
 <ul class="nav bd-sidenav">
 <li class="toctree-l1 has-children"><a class="reference internal" href="content/api/public_api.html">API</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="content/api/calibrate.html">Main Calibration Functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="content/api/demographics.html">Demographics Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content/api/income.html">Life-cycle productivity profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content/api/input_output.html">Output-Consumption Bridge</a></li>
 <li class="toctree-l2"><a class="reference internal" href="content/api/macro_params.html">Macro Parameter Estimation Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content/api/utils.html">Calibration Utilities</a></li>
 </ul>
 </details></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Calibration</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="content/calibration/exogenous_parameters.html">Exogenous Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="content/calibration/households.html">Calibration of Household Preference Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="content/calibration/firms.html">Calibration of Firms Parameters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="content/calibration/macro.html">Calibration of Macroeconomic Parameters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="content/calibration/demographics.html">Demographics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="content/calibration/earnings.html">Lifetime Earnings Profiles</a></li>
-<li class="toctree-l1"><a class="reference internal" href="content/calibration/tax_functions.html">Tax Functions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="content/calibration/bequests.html">Bequest Process Calibration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="content/calibration/taxes.html">Taxes in OG-ZAF</a></li>
 <li class="toctree-l1"><a class="reference internal" href="content/calibration/UBI.html">Universal Basic Income (UBI)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="content/calibration/matching_lwi.html">Matching Labor, Wealth, and Income Moments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="content/calibration/exogenous_parameters.html">Exogenous Parameters</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">References</span></p>
 <ul class="nav bd-sidenav">
@@ -362,18 +365,38 @@ document.write(`
 <h1 id="index">Index</h1>
 
 <div class="genindex-jumpbox">
- <a href="#C"><strong>C</strong></a>
+ <a href="#A"><strong>A</strong></a>
+ | <a href="#C"><strong>C</strong></a>
  | <a href="#G"><strong>G</strong></a>
  | <a href="#I"><strong>I</strong></a>
  | <a href="#M"><strong>M</strong></a>
  | <a href="#O"><strong>O</strong></a>
- | <a href="#P"><strong>P</strong></a>
  
 </div>
+<h2 id="A">A</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="content/api/income.html#ogzaf.income.arc_error">arc_error() (in module ogzaf.income)</a>
+</li>
+      <li><a href="content/api/income.html#ogzaf.income.arctan_deriv_func">arctan_deriv_func() (in module ogzaf.income)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="content/api/income.html#ogzaf.income.arctan_fit">arctan_fit() (in module ogzaf.income)</a>
+</li>
+      <li><a href="content/api/income.html#ogzaf.income.arctan_func">arctan_func() (in module ogzaf.income)</a>
+</li>
+  </ul></td>
+</tr></table>
+
 <h2 id="C">C</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="content/api/calibrate.html#ogzaf.calibrate.Calibration">Calibration (class in ogzaf.calibrate)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="content/api/utils.html#ogzaf.utils.CustomHttpAdapter">CustomHttpAdapter (class in ogzaf.utils)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -381,15 +404,17 @@ document.write(`
 <h2 id="G">G</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="content/api/demographics.html#ogzaf.demographics.get_fert">get_fert() (in module ogzaf.demographics)</a>
+      <li><a href="content/api/input_output.html#ogzaf.input_output.get_alpha_c">get_alpha_c() (in module ogzaf.input_output)</a>
 </li>
-      <li><a href="content/api/macro_params.html#ogzaf.macro_params.get_macro_params">get_macro_params() (in module ogzaf.macro_params)</a>
+      <li><a href="content/api/income.html#ogzaf.income.get_e_interp">get_e_interp() (in module ogzaf.income)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="content/api/demographics.html#ogzaf.demographics.get_mort">get_mort() (in module ogzaf.demographics)</a>
+      <li><a href="content/api/income.html#ogzaf.income.get_e_orig">get_e_orig() (in module ogzaf.income)</a>
 </li>
-      <li><a href="content/api/demographics.html#ogzaf.demographics.get_pop_objs">get_pop_objs() (in module ogzaf.demographics)</a>
+      <li><a href="content/api/input_output.html#ogzaf.input_output.get_io_matrix">get_io_matrix() (in module ogzaf.input_output)</a>
+</li>
+      <li><a href="content/api/macro_params.html#ogzaf.macro_params.get_macro_params">get_macro_params() (in module ogzaf.macro_params)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -397,7 +422,7 @@ document.write(`
 <h2 id="I">I</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="content/api/demographics.html#ogzaf.demographics.immsolve">immsolve() (in module ogzaf.demographics)</a>
+      <li><a href="content/api/utils.html#ogzaf.utils.CustomHttpAdapter.init_poolmanager">init_poolmanager() (ogzaf.utils.CustomHttpAdapter method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -409,9 +434,13 @@ document.write(`
     module
 
       <ul>
-        <li><a href="content/api/demographics.html#module-ogzaf.demographics">ogzaf.demographics</a>
+        <li><a href="content/api/income.html#module-ogzaf.income">ogzaf.income</a>
+</li>
+        <li><a href="content/api/input_output.html#module-ogzaf.input_output">ogzaf.input_output</a>
 </li>
         <li><a href="content/api/macro_params.html#module-ogzaf.macro_params">ogzaf.macro_params</a>
+</li>
+        <li><a href="content/api/utils.html#module-ogzaf.utils">ogzaf.utils</a>
 </li>
       </ul></li>
   </ul></td>
@@ -421,10 +450,17 @@ document.write(`
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li>
-    ogzaf.demographics
+    ogzaf.income
 
       <ul>
-        <li><a href="content/api/demographics.html#module-ogzaf.demographics">module</a>
+        <li><a href="content/api/income.html#module-ogzaf.income">module</a>
+</li>
+      </ul></li>
+      <li>
+    ogzaf.input_output
+
+      <ul>
+        <li><a href="content/api/input_output.html#module-ogzaf.input_output">module</a>
 </li>
       </ul></li>
   </ul></td>
@@ -436,14 +472,13 @@ document.write(`
         <li><a href="content/api/macro_params.html#module-ogzaf.macro_params">module</a>
 </li>
       </ul></li>
-  </ul></td>
-</tr></table>
+      <li>
+    ogzaf.utils
 
-<h2 id="P">P</h2>
-<table style="width: 100%" class="indextable genindextable"><tr>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="content/api/demographics.html#ogzaf.demographics.pop_rebin">pop_rebin() (in module ogzaf.demographics)</a>
+      <ul>
+        <li><a href="content/api/utils.html#module-ogzaf.utils">module</a>
 </li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
@@ -475,7 +510,7 @@ document.write(`
   <div class="footer-item">
     
 <p class="component-author">
-By Marcelo LaFleur and Richard W. Evans
+By Marcelo LaFleur, Richard W. Evans, and Jason DeBacker
 </p>
 
   </div>
@@ -485,7 +520,7 @@ By Marcelo LaFleur and Richard W. Evans
 
   <p class="copyright">
     
-      © Copyright 2022.
+      © Copyright 2024.
       <br/>
     
   </p>

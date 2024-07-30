@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ogzaf.calibrate &#8212; OG-ZAF</title>
+    <title>ogzaf.input_output &#8212; OG-ZAF</title>
   
   
   
@@ -56,7 +56,7 @@
     <script async="async" src="../../_static/sphinx-thebe.js?v=c100c467"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
-    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/ogzaf/calibrate';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/ogzaf/input_output';</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -283,7 +283,7 @@
       
       
       
-      <li><a href="https://github.com/EAPD-DRB/OG-ZAF/issues/new?title=Issue%20on%20page%20%2F_modules/ogzaf/calibrate.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/EAPD-DRB/OG-ZAF/issues/new?title=Issue%20on%20page%20%2F_modules/ogzaf/input_output.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -361,116 +361,92 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <h1>Source code for ogzaf.calibrate</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">ogzaf</span> <span class="kn">import</span> <span class="n">macro_params</span><span class="p">,</span> <span class="n">income</span>
-<span class="kn">from</span> <span class="nn">ogzaf</span> <span class="kn">import</span> <span class="n">input_output</span> <span class="k">as</span> <span class="n">io</span>
-<span class="kn">import</span> <span class="nn">os</span>
+  <h1>Source code for ogzaf.input_output</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">ogcore</span> <span class="kn">import</span> <span class="n">demographics</span>
+<span class="kn">from</span> <span class="nn">ogzaf.constants</span> <span class="kn">import</span> <span class="n">CONS_DICT</span><span class="p">,</span> <span class="n">PROD_DICT</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Read in Social Accounting Matrix (SAM) file</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="c1"># Read in SAM file</span>
+<span class="n">storage_options</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;User-Agent&quot;</span><span class="p">:</span> <span class="s2">&quot;Mozilla/5.0&quot;</span><span class="p">}</span>
+<span class="n">SAM_path</span> <span class="o">=</span> <span class="s2">&quot;https://www.wider.unu.edu/sites/default/files/Data/SASAM-2015-Data-Resource.xlsx&quot;</span>
+<span class="n">SAM</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span>
+    <span class="n">SAM_path</span><span class="p">,</span>
+    <span class="n">sheet_name</span><span class="o">=</span><span class="s2">&quot;Micro SAM 2015&quot;</span><span class="p">,</span>
+    <span class="n">skiprows</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span>
+    <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">storage_options</span><span class="o">=</span><span class="n">storage_options</span><span class="p">,</span>
+<span class="p">)</span>
 
 
-<div class="viewcode-block" id="Calibration">
-<a class="viewcode-back" href="../../content/api/calibrate.html#ogzaf.calibrate.Calibration">[docs]</a>
-<span class="k">class</span> <span class="nc">Calibration</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;OG-ZAF calibration class&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="get_alpha_c">
+<a class="viewcode-back" href="../../content/api/input_output.html#ogzaf.input_output.get_alpha_c">[docs]</a>
+<span class="k">def</span> <span class="nf">get_alpha_c</span><span class="p">(</span><span class="n">sam</span><span class="o">=</span><span class="n">SAM</span><span class="p">,</span> <span class="n">cons_dict</span><span class="o">=</span><span class="n">CONS_DICT</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calibrate the alpha_c vector, showing the shares of household</span>
+<span class="sd">    expenditures for each consumption category</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="n">p</span><span class="p">,</span>
-        <span class="n">estimate_tax_functions</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">estimate_chi_n</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">demographic_data_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">output_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Constructor for the Calibration class.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        sam (pd.DataFrame): SAM file</span>
+<span class="sd">        cons_dict (dict): Dictionary of consumption categories</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            p (OG-Core Specifications object): model parameters</span>
-<span class="sd">            estimate_tax_functions (bool): whether to estimate tax</span>
-<span class="sd">                function parameters</span>
-<span class="sd">            estimate_chi_n (bool): whether to estimate chi_n</span>
-<span class="sd">            demographic_data_path (str): path to save demographic data</span>
-<span class="sd">            output_path (str): path to save output to</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            None</span>
-
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># Create output_path if it doesn&#39;t exist</span>
-        <span class="k">if</span> <span class="n">output_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">output_path</span><span class="p">):</span>
-                <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_path</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">estimate_tax_functions</span> <span class="o">=</span> <span class="n">estimate_tax_functions</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">estimate_chi_n</span> <span class="o">=</span> <span class="n">estimate_chi_n</span>
-
-        <span class="c1"># Macro estimation</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">macro_params</span> <span class="o">=</span> <span class="n">macro_params</span><span class="o">.</span><span class="n">get_macro_params</span><span class="p">()</span>
-
-        <span class="c1"># io matrix and alpha_c</span>
-        <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">I</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># no need if just one consumption good</span>
-            <span class="n">alpha_c_dict</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">get_alpha_c</span><span class="p">()</span>
-            <span class="c1"># check that model dimensions are consistent with alpha_c</span>
-            <span class="k">assert</span> <span class="n">p</span><span class="o">.</span><span class="n">I</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">alpha_c_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">alpha_c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">alpha_c_dict</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">alpha_c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">])</span>
-        <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">M</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># no need if just one production good</span>
-            <span class="n">io_df</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">get_io_matrix</span><span class="p">()</span>
-            <span class="c1"># check that model dimensions are consistent with io_matrix</span>
-            <span class="k">assert</span> <span class="n">p</span><span class="o">.</span><span class="n">M</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">io_df</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">io_matrix</span> <span class="o">=</span> <span class="n">io_df</span><span class="o">.</span><span class="n">values</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">io_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">1.0</span><span class="p">]])</span>
-
-        <span class="c1"># demographics</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">demographic_params</span> <span class="o">=</span> <span class="n">demographics</span><span class="o">.</span><span class="n">get_pop_objs</span><span class="p">(</span>
-            <span class="n">p</span><span class="o">.</span><span class="n">E</span><span class="p">,</span>
-            <span class="n">p</span><span class="o">.</span><span class="n">S</span><span class="p">,</span>
-            <span class="n">p</span><span class="o">.</span><span class="n">T</span><span class="p">,</span>
-            <span class="mi">0</span><span class="p">,</span>
-            <span class="mi">99</span><span class="p">,</span>
-            <span class="n">country_id</span><span class="o">=</span><span class="s2">&quot;710&quot;</span><span class="p">,</span>
-            <span class="n">initial_data_year</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">start_year</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span>
-            <span class="n">final_data_year</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">start_year</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
-            <span class="n">GraphDiag</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-            <span class="n">download_path</span><span class="o">=</span><span class="n">demographic_data_path</span><span class="p">,</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        alpha_c (dict): Dictionary of shares of household expenditures</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">alpha_c</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">overall_sum</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">cons_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="c1"># note the subtraction of the row to focus on domestic consumption</span>
+        <span class="n">category_total</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">sam</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">sam</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">value</span><span class="p">),</span> <span class="s2">&quot;total&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+            <span class="o">-</span> <span class="n">sam</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">sam</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">value</span><span class="p">),</span> <span class="s2">&quot;row&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
         <span class="p">)</span>
+        <span class="n">alpha_c</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">category_total</span>
+        <span class="n">overall_sum</span> <span class="o">+=</span> <span class="n">category_total</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">cons_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">alpha_c</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">alpha_c</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">/</span> <span class="n">overall_sum</span>
 
-        <span class="c1"># demographics for 80 period lives (needed for getting e below)</span>
-        <span class="n">demog80</span> <span class="o">=</span> <span class="n">demographics</span><span class="o">.</span><span class="n">get_pop_objs</span><span class="p">(</span>
-            <span class="mi">20</span><span class="p">,</span>
-            <span class="mi">80</span><span class="p">,</span>
-            <span class="n">p</span><span class="o">.</span><span class="n">T</span><span class="p">,</span>
-            <span class="mi">0</span><span class="p">,</span>
-            <span class="mi">99</span><span class="p">,</span>
-            <span class="n">country_id</span><span class="o">=</span><span class="s2">&quot;710&quot;</span><span class="p">,</span>
-            <span class="n">initial_data_year</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">start_year</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span>
-            <span class="n">final_data_year</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">start_year</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
-            <span class="n">GraphDiag</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">alpha_c</span></div>
 
-        <span class="c1"># earnings profiles</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">e</span> <span class="o">=</span> <span class="n">income</span><span class="o">.</span><span class="n">get_e_interp</span><span class="p">(</span>
-            <span class="n">p</span><span class="o">.</span><span class="n">S</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">demographic_params</span><span class="p">[</span><span class="s2">&quot;omega_SS&quot;</span><span class="p">],</span>
-            <span class="n">demog80</span><span class="p">[</span><span class="s2">&quot;omega_SS&quot;</span><span class="p">],</span>
-            <span class="n">p</span><span class="o">.</span><span class="n">lambdas</span><span class="p">,</span>
-            <span class="n">plot_path</span><span class="o">=</span><span class="n">output_path</span><span class="p">,</span>
-        <span class="p">)</span>
 
-    <span class="c1"># method to return all newly calibrated parameters in a dictionary</span>
-    <span class="k">def</span> <span class="nf">get_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="nb">dict</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="c1"># if self.estimate_chi_n:</span>
-        <span class="c1">#     dict[&quot;chi_n&quot;] = self.chi_n</span>
-        <span class="nb">dict</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">macro_params</span><span class="p">)</span>
-        <span class="nb">dict</span><span class="p">[</span><span class="s2">&quot;e&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">e</span>
-        <span class="nb">dict</span><span class="p">[</span><span class="s2">&quot;alpha_c&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha_c</span>
-        <span class="nb">dict</span><span class="p">[</span><span class="s2">&quot;io_matrix&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">io_matrix</span>
-        <span class="nb">dict</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">demographic_params</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="nb">dict</span></div>
+<div class="viewcode-block" id="get_io_matrix">
+<a class="viewcode-back" href="../../content/api/input_output.html#ogzaf.input_output.get_io_matrix">[docs]</a>
+<span class="k">def</span> <span class="nf">get_io_matrix</span><span class="p">(</span><span class="n">sam</span><span class="o">=</span><span class="n">SAM</span><span class="p">,</span> <span class="n">cons_dict</span><span class="o">=</span><span class="n">CONS_DICT</span><span class="p">,</span> <span class="n">prod_dict</span><span class="o">=</span><span class="n">PROD_DICT</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calibrate the io_matrix array.  This array relates the share of each</span>
+<span class="sd">    production category in each consumption category</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        sam (pd.DataFrame): SAM file</span>
+<span class="sd">        cons_dict (dict): Dictionary of consumption categories</span>
+<span class="sd">        prod_dict (dict): Dictionary of production categories</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        io_df (pd.DataFrame): Dataframe of io_matrix</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Create initial matrix as dataframe of 0&#39;s to fill in</span>
+    <span class="n">io_dict</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">prod_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">io_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cons_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+    <span class="n">io_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">io_dict</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">cons_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+    <span class="c1"># Fill in the matrix</span>
+    <span class="c1"># Note, each cell in the SAM represents a payment from the columns</span>
+    <span class="c1"># account to the row account</span>
+    <span class="c1"># (see https://www.un.org/en/development/desa/policy/capacity/presentations/manila/6_sam_mams_philippines.pdf)</span>
+    <span class="c1"># We are thus going to take the consumption categories from rows and</span>
+    <span class="c1"># the production categories from columns</span>
+    <span class="k">for</span> <span class="n">ck</span><span class="p">,</span> <span class="n">cv</span> <span class="ow">in</span> <span class="n">cons_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">pk</span><span class="p">,</span> <span class="n">pv</span> <span class="ow">in</span> <span class="n">prod_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">io_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">io_df</span><span class="o">.</span><span class="n">index</span> <span class="o">==</span> <span class="n">ck</span><span class="p">,</span> <span class="n">pk</span><span class="p">]</span> <span class="o">=</span> <span class="n">sam</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span>
+                <span class="n">sam</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">cv</span><span class="p">),</span> <span class="n">pv</span>
+            <span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+    <span class="c1"># change from levels to share (where each row sums to one)</span>
+    <span class="n">io_df</span> <span class="o">=</span> <span class="n">io_df</span><span class="o">.</span><span class="n">div</span><span class="p">(</span><span class="n">io_df</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">io_df</span></div>
 
 </pre></div>
 

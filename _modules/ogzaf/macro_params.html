@@ -186,21 +186,24 @@
 <ul class="nav bd-sidenav">
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../content/api/public_api.html">API</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../content/api/calibrate.html">Main Calibration Functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../content/api/demographics.html">Demographics Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../content/api/income.html">Life-cycle productivity profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../content/api/input_output.html">Output-Consumption Bridge</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../content/api/macro_params.html">Macro Parameter Estimation Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../content/api/utils.html">Calibration Utilities</a></li>
 </ul>
 </details></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Calibration</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../../content/calibration/exogenous_parameters.html">Exogenous Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../content/calibration/households.html">Calibration of Household Preference Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../content/calibration/firms.html">Calibration of Firms Parameters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../content/calibration/macro.html">Calibration of Macroeconomic Parameters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../content/calibration/demographics.html">Demographics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../content/calibration/earnings.html">Lifetime Earnings Profiles</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../content/calibration/tax_functions.html">Tax Functions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../content/calibration/bequests.html">Bequest Process Calibration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../content/calibration/taxes.html">Taxes in OG-ZAF</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../content/calibration/UBI.html">Universal Basic Income (UBI)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../content/calibration/matching_lwi.html">Matching Labor, Wealth, and Income Moments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../content/calibration/exogenous_parameters.html">Exogenous Parameters</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">References</span></p>
 <ul class="nav bd-sidenav">
@@ -366,7 +369,6 @@ document.write(`
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="c1"># imports</span>
-<span class="kn">import</span> <span class="nn">pandas_datareader.data</span> <span class="k">as</span> <span class="nn">web</span>
 <span class="kn">from</span> <span class="nn">pandas_datareader</span> <span class="kn">import</span> <span class="n">wb</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -390,7 +392,7 @@ document.write(`
     <span class="n">end</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">()</span>  <span class="c1"># go through today</span>
     <span class="n">baseline_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2019</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">31</span><span class="p">)</span>
     <span class="n">baseline_yearquarter</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="s2">&quot;2019Q1&quot;</span>  <span class="c1"># The WB QPSD database has the date in YYYYQQ format</span>
+        <span class="s2">&quot;2024Q1&quot;</span>  <span class="c1"># The WB QPSD database has the date in YYYYQQ format</span>
     <span class="p">)</span>
 
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -408,43 +410,43 @@ document.write(`
     <span class="p">}</span>
 
     <span class="c1"># pull series of interest using pandas_datareader</span>
-    <span class="n">wb_data_a</span> <span class="o">=</span> <span class="n">wb</span><span class="o">.</span><span class="n">download</span><span class="p">(</span>
-        <span class="n">indicator</span><span class="o">=</span><span class="n">wb_a_variable_dict</span><span class="o">.</span><span class="n">values</span><span class="p">(),</span>
-        <span class="n">country</span><span class="o">=</span><span class="n">country_iso</span><span class="p">,</span>
-        <span class="n">start</span><span class="o">=</span><span class="n">start</span><span class="p">,</span>
-        <span class="n">end</span><span class="o">=</span><span class="n">end</span><span class="p">,</span>
-    <span class="p">)</span>
-    <span class="n">wb_data_a</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span>
-        <span class="n">columns</span><span class="o">=</span><span class="nb">dict</span><span class="p">((</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">wb_a_variable_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()),</span>
-        <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-    <span class="p">)</span>
+    <span class="c1"># wb_data_a = wb.download(</span>
+    <span class="c1">#     indicator=wb_a_variable_dict.values(),</span>
+    <span class="c1">#     country=country_iso,</span>
+    <span class="c1">#     start=start,</span>
+    <span class="c1">#     end=end,</span>
+    <span class="c1"># )</span>
+    <span class="c1"># wb_data_a.rename(</span>
+    <span class="c1">#     columns=dict((y, x) for x, y in wb_a_variable_dict.items()),</span>
+    <span class="c1">#     inplace=True,</span>
+    <span class="c1"># )</span>
 
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This retrieves quarterly data from the World Bank Quarterly Public Sector Debt database.</span>
 <span class="sd">    The command extracts all available data even when start and end dates are specified.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">wb_q_variable_dict</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;Gross PSD USD - domestic creditors&quot;</span><span class="p">:</span> <span class="s2">&quot;DP.DOD.DECD.CR.PS.CD&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;Gross PSD USD - external creditors&quot;</span><span class="p">:</span> <span class="s2">&quot;DP.DOD.DECX.CR.PS.CD&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;Gross PSD Gen Gov - percentage of GDP&quot;</span><span class="p">:</span> <span class="s2">&quot;DP.DOD.DECT.CR.GG.Z1&quot;</span><span class="p">,</span>
-    <span class="p">}</span>
+    <span class="c1"># wb_q_variable_dict = {</span>
+    <span class="c1">#     &quot;Gross PSD USD - domestic creditors&quot;: &quot;DP.DOD.DECD.CR.PS.CD&quot;,</span>
+    <span class="c1">#     &quot;Gross PSD USD - external creditors&quot;: &quot;DP.DOD.DECX.CR.PS.CD&quot;,</span>
+    <span class="c1">#     &quot;Gross PSD Gen Gov - percentage of GDP&quot;: &quot;DP.DOD.DECT.CR.GG.Z1&quot;,</span>
+    <span class="c1"># }</span>
 
     <span class="c1"># pull series of interest using pandas_datareader</span>
-    <span class="n">wb_data_q</span> <span class="o">=</span> <span class="n">wb</span><span class="o">.</span><span class="n">download</span><span class="p">(</span>
-        <span class="n">indicator</span><span class="o">=</span><span class="n">wb_q_variable_dict</span><span class="o">.</span><span class="n">values</span><span class="p">(),</span>
-        <span class="n">country</span><span class="o">=</span><span class="n">country_iso</span><span class="p">,</span>
-        <span class="n">start</span><span class="o">=</span><span class="n">start</span><span class="p">,</span>
-        <span class="n">end</span><span class="o">=</span><span class="n">end</span><span class="p">,</span>
-    <span class="p">)</span>
-    <span class="n">wb_data_q</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span>
-        <span class="n">columns</span><span class="o">=</span><span class="nb">dict</span><span class="p">((</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">wb_q_variable_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()),</span>
-        <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-    <span class="p">)</span>
+    <span class="c1"># wb_data_q = wb.download(</span>
+    <span class="c1">#     indicator=wb_q_variable_dict.values(),</span>
+    <span class="c1">#     country=country_iso,</span>
+    <span class="c1">#     start=start,</span>
+    <span class="c1">#     end=end,</span>
+    <span class="c1"># )</span>
+    <span class="c1"># wb_data_q.rename(</span>
+    <span class="c1">#     columns=dict((y, x) for x, y in wb_q_variable_dict.items()),</span>
+    <span class="c1">#     inplace=True,</span>
+    <span class="c1"># )</span>
 
-    <span class="c1"># Remove the hierarchical index (country and year) of wb_data_q and create a single row index using year</span>
-    <span class="n">wb_data_q</span> <span class="o">=</span> <span class="n">wb_data_q</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
-    <span class="n">wb_data_q</span> <span class="o">=</span> <span class="n">wb_data_q</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;year&quot;</span><span class="p">)</span>
+    <span class="c1"># # Remove the hierarchical index (country and year) of wb_data_q and create a single row index using year</span>
+    <span class="c1"># wb_data_q = wb_data_q.reset_index()</span>
+    <span class="c1"># wb_data_q = wb_data_q.set_index(&quot;year&quot;)</span>
 
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This retrieves labour share data from the ILOSTAT Data API</span>
@@ -474,92 +476,45 @@ document.write(`
 
     <span class="n">ilo_data</span> <span class="o">=</span> <span class="n">df_temp</span><span class="p">[[</span><span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="s2">&quot;obs_value&quot;</span><span class="p">]]</span>
 
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    This retrieves data from FRED.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="n">fred_variable_dict</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="c1"># &quot;Labor share&quot;: &quot;LABSHPINA156NRUG&quot;,</span>
-        <span class="c1"># &quot;BAA Corp Bond Rates&quot;: &quot;DBAA&quot;,</span>
-        <span class="c1"># &quot;10 year govt bond rate&quot;: &quot;IRLTLT01ZAM156N&quot;,</span>
-        <span class="c1"># &quot;Nominal GDP&quot;: &quot;MKTGDPZAA646NWDB&quot;,</span>
-        <span class="s2">&quot;Total Expenditure to GDP&quot;</span><span class="p">:</span> <span class="s2">&quot;ZAFGGXG01GDPPT&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;Total gov transfer payments&quot;</span><span class="p">:</span> <span class="s2">&quot;B087RC1Q027SBEA&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;Social Security payments&quot;</span><span class="p">:</span> <span class="s2">&quot;W823RC1&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;Gov interest payments&quot;</span><span class="p">:</span> <span class="s2">&quot;A091RC1Q027SBEA&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;Labor share of income&quot;</span><span class="p">:</span> <span class="s2">&quot;LABSHPZAA156NRUG&quot;</span><span class="p">,</span>
-    <span class="p">}</span>
-
-    <span class="c1"># pull series of interest using pandas_datareader</span>
-    <span class="n">fred_data</span> <span class="o">=</span> <span class="n">web</span><span class="o">.</span><span class="n">DataReader</span><span class="p">(</span><span class="n">fred_variable_dict</span><span class="o">.</span><span class="n">values</span><span class="p">(),</span> <span class="s2">&quot;fred&quot;</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">)</span>
-    <span class="n">fred_data</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span>
-        <span class="n">columns</span><span class="o">=</span><span class="nb">dict</span><span class="p">((</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">fred_variable_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()),</span>
-        <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-    <span class="p">)</span>
-    <span class="c1"># make data quarterly</span>
-    <span class="n">fred_data_q</span> <span class="o">=</span> <span class="n">fred_data</span><span class="o">.</span><span class="n">resample</span><span class="p">(</span><span class="s2">&quot;Q&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
-
-    <span class="c1"># Separate quartely, monthly, and annual FRED dataseries</span>
-
-    <span class="c1"># fred_data_d = fred_data[[&quot;BAA Corp Bond Rates&quot;, &quot;10 year govt bond rate&quot;]]</span>
-
     <span class="c1"># initialize a dictionary of parameters</span>
     <span class="n">macro_parameters</span> <span class="o">=</span> <span class="p">{}</span>
 
     <span class="c1"># print(fred_data.loc(str(baseline_date)))</span>
     <span class="c1"># find initial_debt_ratio</span>
-    <span class="n">macro_parameters</span><span class="p">[</span><span class="s2">&quot;initial_debt_ratio&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">wb_data_q</span><span class="p">[</span><span class="s2">&quot;Gross PSD Gen Gov - percentage of GDP&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span>
-            <span class="n">baseline_yearquarter</span>
-        <span class="p">]</span>
-    <span class="p">)</span> <span class="o">/</span> <span class="mi">100</span>
+    <span class="c1"># macro_parameters[&quot;initial_debt_ratio&quot;] = (</span>
+    <span class="c1">#     pd.Series(wb_data_q[&quot;Gross PSD Gen Gov - percentage of GDP&quot;]).loc[</span>
+    <span class="c1">#         baseline_yearquarter</span>
+    <span class="c1">#     ]</span>
+    <span class="c1"># ) / 100</span>
 
     <span class="c1"># find initial_foreign_debt_ratio</span>
-    <span class="n">macro_parameters</span><span class="p">[</span><span class="s2">&quot;initial_foreign_debt_ratio&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span>
-        <span class="n">wb_data_q</span><span class="p">[</span><span class="s2">&quot;Gross PSD USD - external creditors&quot;</span><span class="p">]</span>
-        <span class="o">/</span> <span class="p">(</span>
-            <span class="n">wb_data_q</span><span class="p">[</span><span class="s2">&quot;Gross PSD USD - domestic creditors&quot;</span><span class="p">]</span>
-            <span class="o">+</span> <span class="n">wb_data_q</span><span class="p">[</span><span class="s2">&quot;Gross PSD USD - external creditors&quot;</span><span class="p">]</span>
-        <span class="p">)</span>
-    <span class="p">)</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">baseline_yearquarter</span><span class="p">]</span>
+    <span class="c1"># macro_parameters[&quot;initial_foreign_debt_ratio&quot;] = pd.Series(</span>
+    <span class="c1">#     wb_data_q[&quot;Gross PSD USD - external creditors&quot;]</span>
+    <span class="c1">#     / (</span>
+    <span class="c1">#         wb_data_q[&quot;Gross PSD USD - domestic creditors&quot;]</span>
+    <span class="c1">#         + wb_data_q[&quot;Gross PSD USD - external creditors&quot;]</span>
+    <span class="c1">#     )</span>
+    <span class="c1"># ).loc[baseline_yearquarter]</span>
 
     <span class="c1"># find zeta_D (Share of new debt issues from government that are purchased by foreigners)</span>
-    <span class="n">macro_parameters</span><span class="p">[</span><span class="s2">&quot;zeta_D&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span>
-            <span class="n">wb_data_q</span><span class="p">[</span><span class="s2">&quot;Gross PSD USD - external creditors&quot;</span><span class="p">]</span>
-            <span class="o">/</span> <span class="p">(</span>
-                <span class="n">wb_data_q</span><span class="p">[</span><span class="s2">&quot;Gross PSD USD - domestic creditors&quot;</span><span class="p">]</span>
-                <span class="o">+</span> <span class="n">wb_data_q</span><span class="p">[</span><span class="s2">&quot;Gross PSD USD - external creditors&quot;</span><span class="p">]</span>
-            <span class="p">)</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">baseline_yearquarter</span><span class="p">]</span>
-    <span class="p">]</span>
-
-    <span class="c1"># find alpha_T</span>
-    <span class="n">macro_parameters</span><span class="p">[</span><span class="s2">&quot;alpha_T&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.04</span><span class="p">]</span>
-    <span class="c1"># macro_parameters[&quot;alpha_T&quot;] = [</span>
+    <span class="c1"># macro_parameters[&quot;zeta_D&quot;] = [</span>
     <span class="c1">#     pd.Series(</span>
-    <span class="c1">#         (</span>
-    <span class="c1">#             fred_data_q[&quot;Total gov transfer payments&quot;]</span>
-    <span class="c1">#             - fred_data_q[&quot;Social Security payments&quot;]</span>
+    <span class="c1">#         wb_data_q[&quot;Gross PSD USD - external creditors&quot;]</span>
+    <span class="c1">#         / (</span>
+    <span class="c1">#             wb_data_q[&quot;Gross PSD USD - domestic creditors&quot;]</span>
+    <span class="c1">#             + wb_data_q[&quot;Gross PSD USD - external creditors&quot;]</span>
     <span class="c1">#         )</span>
-    <span class="c1">#         / fred_data_q[&quot;Nominal GDP&quot;]</span>
-    <span class="c1">#     ).loc[baseline_date]</span>
+    <span class="c1">#     ).loc[baseline_yearquarter]</span>
     <span class="c1"># ]</span>
 
-    <span class="c1"># find alpha_G</span>
-    <span class="c1"># macro_parameters[&quot;alpha_G&quot;] = [0.27]</span>
-    <span class="c1"># macro_parameters[&quot;alpha_G&quot;] = [</span>
-    <span class="c1">#     pd.Series(</span>
-    <span class="c1">#         (</span>
-    <span class="c1">#             fred_data_q[&quot;Gov expenditures&quot;]</span>
-    <span class="c1">#             - fred_data_q[&quot;Total gov transfer payments&quot;]</span>
-    <span class="c1">#             - fred_data_q[&quot;Gov interest payments&quot;]</span>
-    <span class="c1">#         )</span>
-    <span class="c1">#         / fred_data_q[&quot;Nominal GDP&quot;]</span>
-    <span class="c1">#     ).loc[baseline_date]</span>
-    <span class="c1"># ]</span>
+    <span class="c1"># alpha_T, non-social security benefits as a fraction of GDP</span>
+    <span class="c1"># source: https://data.imf.org/?sk=b052f0f0-c166-43b6-84fa-47cccae3e219&amp;hide_uv=1</span>
+    <span class="n">macro_parameters</span><span class="p">[</span><span class="s2">&quot;alpha_T&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.041</span> <span class="o">-</span> <span class="mf">0.0</span><span class="p">]</span>
+    <span class="c1"># alpha_G, gov&#39;t consumption expenditures as a fraction of GDP</span>
+    <span class="c1"># source: https://data.imf.org/?sk=edb0cd70-0af3-40e1-a9c3-bdef83ee4d1e&amp;hide_uv=1</span>
+    <span class="n">macro_parameters</span><span class="p">[</span><span class="s2">&quot;alpha_G&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.351</span> <span class="o">-</span> <span class="mf">0.043</span> <span class="o">-</span> <span class="mf">0.041</span><span class="p">]</span>
 
-    <span class="c1"># find gamma</span>
+    <span class="c1"># find gamma, capital&#39;s share of income</span>
     <span class="n">macro_parameters</span><span class="p">[</span><span class="s2">&quot;gamma&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
         <span class="mi">1</span>
         <span class="o">-</span> <span class="p">(</span>
@@ -570,23 +525,23 @@ document.write(`
             <span class="p">)</span>
             <span class="o">/</span> <span class="mi">100</span>
         <span class="p">)</span>
-        <span class="c1"># 1</span>
-        <span class="c1"># - pd.Series(</span>
-        <span class="c1">#     (fred_data[&quot;Labor share of income&quot;]).loc[baseline_yearquarter]</span>
-        <span class="c1"># ).mean()</span>
     <span class="p">]</span>
 
     <span class="c1"># find g_y</span>
-    <span class="n">macro_parameters</span><span class="p">[</span><span class="s2">&quot;g_y_annual&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="n">wb_data_a</span><span class="p">[</span><span class="s2">&quot;GDP per capita (constant 2015 US$)&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">pct_change</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
-    <span class="p">)</span>
+    <span class="c1"># macro_parameters[&quot;g_y_annual&quot;] = (</span>
+    <span class="c1">#     wb_data_a[&quot;GDP per capita (constant 2015 US$)&quot;].pct_change(-1).mean()</span>
+    <span class="c1"># )</span>
 
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;&quot;</span>
-<span class="sd">    We want to use the non linear relationship estimated by Li, Magud, Werner, Witte (2021), available here: https://www.imf.org/en/Publications/WP/Issues/2021/06/04/The-Long-Run-Impact-of-Sovereign-Yields-on-Corporate-Yields-in-Emerging-Markets-50224</span>
+<span class="sd">    We want to use the non linear relationship estimated by</span>
+<span class="sd">    Li, Magud, Werner, Witte (2021), available here:</span>
+<span class="sd">    https://www.imf.org/en/Publications/WP/Issues/2021/06/04/The-Long-Run-Impact-of-Sovereign-Yields-on-Corporate-Yields-in-Emerging-Markets-50224</span>
 
 <span class="sd">    Steps:</span>
-<span class="sd">    1) Generate modelled corporate yields (corp_yhat) for a range of sovereign yields (sov_y)  using the estimated equation in col 2 of table 8 (and figure 3).</span>
-<span class="sd">    2) Estimate the OLS using sovereign yields as the dependent variable</span>
+<span class="sd">    1) Generate modelled corporate yields (corp_yhat) for a range of</span>
+<span class="sd">    sovereign yields (sov_y)  using the estimated equation in col 2 of</span>
+<span class="sd">    table 8 (and figure 3). 2) Estimate the OLS using sovereign yields</span>
+<span class="sd">    as the dependent variable</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># # estimate r_gov_shift and r_gov_scale</span>
@@ -598,16 +553,14 @@ document.write(`
         <span class="n">corp_yhat</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">res</span> <span class="o">=</span> <span class="n">mod</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
-    <span class="c1"># first term is the constant and needs to be divided by 100 to have the correct unit. Second term is the coefficient</span>
+    <span class="c1"># first term is the constant and needs to be divided by 100 to have</span>
+    <span class="c1"># the correct unit. Second term is the coefficient</span>
     <span class="n">macro_parameters</span><span class="p">[</span><span class="s2">&quot;r_gov_shift&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
         <span class="p">(</span><span class="o">-</span><span class="n">res</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mi">100</span><span class="p">)</span>
-    <span class="p">]</span>  <span class="c1"># constant = 0.0337662504</span>
+    <span class="p">]</span>  <span class="c1"># constant = -0.0337662504</span>
     <span class="n">macro_parameters</span><span class="p">[</span><span class="s2">&quot;r_gov_scale&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
         <span class="n">res</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
     <span class="p">]</span>  <span class="c1"># coefficient = 0.24484764</span>
-
-    <span class="c1"># macro_parameters[&quot;r_gov_shift&quot;] = [-0.0337662504]</span>
-    <span class="c1"># macro_parameters[&quot;r_gov_scale&quot;] = [0.24484764]</span>
 
     <span class="k">return</span> <span class="n">macro_parameters</span></div>
 
@@ -639,7 +592,7 @@ document.write(`
   <div class="footer-item">
     
 <p class="component-author">
-By Marcelo LaFleur and Richard W. Evans
+By Marcelo LaFleur, Richard W. Evans, and Jason DeBacker
 </p>
 
   </div>
@@ -649,7 +602,7 @@ By Marcelo LaFleur and Richard W. Evans
 
   <p class="copyright">
     
-      © Copyright 2022.
+      © Copyright 2024.
       <br/>
     
   </p>

@@ -62,8 +62,8 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'content/calibration/exogenous_parameters';</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Calibration of Macroeconomic Parameters" href="macro.html" />
-    <link rel="prev" title="Macro Parameter Estimation Functions" href="../api/macro_params.html" />
+    <link rel="next" title="References" href="../OGZAF_references.html" />
+    <link rel="prev" title="Matching Labor, Wealth, and Income Moments" href="matching_lwi.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -189,21 +189,24 @@
 <ul class="nav bd-sidenav">
 <li class="toctree-l1 has-children"><a class="reference internal" href="../api/public_api.html">API</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../api/calibrate.html">Main Calibration Functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/demographics.html">Demographics Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/income.html">Life-cycle productivity profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/input_output.html">Output-Consumption Bridge</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/macro_params.html">Macro Parameter Estimation Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/utils.html">Calibration Utilities</a></li>
 </ul>
 </details></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Calibration</span></p>
 <ul class="current nav bd-sidenav">
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Exogenous Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="households.html">Calibration of Household Preference Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="firms.html">Calibration of Firms Parameters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="macro.html">Calibration of Macroeconomic Parameters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="demographics.html">Demographics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="earnings.html">Lifetime Earnings Profiles</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tax_functions.html">Tax Functions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="bequests.html">Bequest Process Calibration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="taxes.html">Taxes in OG-ZAF</a></li>
 <li class="toctree-l1"><a class="reference internal" href="UBI.html">Universal Basic Income (UBI)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="matching_lwi.html">Matching Labor, Wealth, and Income Moments</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Exogenous Parameters</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">References</span></p>
 <ul class="nav bd-sidenav">
@@ -411,8 +414,7 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="exogenous-parameters">
 <span id="chap-exog"></span><h1>Exogenous Parameters<a class="headerlink" href="#exogenous-parameters" title="Link to this heading">#</a></h1>
-<p>[TODO: This chapter needs heavy updating. Would be nice to do something similar to API chapter. But it is also nice to have references and descriptions as in the table below.]</p>
-<p>In this chapter, list the exogenous inputs to the model, options, and where the values come from (weak calibration vs. strong calibration). Point to the respective chapters for some of the inputs. Mention the code in <a class="reference external" href="https://github.com/EAPD-DRB/OG-ZAF/blob/master/ogzaf/ogzaf_default_parameters.json"><code class="docutils literal notranslate"><span class="pre">ogzaf_default_parameters.json</span></code></a> in the OG-ZAF repository and in <a class="reference external" href="https://github.com/PSLmodels/OG-Core/blob/master/ogcore/default_parameters.json"><code class="docutils literal notranslate"><span class="pre">default_parameters.json</span></code></a> and <a class="reference external" href="https://github.com/PSLmodels/OG-Core/blob/master/ogcore/parameters.py"><code class="docutils literal notranslate"><span class="pre">parameters.py</span></code></a> in the OG-Core repository.</p>
+<p>The JSON file <a class="reference external" href="https://github.com/EAPD-DRB/OG-ZAF/blob/master/ogzaf/ogzaf_default_parameters.json"><code class="docutils literal notranslate"><span class="pre">ogzaf_default_parameters.json</span></code></a> provides values for all the model parameters used as defaults for <code class="docutils literal notranslate"><span class="pre">OG-ZAF</span></code>. Below, we provide a table highlighting some of the parameters describing the scale of the model (number of periods, aged, productivity types) and some parameters of the solution method (dampening parameter for TPI). The table below provides a list of the exogenous parameters and their baseline calibration values.</p>
   <!-- +++
   ```{code-cell} ogzaf-dev
   :tags: [hide-cell]
@@ -441,37 +443,17 @@ document.write(`
 <td><p>Number of periods of youth economically outside the model</p></td>
 <td><p><span class="math notranslate nohighlight">\(\text{round} \frac{S}{4}\)</span>=20</p></td>
 </tr>
-<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(R\)</span></p></td>
-<td><p>Retirement age (period)</p></td>
-<td><p><span class="math notranslate nohighlight">\(E + \text{round} (\frac{9}{16} S) = 65\)</span></p></td>
-</tr>
-<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(T_1\)</span></p></td>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(T_1\)</span></p></td>
 <td><p>Number of periods to steady state for initial time path guesses</p></td>
 <td><p>160</p></td>
 </tr>
-<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(T_2\)</span></p></td>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(T_2\)</span></p></td>
 <td><p>Maximum number of periods to steady state for nonsteady-state equilibrium</p></td>
 <td><p>160</p></td>
 </tr>
-<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(\nu\)</span></p></td>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(\nu\)</span></p></td>
 <td><p>Dampening parameter for TPI</p></td>
 <td><p>0.4</p></td>
-</tr>
-<tr class="row-even"><td><p><span class="math notranslate nohighlight">\({ \{ { \{ \omega_{s,0} \} }_{s=1}^{E+S}  \}}_{t=0}^{T_2 + S - 1}\)</span></p></td>
-<td><p>Initial population distribution by age</p></td>
-<td><p>(see Chap. <a class="reference internal" href="demographics.html#chap-demog"><span class="std std-ref">Demographics</span></a>)</p></td>
-</tr>
-<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\({ \{ f_s \}}_{s=1}^{E+S}\)</span></p></td>
-<td><p>Fertility rates by age</p></td>
-<td><p>(see Sec. <a class="reference internal" href="demographics.html#secdemogfert"><span class="std std-ref">Fertility rates</span></a>)</p></td>
-</tr>
-<tr class="row-even"><td><p><span class="math notranslate nohighlight">\({ \{ i_s \}}_{s=1}^{E+S}\)</span></p></td>
-<td><p>Immigration rates by age</p></td>
-<td><p>(see Sec. <a class="reference internal" href="demographics.html#secdemogmort"><span class="std std-ref">Mortality rates</span></a>)</p></td>
-</tr>
-<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\({ \{ \rho_s \}}_{s=0}^{E+S}\)</span></p></td>
-<td><p>Mortality rates by age</p></td>
-<td><p>(see Sec. <a class="reference internal" href="demographics.html#secdemogimm"><span class="std std-ref">Immigration rates</span></a>)</p></td>
 </tr>
 </tbody>
 </table>
@@ -509,20 +491,20 @@ document.write(`
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="../api/macro_params.html"
+       href="matching_lwi.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Macro Parameter Estimation Functions</p>
+        <p class="prev-next-title">Matching Labor, Wealth, and Income Moments</p>
       </div>
     </a>
     <a class="right-next"
-       href="macro.html"
+       href="../OGZAF_references.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Calibration of Macroeconomic Parameters</p>
+        <p class="prev-next-title">References</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -542,7 +524,7 @@ document.write(`
   <div class="footer-item">
     
 <p class="component-author">
-By Marcelo LaFleur and Richard W. Evans
+By Marcelo LaFleur, Richard W. Evans, and Jason DeBacker
 </p>
 
   </div>
@@ -552,7 +534,7 @@ By Marcelo LaFleur and Richard W. Evans
 
   <p class="copyright">
     
-      © Copyright 2022.
+      © Copyright 2024.
       <br/>
     
   </p>

@@ -1,4 +1,4 @@
 (Chap_matchingLWI)=
 # Matching Labor, Wealth, and Income Moments
 
-[TODO: We should include our calibration notes here for how we calibrate `OG-USA` to match the distribution of labor supply by age in the data, how we match wealth share moments, and how we match income share moments.]
+[TO BE COMPLETED: As we note in Chapter {numref}`Chap_LfEarn`, we match the Gini coefficient of the income distribution through our calibration of the lifecyle productivity profile.  With survey data on hours worked by age, we can adjust the $\chi^n_s$ parameter to match the lifecycle profile of labor supply. The $\beta^j$ and $\chi^b_j$ parameters can be used to match the distribution of wealth given survey or administrative data describing its distribution.]

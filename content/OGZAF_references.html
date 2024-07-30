@@ -61,7 +61,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Citations and use cases of OG-ZAF" href="citations.html" />
-    <link rel="prev" title="Matching Labor, Wealth, and Income Moments" href="calibration/matching_lwi.html" />
+    <link rel="prev" title="Exogenous Parameters" href="calibration/exogenous_parameters.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -187,21 +187,24 @@
 <ul class="nav bd-sidenav">
 <li class="toctree-l1 has-children"><a class="reference internal" href="api/public_api.html">API</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="api/calibrate.html">Main Calibration Functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/demographics.html">Demographics Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/income.html">Life-cycle productivity profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/input_output.html">Output-Consumption Bridge</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/macro_params.html">Macro Parameter Estimation Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/utils.html">Calibration Utilities</a></li>
 </ul>
 </details></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Calibration</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="calibration/exogenous_parameters.html">Exogenous Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="calibration/households.html">Calibration of Household Preference Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="calibration/firms.html">Calibration of Firms Parameters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="calibration/macro.html">Calibration of Macroeconomic Parameters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="calibration/demographics.html">Demographics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="calibration/earnings.html">Lifetime Earnings Profiles</a></li>
-<li class="toctree-l1"><a class="reference internal" href="calibration/tax_functions.html">Tax Functions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="calibration/bequests.html">Bequest Process Calibration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="calibration/taxes.html">Taxes in OG-ZAF</a></li>
 <li class="toctree-l1"><a class="reference internal" href="calibration/UBI.html">Universal Basic Income (UBI)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="calibration/matching_lwi.html">Matching Labor, Wealth, and Income Moments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="calibration/exogenous_parameters.html">Exogenous Parameters</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">References</span></p>
 <ul class="current nav bd-sidenav">
@@ -431,41 +434,9 @@ document.write(`
 <span class="label"><span class="fn-bracket">[</span>DEP19<span class="fn-bracket">]</span></span>
 <p>Jason DeBacker, Richard W. Evans, and Kerk L. Phillips. Integrating microsimulation models of tax policy into a dge macroeconomic model. <em>Public Finance Review</em>, 47(2):207–275, March 2019.</p>
 </div>
-<div class="citation" id="id24" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span>DR17<span class="fn-bracket">]</span></span>
-<p>Jason DeBacker and Shanthi Ramnath. Estimating the hourly earnings processes of top earners. Technical Report, Mimeo, 2017.</p>
-</div>
 <div class="citation" id="id31" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span>EP17<span class="fn-bracket">]</span></span>
 <p>Richard W. Evans and Kerk L. Phillips. Advantages of an ellipse when modeling leisure utility. <em>Computational Economics</em>, 2017.</p>
-</div>
-<div class="citation" id="id33" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span>GS94a<span class="fn-bracket">]</span></span>
-<p>William G. Gale and John Karl Scholz. Intergenerational transfers and the accumulation of wealth. <em>Journal of Economic Perspectives</em>, 8(4):145–160, Fall 1994.</p>
-</div>
-<div class="citation" id="id34" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span>GKSW00<span class="fn-bracket">]</span></span>
-<p>Jagadeesh Gokhale, Laurence J. Kotlikoff, James Sefton, and Martin Weale. Simulating the transmission of wealth inequality via bequests. <em>Journal of Public Economics</em>, 79(1):93–128, January 2000.</p>
-</div>
-<div class="citation" id="id35" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span>GS94b<span class="fn-bracket">]</span></span>
-<p>Miguel Gouveia and Robert P. Strauss. Effective federal individual tax functions: an exploratory empirical analysis. <em>National Tax Journal</em>, 47(2):317–39, June 1994.</p>
-</div>
-<div class="citation" id="id40" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span>Hur89<span class="fn-bracket">]</span></span>
-<p>Michael D. Hurd. Mortality risk and bequests. <em>Econometrica</em>, 57(4):779–813, July 1989.</p>
-</div>
-<div class="citation" id="id46" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span>KS81<span class="fn-bracket">]</span></span>
-<p>Laurence J. Kotlikoff and Lawrence H. Summers. The role of intergenerational transfers in aggregate capital accumulation. <em>Journal of Political Economy</em>, 89(4):706–732, August 1981.</p>
-</div>
-<div class="citation" id="id48" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span>Lai01<span class="fn-bracket">]</span></span>
-<p>John Laitner. Secular changes in wealth inequality and inheritance. <em>Economic Journal</em>, 111(474):691–721, October 2001.</p>
-</div>
-<div class="citation" id="id57" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span>Nis02<span class="fn-bracket">]</span></span>
-<p>Shinichi Nishiyama. Bequests, inter vivos transfers, and wealth distribution. <em>Review of Economic Dynamics</em>, 5(4):892–931, October 2002.</p>
 </div>
 <div class="citation" id="id59" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span>Nis15<span class="fn-bracket">]</span></span>
@@ -475,21 +446,9 @@ document.write(`
 <span class="label"><span class="fn-bracket">[</span>Pet16<span class="fn-bracket">]</span></span>
 <p>William B. Peterman. Reconciling micro and macro estimates of the frisch labor supply elasticity. <em>Economic Inquiry</em>, 54(1):100–120, January 2016.</p>
 </div>
-<div class="citation" id="id61" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span>PS03<span class="fn-bracket">]</span></span>
-<p>Thomas Piketty and Emmanuel Saez. Income inequality in the united states, 1913-1998. <em>Quarterly Journal of Economics</em>, 118(1):1–39, February 2003.</p>
-</div>
 <div class="citation" id="id68" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span>Suz83<span class="fn-bracket">]</span></span>
 <p>Kotaro Suzumura. Perron-frobenius theorem on non-negative square matrices: an elementary proof. <em>Hitotsubashi Journal of Economics</em>, 24:137–141, 1983.</p>
-</div>
-<div class="citation" id="id69" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span>VW88<span class="fn-bracket">]</span></span>
-<p>Steven F. Venti and David A. Wise. The cause of wealth dispersion at retirement: choice or chance? <em>American Economic Review</em>, 88(2):185–191, May 1988.</p>
-</div>
-<div class="citation" id="id72" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span>Wol15<span class="fn-bracket">]</span></span>
-<p>Edward N. Wolff. <em>Inheriting Wealth in America: Future Boom or Bust?</em> Oxford University Press, 2015.</p>
 </div>
 <div class="citation" id="id4" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span>BusinessTech24<span class="fn-bracket">]</span></span>
@@ -498,14 +457,6 @@ document.write(`
 <div class="citation" id="id19" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span>CensusBureau15<span class="fn-bracket">]</span></span>
 <p>Census Bureau. Annual estimates of the resident population by single year of age and sex: april 1, 2010 to july 1, 2013 (both sexes). National Characteristics Vintage 2013, U.S. Census Bureau, http://www.census.gov/popest/data/national/asrh/2013/index.html, 2015.</p>
-</div>
-<div class="citation" id="id27" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span>DeNardi04<span class="fn-bracket">]</span></span>
-<p>Mariacristina De Nardi. Wealth inequality and intergenerational links. <em>Review of Economic Studies</em>, 71(3):743–768, July 2004.</p>
-</div>
-<div class="citation" id="id28" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span>DeNardiY14<span class="fn-bracket">]</span></span>
-<p>Mariacristina De Nardi and Fang Yang. Bequests and heterogeneity in retirement wealth. <em>European Economic Review</em>, 72:182–196, November 2014.</p>
 </div>
 </div>
 </div>
@@ -542,12 +493,12 @@ document.write(`
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="calibration/matching_lwi.html"
+       href="calibration/exogenous_parameters.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Matching Labor, Wealth, and Income Moments</p>
+        <p class="prev-next-title">Exogenous Parameters</p>
       </div>
     </a>
     <a class="right-next"
@@ -575,7 +526,7 @@ document.write(`
   <div class="footer-item">
     
 <p class="component-author">
-By Marcelo LaFleur and Richard W. Evans
+By Marcelo LaFleur, Richard W. Evans, and Jason DeBacker
 </p>
 
   </div>
@@ -585,7 +536,7 @@ By Marcelo LaFleur and Richard W. Evans
 
   <p class="copyright">
     
-      © Copyright 2022.
+      © Copyright 2024.
       <br/>
     
   </p>

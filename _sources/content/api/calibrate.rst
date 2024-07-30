@@ -11,4 +11,4 @@ ogzaf.calibrate
 .. currentmodule:: ogzaf.calibrate
 
 .. autoclass:: Calibration
-  :members: get_tax_function_parameters, read_tax_func_estimate, get_dict
+  :members: get_dict

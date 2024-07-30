@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>OG-ZAF &#8212; OG-ZAF</title>
+    <title>Output-Consumption Bridge &#8212; OG-ZAF</title>
   
   
   
@@ -57,12 +57,11 @@
     <script async="async" src="../../_static/sphinx-thebe.js?v=c100c467"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
-    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'content/intro/intro';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'content/api/input_output';</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Contributor Guide" href="../contributing/contributor_guide.html" />
+    <link rel="next" title="Macro Parameter Estimation Functions" href="macro_params.html" />
+    <link rel="prev" title="Life-cycle productivity profiles" href="income.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -125,8 +124,6 @@
       
       
       
-        
-      
       <div class="bd-sidebar-primary bd-sidebar">
         
 
@@ -145,7 +142,7 @@
     
   
 
-<a class="navbar-brand logo" href="#">
+<a class="navbar-brand logo" href="../intro/intro.html">
   
   
   
@@ -176,8 +173,8 @@
     <div class="bd-toc-item navbar-nav active">
         
         <ul class="nav bd-sidenav bd-sidenav__home-link">
-            <li class="toctree-l1 current active">
-                <a class="reference internal" href="#">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro/intro.html">
                     OG-ZAF
                 </a>
             </li>
@@ -187,13 +184,13 @@
 <li class="toctree-l1"><a class="reference internal" href="../contributing/contributor_guide.html">Contributor Guide</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">OG-ZAF API</span></p>
-<ul class="nav bd-sidenav">
-<li class="toctree-l1 has-children"><a class="reference internal" href="../api/public_api.html">API</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../api/calibrate.html">Main Calibration Functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/income.html">Life-cycle productivity profiles</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/input_output.html">Output-Consumption Bridge</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/macro_params.html">Macro Parameter Estimation Functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/utils.html">Calibration Utilities</a></li>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="public_api.html">API</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="calibrate.html">Main Calibration Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="income.html">Life-cycle productivity profiles</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Output-Consumption Bridge</a></li>
+<li class="toctree-l2"><a class="reference internal" href="macro_params.html">Macro Parameter Estimation Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html">Calibration Utilities</a></li>
 </ul>
 </details></li>
 </ul>
@@ -287,7 +284,7 @@
       
       
       
-      <li><a href="https://github.com/EAPD-DRB/OG-ZAF/issues/new?title=Issue%20on%20page%20%2Fcontent/intro/intro.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/EAPD-DRB/OG-ZAF/issues/new?title=Issue%20on%20page%20%2Fcontent/api/input_output.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -317,7 +314,7 @@
       
       
       
-      <li><a href="../../_sources/content/intro/intro.md" target="_blank"
+      <li><a href="../../_sources/content/api/input_output.rst" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -327,7 +324,7 @@
 <span class="btn__icon-container">
   <i class="fas fa-file"></i>
   </span>
-<span class="btn__text-container">.md</span>
+<span class="btn__text-container">.rst</span>
 </a>
 </li>
       
@@ -401,7 +398,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>OG-ZAF</h1>
+    <h1>Output-Consumption Bridge</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -411,9 +408,11 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#core-maintainers">Core Maintainers</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#disclaimer">Disclaimer</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#citing-og-zaf">Citing OG-ZAF</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-ogzaf.input_output">ogzaf.input_output</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ogzaf.input_output.get_alpha_c"><code class="docutils literal notranslate"><span class="pre">get_alpha_c()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ogzaf.input_output.get_io_matrix"><code class="docutils literal notranslate"><span class="pre">get_io_matrix()</span></code></a></li>
+</ul>
+</li>
 </ul>
             </nav>
         </div>
@@ -425,57 +424,55 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="og-zaf">
-<span id="chap-intro"></span><h1>OG-ZAF<a class="headerlink" href="#og-zaf" title="Link to this heading">#</a></h1>
-<div class="pst-scrollable-table-container"><table class="table">
-<thead>
-<tr class="row-odd"><th class="head"><p></p></th>
-<th class="head"><p></p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p>Org</p></td>
-<td><p><a class="reference external" href="https://www.un.org/en/desa"><img alt="United Nations DESA" src="https://img.shields.io/badge/United%20Nations%20DESA-blue" /></a> <a class="reference external" href="https://www.PSLmodels.org"><img alt="PSL cataloged" src="https://img.shields.io/badge/PSL-cataloged-a0a0a0.svg" /></a> <a class="reference external" href="https://github.com/EAPD-DRB/OG-ZAF/blob/main/LICENSE"><img alt="OS License: CC0-1.0" src="https://img.shields.io/badge/OS%20License-CC0%201.0-yellow" /></a></p></td>
-</tr>
-<tr class="row-odd"><td><p>Package</p></td>
-<td><p><a class="reference external" href="https://www.python.org/downloads/release/python-31013/"><img alt="Python 3.10" src="https://img.shields.io/badge/python-3.10-blue.svg" /></a> <a class="reference external" href="https://www.python.org/downloads/release/python-3116/"><img alt="Python 3.11" src="https://img.shields.io/badge/python-3.11-blue.svg" /></a> <a class="reference external" href="https://pypi.org/project/ogzaf/"><img alt="PyPI Latest Release" src="https://img.shields.io/pypi/v/ogzaf.svg" /></a> <a class="reference external" href="https://pypi.org/project/ogzaf/"><img alt="PyPI Downloads" src="https://img.shields.io/pypi/dm/ogzaf.svg?label=PyPI%20downloads" /></a></p></td>
-</tr>
-<tr class="row-even"><td><p>Testing</p></td>
-<td><p><img alt="example event parameter" src="https://github.com/EAPD-DRB/OG-ZAF/actions/workflows/build_and_test.yml/badge.svg?branch=main" /> <img alt="example event parameter" src="https://github.com/EAPD-DRB/OG-ZAF/actions/workflows/deploy_docs.yml/badge.svg?branch=main" /> <img alt="example event parameter" src="https://github.com/EAPD-DRB/OG-ZAF/actions/workflows/check_format.yml/badge.svg?branch=main" /> <a class="reference external" href="https://codecov.io/gh/EAPD-DRB/OG-ZAF"><img alt="Codecov" src="https://codecov.io/gh/EAPD-DRB/OG-ZAF/branch/main/graph/badge.svg" /></a></p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<p><a class="reference external" href="https://github.com/EAPD-DRB/OG-ZAF"><code class="docutils literal notranslate"><span class="pre">OG-ZAF</span></code></a> is a package that provides code and data to calibrate an overlapping-generations (OG) model to the economy of South Africa (ZAF), the code of which is hosted on GitHub at <a class="github reference external" href="https://github.com/EAPD-DRB/OG-ZAF">EAPD-DRB/OG-ZAF</a>. <code class="docutils literal notranslate"><span class="pre">OG-ZAF</span></code> uses as a dependency the <a class="reference external" href="https://pslmodels.github.io/OG-Core/"><code class="docutils literal notranslate"><span class="pre">OG-Core</span></code></a> package, which contains the core theory and logic of a general OG model. The <code class="docutils literal notranslate"><span class="pre">OG-ZAF</span></code> calibration package and the <code class="docutils literal notranslate"><span class="pre">OG-Core</span></code> theory and logic make the model that allows for dynamic general equilibrium analysis of federal fiscal policy in South Africa. The model output focuses on changes in macroeconomic aggregates (GDP, investment, consumption), wages, interest rates, and the stream of tax revenues over time. This documentation of the <code class="docutils literal notranslate"><span class="pre">OG-ZAF</span></code> package contains the following major sections, which are regularly updated.</p>
-<ul class="simple">
-<li><p>Contributing to <code class="docutils literal notranslate"><span class="pre">OG-ZAF</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">OG-ZAF</span></code> API</p></li>
-<li><p>Calibration</p></li>
-<li><p>References</p></li>
-<li><p>Citations of <code class="docutils literal notranslate"><span class="pre">OG-ZAF</span></code></p></li>
+  <section id="output-consumption-bridge">
+<span id="input-output"></span><h1>Output-Consumption Bridge<a class="headerlink" href="#output-consumption-bridge" title="Link to this heading">#</a></h1>
+<p><strong>input_output.py modules</strong></p>
+<section id="module-ogzaf.input_output">
+<span id="ogzaf-input-output"></span><h2>ogzaf.input_output<a class="headerlink" href="#module-ogzaf.input_output" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="ogzaf.input_output.get_alpha_c">
+<span class="sig-prename descclassname"><span class="pre">ogzaf.input_output.</span></span><span class="sig-name descname"><span class="pre">get_alpha_c</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sam</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">SAM</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cons_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">CONS_DICT</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/ogzaf/input_output.html#get_alpha_c"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ogzaf.input_output.get_alpha_c" title="Link to this definition">#</a></dt>
+<dd><p>Calibrate the alpha_c vector, showing the shares of household
+expenditures for each consumption category</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sam</strong> (<em>pd.DataFrame</em>) – SAM file</p></li>
+<li><p><strong>cons_dict</strong> (<em>dict</em>) – Dictionary of consumption categories</p></li>
 </ul>
-<section id="core-maintainers">
-<span id="sec-coremaintainers"></span><h2>Core Maintainers<a class="headerlink" href="#core-maintainers" title="Link to this heading">#</a></h2>
-<p>Marcelo LaFleur (GitHub handle <a class="reference external" href="https://github.com/SeaCelo">&#64;SeaCelo</a>) and <a class="reference external" href="https://sites.google.com/site/rickecon/">Richard W. Evans</a> (GitHub handle <a class="reference external" href="https://github.com/rickecon">&#64;rickecon</a>) are the core maintainers of <code class="docutils literal notranslate"><span class="pre">OG-ZAF</span></code>. If you have questions about or contributions to the model or repository, please submit a GitHub “Issue” described in the <a class="reference internal" href="../contributing/contributor_guide.html#sec-githubissue"><span class="std std-ref">Submitting a GitHub Issue</span></a> subsection or “Pull Request” as described in the <a class="reference internal" href="../contributing/contributor_guide.html#sec-githubpr"><span class="std std-ref">Submitting a GitHub Pull Request</span></a> subsection of the <a class="reference internal" href="../contributing/contributor_guide.html#sec-workflow"><span class="std std-ref">Workflow</span></a> section of the <code class="docutils literal notranslate"><span class="pre">OG-ZAF</span></code> <a class="reference internal" href="../contributing/contributor_guide.html#chap-contribguide"><span class="std std-ref">Contributor Guide</span></a>.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dictionary of shares of household expenditures</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>alpha_c (dict)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ogzaf.input_output.get_io_matrix">
+<span class="sig-prename descclassname"><span class="pre">ogzaf.input_output.</span></span><span class="sig-name descname"><span class="pre">get_io_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sam</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">SAM</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cons_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">CONS_DICT</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prod_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">PROD_DICT</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/ogzaf/input_output.html#get_io_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ogzaf.input_output.get_io_matrix" title="Link to this definition">#</a></dt>
+<dd><p>Calibrate the io_matrix array.  This array relates the share of each
+production category in each consumption category</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sam</strong> (<em>pd.DataFrame</em>) – SAM file</p></li>
+<li><p><strong>cons_dict</strong> (<em>dict</em>) – Dictionary of consumption categories</p></li>
+<li><p><strong>prod_dict</strong> (<em>dict</em>) – Dictionary of production categories</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dataframe of io_matrix</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>io_df (pd.DataFrame)</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
-<section id="disclaimer">
-<span id="sec-disclaimer"></span><h2>Disclaimer<a class="headerlink" href="#disclaimer" title="Link to this heading">#</a></h2>
-<p>The model is continuously under development. Users will be notified through <a class="reference external" href="https://github.com/EAPD-DRB/OG-ZAF/pulls?q=is%3Apr+is%3Aclosed">closed PR threads</a> and through the <a class="reference external" href="https://github.com/EAPD-DRB/OG-ZAF/releases">release notes</a> what changes have been implemented. The package will have released versions, which will be checked against existing code prior to release. Stay tuned for an upcoming release!</p>
-</section>
-<section id="citing-og-zaf">
-<span id="sec-citingogzaf"></span><h2>Citing OG-ZAF<a class="headerlink" href="#citing-og-zaf" title="Link to this heading">#</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">OG-ZAF</span></code> (Version #.#.#)[Source code], <a class="github reference external" href="https://github.com/EAPD-DRB/OG-ZAF">EAPD-DRB/OG-ZAF</a></p>
-</section>
-<div class="toctree-wrapper compound">
-</div>
-<div class="toctree-wrapper compound">
-</div>
-<div class="toctree-wrapper compound">
-</div>
-<div class="toctree-wrapper compound">
-</div>
-<div class="toctree-wrapper compound">
-</div>
 </section>
 
     <script type="text/x-thebe-config">
@@ -491,7 +488,7 @@ document.write(`
         },
         kernelOptions: {
             name: "python3",
-            path: "./content/intro"
+            path: "./content/api"
         },
         predefinedOutput: true
     }
@@ -508,12 +505,21 @@ document.write(`
                 <footer class="prev-next-footer d-print-none">
                   
 <div class="prev-next-area">
+    <a class="left-prev"
+       href="income.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Life-cycle productivity profiles</p>
+      </div>
+    </a>
     <a class="right-next"
-       href="../contributing/contributor_guide.html"
+       href="macro_params.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Contributor Guide</p>
+        <p class="prev-next-title">Macro Parameter Estimation Functions</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -533,9 +539,11 @@ document.write(`
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#core-maintainers">Core Maintainers</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#disclaimer">Disclaimer</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#citing-og-zaf">Citing OG-ZAF</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-ogzaf.input_output">ogzaf.input_output</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ogzaf.input_output.get_alpha_c"><code class="docutils literal notranslate"><span class="pre">get_alpha_c()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ogzaf.input_output.get_io_matrix"><code class="docutils literal notranslate"><span class="pre">get_io_matrix()</span></code></a></li>
+</ul>
+</li>
 </ul>
   </nav></div>
 

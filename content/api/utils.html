@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>OG-ZAF &#8212; OG-ZAF</title>
+    <title>Calibration Utilities &#8212; OG-ZAF</title>
   
   
   
@@ -57,12 +57,11 @@
     <script async="async" src="../../_static/sphinx-thebe.js?v=c100c467"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
-    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'content/intro/intro';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'content/api/utils';</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Contributor Guide" href="../contributing/contributor_guide.html" />
+    <link rel="next" title="Calibration of Household Preference Parameters" href="../calibration/households.html" />
+    <link rel="prev" title="Macro Parameter Estimation Functions" href="macro_params.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -125,8 +124,6 @@
       
       
       
-        
-      
       <div class="bd-sidebar-primary bd-sidebar">
         
 
@@ -145,7 +142,7 @@
     
   
 
-<a class="navbar-brand logo" href="#">
+<a class="navbar-brand logo" href="../intro/intro.html">
   
   
   
@@ -176,8 +173,8 @@
     <div class="bd-toc-item navbar-nav active">
         
         <ul class="nav bd-sidenav bd-sidenav__home-link">
-            <li class="toctree-l1 current active">
-                <a class="reference internal" href="#">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro/intro.html">
                     OG-ZAF
                 </a>
             </li>
@@ -187,13 +184,13 @@
 <li class="toctree-l1"><a class="reference internal" href="../contributing/contributor_guide.html">Contributor Guide</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">OG-ZAF API</span></p>
-<ul class="nav bd-sidenav">
-<li class="toctree-l1 has-children"><a class="reference internal" href="../api/public_api.html">API</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../api/calibrate.html">Main Calibration Functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/income.html">Life-cycle productivity profiles</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/input_output.html">Output-Consumption Bridge</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/macro_params.html">Macro Parameter Estimation Functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/utils.html">Calibration Utilities</a></li>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="public_api.html">API</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="calibrate.html">Main Calibration Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="income.html">Life-cycle productivity profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="input_output.html">Output-Consumption Bridge</a></li>
+<li class="toctree-l2"><a class="reference internal" href="macro_params.html">Macro Parameter Estimation Functions</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Calibration Utilities</a></li>
 </ul>
 </details></li>
 </ul>
@@ -287,7 +284,7 @@
       
       
       
-      <li><a href="https://github.com/EAPD-DRB/OG-ZAF/issues/new?title=Issue%20on%20page%20%2Fcontent/intro/intro.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/EAPD-DRB/OG-ZAF/issues/new?title=Issue%20on%20page%20%2Fcontent/api/utils.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -317,7 +314,7 @@
       
       
       
-      <li><a href="../../_sources/content/intro/intro.md" target="_blank"
+      <li><a href="../../_sources/content/api/utils.rst" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -327,7 +324,7 @@
 <span class="btn__icon-container">
   <i class="fas fa-file"></i>
   </span>
-<span class="btn__text-container">.md</span>
+<span class="btn__text-container">.rst</span>
 </a>
 </li>
       
@@ -401,7 +398,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>OG-ZAF</h1>
+    <h1>Calibration Utilities</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -411,9 +408,13 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#core-maintainers">Core Maintainers</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#disclaimer">Disclaimer</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#citing-og-zaf">Citing OG-ZAF</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ogzaf-utils">ogzaf.utils</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ogzaf.utils.CustomHttpAdapter"><code class="docutils literal notranslate"><span class="pre">CustomHttpAdapter</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#ogzaf.utils.CustomHttpAdapter.init_poolmanager"><code class="docutils literal notranslate"><span class="pre">CustomHttpAdapter.init_poolmanager()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
             </nav>
         </div>
@@ -425,57 +426,38 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="og-zaf">
-<span id="chap-intro"></span><h1>OG-ZAF<a class="headerlink" href="#og-zaf" title="Link to this heading">#</a></h1>
-<div class="pst-scrollable-table-container"><table class="table">
-<thead>
-<tr class="row-odd"><th class="head"><p></p></th>
-<th class="head"><p></p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p>Org</p></td>
-<td><p><a class="reference external" href="https://www.un.org/en/desa"><img alt="United Nations DESA" src="https://img.shields.io/badge/United%20Nations%20DESA-blue" /></a> <a class="reference external" href="https://www.PSLmodels.org"><img alt="PSL cataloged" src="https://img.shields.io/badge/PSL-cataloged-a0a0a0.svg" /></a> <a class="reference external" href="https://github.com/EAPD-DRB/OG-ZAF/blob/main/LICENSE"><img alt="OS License: CC0-1.0" src="https://img.shields.io/badge/OS%20License-CC0%201.0-yellow" /></a></p></td>
-</tr>
-<tr class="row-odd"><td><p>Package</p></td>
-<td><p><a class="reference external" href="https://www.python.org/downloads/release/python-31013/"><img alt="Python 3.10" src="https://img.shields.io/badge/python-3.10-blue.svg" /></a> <a class="reference external" href="https://www.python.org/downloads/release/python-3116/"><img alt="Python 3.11" src="https://img.shields.io/badge/python-3.11-blue.svg" /></a> <a class="reference external" href="https://pypi.org/project/ogzaf/"><img alt="PyPI Latest Release" src="https://img.shields.io/pypi/v/ogzaf.svg" /></a> <a class="reference external" href="https://pypi.org/project/ogzaf/"><img alt="PyPI Downloads" src="https://img.shields.io/pypi/dm/ogzaf.svg?label=PyPI%20downloads" /></a></p></td>
-</tr>
-<tr class="row-even"><td><p>Testing</p></td>
-<td><p><img alt="example event parameter" src="https://github.com/EAPD-DRB/OG-ZAF/actions/workflows/build_and_test.yml/badge.svg?branch=main" /> <img alt="example event parameter" src="https://github.com/EAPD-DRB/OG-ZAF/actions/workflows/deploy_docs.yml/badge.svg?branch=main" /> <img alt="example event parameter" src="https://github.com/EAPD-DRB/OG-ZAF/actions/workflows/check_format.yml/badge.svg?branch=main" /> <a class="reference external" href="https://codecov.io/gh/EAPD-DRB/OG-ZAF"><img alt="Codecov" src="https://codecov.io/gh/EAPD-DRB/OG-ZAF/branch/main/graph/badge.svg" /></a></p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<p><a class="reference external" href="https://github.com/EAPD-DRB/OG-ZAF"><code class="docutils literal notranslate"><span class="pre">OG-ZAF</span></code></a> is a package that provides code and data to calibrate an overlapping-generations (OG) model to the economy of South Africa (ZAF), the code of which is hosted on GitHub at <a class="github reference external" href="https://github.com/EAPD-DRB/OG-ZAF">EAPD-DRB/OG-ZAF</a>. <code class="docutils literal notranslate"><span class="pre">OG-ZAF</span></code> uses as a dependency the <a class="reference external" href="https://pslmodels.github.io/OG-Core/"><code class="docutils literal notranslate"><span class="pre">OG-Core</span></code></a> package, which contains the core theory and logic of a general OG model. The <code class="docutils literal notranslate"><span class="pre">OG-ZAF</span></code> calibration package and the <code class="docutils literal notranslate"><span class="pre">OG-Core</span></code> theory and logic make the model that allows for dynamic general equilibrium analysis of federal fiscal policy in South Africa. The model output focuses on changes in macroeconomic aggregates (GDP, investment, consumption), wages, interest rates, and the stream of tax revenues over time. This documentation of the <code class="docutils literal notranslate"><span class="pre">OG-ZAF</span></code> package contains the following major sections, which are regularly updated.</p>
-<ul class="simple">
-<li><p>Contributing to <code class="docutils literal notranslate"><span class="pre">OG-ZAF</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">OG-ZAF</span></code> API</p></li>
-<li><p>Calibration</p></li>
-<li><p>References</p></li>
-<li><p>Citations of <code class="docutils literal notranslate"><span class="pre">OG-ZAF</span></code></p></li>
+  <section id="calibration-utilities">
+<span id="utils"></span><h1>Calibration Utilities<a class="headerlink" href="#calibration-utilities" title="Link to this heading">#</a></h1>
+<p><strong>utils.py modules</strong></p>
+<section id="ogzaf-utils">
+<h2>ogzaf.utils<a class="headerlink" href="#ogzaf-utils" title="Link to this heading">#</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="ogzaf.utils.CustomHttpAdapter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ogzaf.utils.</span></span><span class="sig-name descname"><span class="pre">CustomHttpAdapter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ssl_context</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/ogzaf/utils.html#CustomHttpAdapter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ogzaf.utils.CustomHttpAdapter" title="Link to this definition">#</a></dt>
+<dd><p>The UN Data Portal server doesn’t support “RFC 5746 secure renegotiation”. This causes and error when the client is using OpenSSL 3, which enforces that standard by default.
+The fix is to create a custom SSL context that allows for legacy connections. This defines a function get_legacy_session() that should be used instead of requests().</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="ogzaf.utils.CustomHttpAdapter.init_poolmanager">
+<span class="sig-name descname"><span class="pre">init_poolmanager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">connections</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxsize</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">block</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/ogzaf/utils.html#CustomHttpAdapter.init_poolmanager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ogzaf.utils.CustomHttpAdapter.init_poolmanager" title="Link to this definition">#</a></dt>
+<dd><p>Initializes a urllib3 PoolManager.</p>
+<p>This method should not be called from user code, and is only
+exposed for use when subclassing the
+<code class="xref py py-class docutils literal notranslate"><span class="pre">HTTPAdapter</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>connections</strong> – The number of urllib3 connection pools to cache.</p></li>
+<li><p><strong>maxsize</strong> – The maximum number of connections to save in the pool.</p></li>
+<li><p><strong>block</strong> – Block when no free connections are available.</p></li>
+<li><p><strong>pool_kwargs</strong> – Extra keyword arguments used to initialize the Pool Manager.</p></li>
 </ul>
-<section id="core-maintainers">
-<span id="sec-coremaintainers"></span><h2>Core Maintainers<a class="headerlink" href="#core-maintainers" title="Link to this heading">#</a></h2>
-<p>Marcelo LaFleur (GitHub handle <a class="reference external" href="https://github.com/SeaCelo">&#64;SeaCelo</a>) and <a class="reference external" href="https://sites.google.com/site/rickecon/">Richard W. Evans</a> (GitHub handle <a class="reference external" href="https://github.com/rickecon">&#64;rickecon</a>) are the core maintainers of <code class="docutils literal notranslate"><span class="pre">OG-ZAF</span></code>. If you have questions about or contributions to the model or repository, please submit a GitHub “Issue” described in the <a class="reference internal" href="../contributing/contributor_guide.html#sec-githubissue"><span class="std std-ref">Submitting a GitHub Issue</span></a> subsection or “Pull Request” as described in the <a class="reference internal" href="../contributing/contributor_guide.html#sec-githubpr"><span class="std std-ref">Submitting a GitHub Pull Request</span></a> subsection of the <a class="reference internal" href="../contributing/contributor_guide.html#sec-workflow"><span class="std std-ref">Workflow</span></a> section of the <code class="docutils literal notranslate"><span class="pre">OG-ZAF</span></code> <a class="reference internal" href="../contributing/contributor_guide.html#chap-contribguide"><span class="std std-ref">Contributor Guide</span></a>.</p>
-</section>
-<section id="disclaimer">
-<span id="sec-disclaimer"></span><h2>Disclaimer<a class="headerlink" href="#disclaimer" title="Link to this heading">#</a></h2>
-<p>The model is continuously under development. Users will be notified through <a class="reference external" href="https://github.com/EAPD-DRB/OG-ZAF/pulls?q=is%3Apr+is%3Aclosed">closed PR threads</a> and through the <a class="reference external" href="https://github.com/EAPD-DRB/OG-ZAF/releases">release notes</a> what changes have been implemented. The package will have released versions, which will be checked against existing code prior to release. Stay tuned for an upcoming release!</p>
-</section>
-<section id="citing-og-zaf">
-<span id="sec-citingogzaf"></span><h2>Citing OG-ZAF<a class="headerlink" href="#citing-og-zaf" title="Link to this heading">#</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">OG-ZAF</span></code> (Version #.#.#)[Source code], <a class="github reference external" href="https://github.com/EAPD-DRB/OG-ZAF">EAPD-DRB/OG-ZAF</a></p>
-</section>
-<div class="toctree-wrapper compound">
-</div>
-<div class="toctree-wrapper compound">
-</div>
-<div class="toctree-wrapper compound">
-</div>
-<div class="toctree-wrapper compound">
-</div>
-<div class="toctree-wrapper compound">
-</div>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<span class="target" id="module-ogzaf.utils"></span></section>
 </section>
 
     <script type="text/x-thebe-config">
@@ -491,7 +473,7 @@ document.write(`
         },
         kernelOptions: {
             name: "python3",
-            path: "./content/intro"
+            path: "./content/api"
         },
         predefinedOutput: true
     }
@@ -508,12 +490,21 @@ document.write(`
                 <footer class="prev-next-footer d-print-none">
                   
 <div class="prev-next-area">
+    <a class="left-prev"
+       href="macro_params.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Macro Parameter Estimation Functions</p>
+      </div>
+    </a>
     <a class="right-next"
-       href="../contributing/contributor_guide.html"
+       href="../calibration/households.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Contributor Guide</p>
+        <p class="prev-next-title">Calibration of Household Preference Parameters</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -533,9 +524,13 @@ document.write(`
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#core-maintainers">Core Maintainers</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#disclaimer">Disclaimer</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#citing-og-zaf">Citing OG-ZAF</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ogzaf-utils">ogzaf.utils</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ogzaf.utils.CustomHttpAdapter"><code class="docutils literal notranslate"><span class="pre">CustomHttpAdapter</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#ogzaf.utils.CustomHttpAdapter.init_poolmanager"><code class="docutils literal notranslate"><span class="pre">CustomHttpAdapter.init_poolmanager()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
   </nav></div>
 
