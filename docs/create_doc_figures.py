@@ -4,12 +4,8 @@ This script creates tables and figures from the OG-ZAF documentation.
 
 # import
 import os
-import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-import matplotlib as mpl
-import json
-import ogzaf
 import ogcore
 from ogcore.parameters import Specifications
 from ogcore import parameter_plots as pp
@@ -60,9 +56,6 @@ fert_rates, fig = demog.get_fert(
 )
 plt.savefig(os.path.join(plot_path, "fert_rates.png"), dpi=300)
 # Mortality rates
-import matplotlib.pyplot as plt
-import ogcore.demographics as demog
-
 mort_rates, _, fig = demog.get_mort(
     totpers=100,
     min_age=0,
