@@ -26,7 +26,7 @@ def get_macro_params():
     end = datetime.date.today()  # go through today
     baseline_date = datetime.datetime(2019, 3, 31)
     baseline_yearquarter = (
-        "2019Q1"  # The WB QPSD database has the date in YYYYQQ format
+        "2024Q1"  # The WB QPSD database has the date in YYYYQQ format
     )
 
     """
