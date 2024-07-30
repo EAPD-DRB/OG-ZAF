@@ -14,9 +14,8 @@ kernelspec:
 (Chap_Exog)=
 # Exogenous Parameters
 
-  [TODO: This chapter needs heavy updating. Would be nice to do something similar to API chapter. But it is also nice to have references and descriptions as in the table below.]
 
-  In this chapter, list the exogenous inputs to the model, options, and where the values come from (weak calibration vs. strong calibration). Point to the respective chapters for some of the inputs. Mention the code in [`ogzaf_default_parameters.json`](https://github.com/EAPD-DRB/OG-ZAF/blob/master/ogzaf/ogzaf_default_parameters.json) in the OG-ZAF repository and in [`default_parameters.json`](https://github.com/PSLmodels/OG-Core/blob/master/ogcore/default_parameters.json) and [`parameters.py`](https://github.com/PSLmodels/OG-Core/blob/master/ogcore/parameters.py) in the OG-Core repository.
+  The JSON file [`ogzaf_default_parameters.json`](https://github.com/EAPD-DRB/OG-ZAF/blob/master/ogzaf/ogzaf_default_parameters.json) provides values for all the model parameters used as defaults for OG-ZAF. Below, we provide a table highlighting some of the parameters describing the scale of the model (number of periods, aged, productivity types) and some parameters of the solution method (dampening parameter for TPI). The table below provides a list of the exogenous parameters and their baseline calibration values.
 
   <!-- +++
   ```{code-cell} ogzaf-dev
@@ -42,9 +41,6 @@ kernelspec:
   * - $E$
     - Number of periods of youth economically outside the model
     - $\text{round} \frac{S}{4}$=20
-  * - $R$
-    - Retirement age (period)
-    - $E + \text{round} (\frac{9}{16} S) = 65$
   * - $T_1$
     - Number of periods to steady state for initial time path guesses
     - 160
@@ -54,16 +50,4 @@ kernelspec:
   * - $\nu$
     - Dampening parameter for TPI
     - 0.4
-  * - ${ \{ { \{ \omega_{s,0} \} }_{s=1}^{E+S}  \}}_{t=0}^{T_2 + S - 1}$
-    - Initial population distribution by age
-    - (see Chap. {ref}`Chap_Demog`)
-  * - ${ \{ f_s \}}_{s=1}^{E+S}$
-    - Fertility rates by age
-    - (see Sec. {ref}`SecDemogFert`)
-  * - ${ \{ i_s \}}_{s=1}^{E+S}$
-    - Immigration rates by age
-    - (see Sec. {ref}`SecDemogMort`)
-  * - ${ \{ \rho_s \}}_{s=0}^{E+S}$
-    - Mortality rates by age
-    - (see Sec. {ref}`SecDemogImm`)
   ```
