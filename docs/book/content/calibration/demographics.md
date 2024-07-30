@@ -13,7 +13,7 @@ kernelspec:
 (Chap_Demog)=
 # Demographics
 
-We start the `OG-ZAF` section on modeling the household with a description of the demographics of the model. {cite}`Nishiyama:2015` and {cite}`DeBackerEtAl:2019` have recently shown that demographic dynamics are likely the biggest influence on macroeconomic time series, exhibiting more influence than fiscal variables or household preference parameters.
+Demographics are a key component of the macroeconmic model. {cite}`Nishiyama:2015` and {cite}`DeBackerEtAl:2019` have recently shown that demographic dynamics are likely the biggest influence on macroeconomic time series, exhibiting more influence than fiscal variables or household preference parameters.
 
 In this chapter, we characterize the equations and parameters that govern the transition dynamics of the population distribution by age. In `OG-ZAF`, we take the approach of taking mortality rates and fertility rates from outside estimates. But we estimate our immigration rates as residuals using the mortality rates, fertility rates, and at least two consecutive periods of population distribution data. This approach makes sense if one is modeling a country in which one is not confident in the immigration rate data. If the country has good immigration data, then the immigration residual approach we describe below can be skipped.
 
@@ -22,11 +22,11 @@ We define $\omega_{s,t}$ as the number of households of age $s$ alive at time $t
 The population of agents of each age in each period $\omega_{s,t}$ evolves according to the following function,
 ```{math}
   :label: EqPopLawofmotion
-    \omega_{1,t+1} &= (1 - \rho_0)\sum_{s=1}^{E+S} f_s\omega_{s,t} + i_1\omega_{1,t}\quad\forall t \\
-    \omega_{s+1,t+1} &= (1 - \rho_s)\omega_{s,t} + i_{s+1}\omega_{s+1,t}\quad\forall t\quad\text{and}\quad 1\leq s \leq E+S-1
+    \omega_{1,t+1} &= (1 - \rho_{0,t})\sum_{s=1}^{E+S} f_{s,t}\omega_{s,t} + i_1\omega_{1,t}\quad\forall t \\
+    \omega_{s+1,t+1} &= (1 - \rho_{s,t})\omega_{s,t} + i_{s+1,t}\omega_{s+1,t}\quad\forall t\quad\text{and}\quad 1\leq s \leq E+S-1
 ```
 
-where $f_s\geq 0$ is an age-specific fertility rate, $i_s$ is an age-specific net immigration rate, $\rho_s$ is an age-specific mortality hazard rate, and $\rho_0$ is an infant mortality rate.[^houseprob_note] The total population in the economy $N_t$ at any period is simply the sum of households in the economy, the population growth rate in any period $t$ from the previous period $t-1$ is $g_{n,t}$, $\tilde{N}_t$ is the working age population, and $\tilde{g}_{n,t}$ is the working age population growth rate in any period $t$ from the previous period $t-1$.
+where $f_{s,t}\geq 0$ is an age-specific fertility rate, $i_{s,t}$ is an age-specific net immigration rate, $\rho_{s,t}$ is an age-specific mortality hazard rate, and $\rho_{0,t}$ is an infant mortality rate.[^houseprob_note] The total population in the economy $N_t$ at any period is simply the sum of households in the economy, the population growth rate in any period $t$ from the previous period $t-1$ is $g_{n,t}$, $\tilde{N}_t$ is the working age population, and $\tilde{g}_{n,t}$ is the working age population growth rate in any period $t$ from the previous period $t-1$.
 
 ```{math}
   :label: EqPopN
@@ -48,12 +48,12 @@ where $f_s\geq 0$ is an age-specific fertility rate, $i_s$ is an age-specific ne
   \tilde{g}_{n,t+1} \equiv \frac{\tilde{N}_{t+1}}{\tilde{N}_t} - 1 \quad\forall t
 ```
 
-We discuss the approach to estimating fertility rates $f_s$, mortality rates $\rho_s$, and immigration rates $i_s$ in Sections {ref}`SecDemogFert`, {ref}`SecDemogMort`, and {ref}`SecDemogImm`.
+We discuss the approach to estimating fertility rates $f_{s,t}$, mortality rates $\rho_{s,t}$, and immigration rates $i_{s,t}$ in Sections {ref}`SecDemogFert`, {ref}`SecDemogMort`, and {ref}`SecDemogImm`.
 
 (SecDemogFert)=
 ## Fertility rates
 
-  In `OG-ZAF`, we assume that the fertility rates for each age cohort $f_s$ are constant across time. However, this assumption is conceptually straightforward to relax. Our data for South Africa fertility rates by age come from United Nations fertility rate data for a country for some range of years (at least one year) and by age. The country_id=710 is for South Africa. These data come from the United Nations Data Portal API for UN population data (see https://population.un.org/dataportal/about/dataapi). The UN variable code for Population by 1-year age groups and sex is "47" and that for Fertility rates by age of mother (1-year) is "68".
+   Our data for South Africa fertility rates by age come from United Nations fertility rate data for a country for some range of years (at least one year) and by age. The country_id=710 is for South Africa. These data come from the United Nations Data Portal API for UN population data (see https://population.un.org/dataportal/about/dataapi). The UN variable code for Population by 1-year age groups and sex is "47" and that for Fertility rates by age of mother (1-year) is "68".
 
   {numref}`Figure %s <FigFertRatesZAF>` was created using the [`ogcore.demographics.get_fert()`](https://github.com/PSLmodels/OG-Core/blob/master/ogcore/demographics.py#L146) function, which downloaded the data from the United National Data Portal API and plotted it in Python.[^un_data_portal]
 
@@ -106,7 +106,7 @@ We discuss the approach to estimating fertility rates $f_s$, mortality rates $\r
 (SecDemogMort)=
 ## Mortality rates
 
-  The mortality rates in our model $\rho_s$ are a one-period hazard rate and represent the probability of dying within one year, given that an household is alive at the beginning of the period in which they are age-$s$. We assume that the mortality rates for each age cohort $\rho_s$ are constant across time. But this assumption can be relaxed. These data come from the United Nations Population Data Portal API for UN population data (see https://population.un.org/dataportal/about/dataapi). The model uses neonatal mortality rates (deaths per 1,000 live births, divided by 1,000) for the infant mortality rate from World Bank World Development Indicators, available at https://data.worldbank.org/indicator/SH.DYN.NMRT
+  The mortality rates in our model $\rho_{s,t}$ are a one-period hazard rate and represent the probability of dying within one year, given that an household is alive at the beginning of the period in which they are age-$s$. These data come from the United Nations Population Data Portal API for UN population data (see https://population.un.org/dataportal/about/dataapi). The model uses neonatal mortality rates (deaths per 1,000 live births, divided by 1,000) for the infant mortality rate from World Bank World Development Indicators, available at https://data.worldbank.org/indicator/SH.DYN.NMRT
 
   The mortality rates are a population-weighted average of the male and female mortality rates by one-year age increments reported by United Nations. The maximum age in years in our model is truncated to 100-years old. In addition, we constrain the mortality rate to be 1.0 or 100 percent at the maximum age of 100.
 
@@ -152,19 +152,19 @@ We discuss the approach to estimating fertility rates $f_s$, mortality rates $\r
   height: 400px
   name: FigMortRatesZAF
   ---
-  South Africa mortility rates by age $\left(\rho_s\right)$ for $E+S=100$: year 2023
+  South Africa mortality rates by age $\left(\rho_{s,t}\right)$ for $E+S=100$: year 2023
   ```
 
 
 (SecDemogImm)=
 ## Immigration rates
 
-  Because of the difficulty in getting accurate immigration rate data by age, we estimate the immigration rates by age in our model $i_s$ as the average residual that reconciles the current-period population distribution with next period's population distribution given fertility rates $f_s$ and mortality rates $\rho_s$. Solving equations {eq}`EqPopLawofmotion` for the immigration rate $i_s$ gives the following characterization of the immigration rates in given population levels in any two consecutive periods $\omega_{s,t}$ and $\omega_{s,t+1}$ and the fertility rates $f_s$ and mortality rates $\rho_s$.
+  Because of the difficulty in getting accurate immigration rate data by age, we estimate the immigration rates by age in our model $i_s$ as the average residual that reconciles the current-period population distribution with next period's population distribution given fertility rates $f_s$ and mortality rates $\rho_{s,t}$. Solving equations {eq}`EqPopLawofmotion` for the immigration rate $i_s$ gives the following characterization of the immigration rates in given population levels in any two consecutive periods $\omega_{s,t}$ and $\omega_{s,t+1}$ and the fertility rates $f_s$ and mortality rates $\rho_{s,t}$.
 
   ```{math}
   :label: EqPopImmRates
-      i_1 &= \frac{\omega_{1,t+1} - (1 - \rho_0)\sum_{s=1}^{E+S}f_s\omega_{s,t}}{\omega_{1,t}}\quad\forall t \\
-      i_{s+1} &= \frac{\omega_{s+1,t+1} - (1 - \rho_s)\omega_{s,t}}{\omega_{s+1,t}}\qquad\qquad\forall t\quad\text{and}\quad 1\leq s \leq E+S-1
+      i_{1,t} &= \frac{\omega_{1,t+1} - (1 - \rho_{0,t})\sum_{s=1}^{E+S}f_{s,t}\omega_{s,t}}{\omega_{1,t}}\quad\forall t \\
+      i_{s+1,t+1} &= \frac{\omega_{s+1,t+1} - (1 - \rho_{s,t})\omega_{s,t}}{\omega_{s+1,t}}\qquad\qquad\forall t\quad\text{and}\quad 1\leq s \leq E+S-1
   ```
 
   ```{code-cell} ipython3
@@ -215,19 +215,19 @@ We discuss the approach to estimating fertility rates $f_s$, mortality rates $\r
   South Africa immigration rates by age $\left(\rho_s\right)$ for $E+S=100$: year 2023
   ```
 
-  We calculate our immigration rates for the consecutive-year-periods of population distribution data 2022 and 2023. The immigration rates $i_s$ that we use in our model are the the residuals described in {eq}`EqPopImmRates` implied by these two consecutive periods. {numref}`Figure %s <FigImmRatesZAF>` shows the estimated immigration rates for $E+S=100$ and given the fertility rates from Section {ref}`SecDemogFert` and the mortality rates from Section {ref}`SecDemogMort`. These immigration rates show large out-migration from South Africa.[^out_migration]
+  We calculate our immigration rates for the consecutive-year-periods of population distribution data 2022 and 2023. The immigration rates $i_{s,t}$ that we use in our model are the the residuals described in {eq}`EqPopImmRates` implied by these two consecutive periods. {numref}`Figure %s <FigImmRatesZAF>` shows the estimated immigration rates for $E+S=100$ and given the fertility rates from Section {ref}`SecDemogFert` and the mortality rates from Section {ref}`SecDemogMort`. These immigration rates show large out-migration from South Africa.[^out_migration]
 
   At the end of Section {ref}`SecDemogPopSSTP`, we describe a small adjustment that we make to the immigration rates after a certain number of periods in order to make computation of the transition path equilibrium of the model compute more robustly.
 
 (SecDemogPopSSTP)=
 ## Population steady-state and transition path
 
-  This model requires information about mortality rates $\rho_s$ in order to solve for the household's problem each period. It also requires the steady-state stationary population distribution $\bar{\omega}_{s}$ and population growth rate $\bar{g}_n$ as well as the full transition path of the stationary population distribution $\hat{\omega}_{s,t}$ and population grow rate $\tilde{g}_{n,t}$ from the current state to the steady-state. To solve for the steady-state and the transition path of the stationary population distribution, we write the stationary population dynamic equations {eq}`EqPopLawofmotionStat` and their matrix representation {eq}`EqPopLOMstatmat`.
+  This model requires information about mortality rates $\rho_{s,t}$ in order to solve for the household's problem each period. It also requires the steady-state stationary population distribution $\bar{\omega}_{s}$ and population growth rate $\bar{g}_n$ as well as the full transition path of the stationary population distribution $\hat{\omega}_{s,t}$ and population grow rate $\tilde{g}_{n,t}$ from the current state to the steady-state. To solve for the steady-state and the transition path of the stationary population distribution, we write the stationary population dynamic equations {eq}`EqPopLawofmotionStat` and their matrix representation {eq}`EqPopLOMstatmat`.
 
   ```{math}
   :label: EqPopLawofmotionStat
-      \hat{\omega}_{1,t+1} &= \frac{(1-\rho_0)\sum_{s=1}^{E+S} f_s\hat{\omega}_{s,t} + i_1\hat{\omega}_{1,t}}{1+\tilde{g}_{n,t+1}}\quad\forall t \\
-      \hat{\omega}_{s+1,t+1} &= \frac{(1 - \rho_s)\hat{\omega}_{s,t} + i_{s+1}\hat{\omega}_{s+1,t}}{1+\tilde{g}_{n,t+1}}\qquad\quad\:\forall t\quad\text{and}\quad 1\leq s \leq E+S-1
+      \hat{\omega}_{1,t+1} &= \frac{(1-\rho_{0,t})\sum_{s=1}^{E+S} f_{s,t}\hat{\omega}_{s,t} + i_{1,t}\hat{\omega}_{1,t}}{1+\tilde{g}_{n,t+1}}\quad\forall t \\
+      \hat{\omega}_{s+1,t+1} &= \frac{(1 - \rho_{s,t})\hat{\omega}_{s,t} + i_{s+1,t}\hat{\omega}_{s+1,t}}{1+\tilde{g}_{n,t+1}}\qquad\quad\:\forall t\quad\text{and}\quad 1\leq s \leq E+S-1
   ```
 
   ```{math}
