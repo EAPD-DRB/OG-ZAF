@@ -14,7 +14,7 @@ parts:
   - file: content/calibration/macro
   - file: content/calibration/demographics
   - file: content/calibration/earnings
-  - file: content/calibration/tax_functions
+  - file: content/calibration/taxes
   - file: content/calibration/UBI
   - file: content/calibration/matching_lwi
   - file: content/calibration/exogenous_parameters
