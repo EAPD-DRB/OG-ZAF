@@ -59,40 +59,26 @@ We discuss the approach to estimating fertility rates $f_{s,t}$, mortality rates
 
   ```{code-cell} ipython3
   :tags: ["hide-input", "remove-output"]
-
-  import numpy as np
-  import matplotlib.pyplot as plt
+  import os
   import ogcore.demographics as demog
+  plot_path = os.path.join(os.path.abspath(''), 'images')
 
-  fert_rates = demog.get_fert(
+  fert_rates, fig = demog.get_fert(
       totpers=100,
       min_age=0,
       max_age=99,
       country_id="710",
-      start_year=2023,
-      end_year=2023,
-      graph=False,
+      start_year=YEAR_TO_PLOT,
+      end_year=YEAR_TO_PLOT,
+      graph=True,
       plot_path=None,
       download_path=None,
   )
-  plt.plot(
-      np.arange(1, 101), np.squeeze(fert_rates), linestyle="-", linewidth=1,
-      color="black"
-  )
-  plt.scatter(
-      np.arange(1, 101), np.squeeze(fert_rates), color="red", marker="o", s=4
-  )
-  plt.grid(
-      visible=True, which='major', axis='both', color='0.5', linestyle='--',
-      linewidth=0.3
-  )
-  plt.xlabel(r"Age ($s$)")
-  plt.ylabel(r"Fertility rate ($f_s$)")
-  plt.savefig('fert_rates_zaf.png')
+  plt.savefig(os.path.join(plot_path, "fert_rates.png"), dpi=300)
   plt.show()
   ```
 
-  ```{figure} ./images/fert_rates_zaf.png
+  ```{figure} ./images/fert_rates.png
   ---
   height: 400px
   name: FigFertRatesZAF
@@ -113,41 +99,29 @@ We discuss the approach to estimating fertility rates $f_{s,t}$, mortality rates
   ```{code-cell} ipython3
   :tags: ["hide-input", "remove-output"]
 
-  import numpy as np
   import matplotlib.pyplot as plt
+  import os
   import ogcore.demographics as demog
 
-  mort_rates, inf_mort_rate = demog.get_mort(
+  plot_path = os.path.join(os.path.abspath(''), 'images')
+  mort_rates, _, fig = demog.get_mort(
       totpers=100,
       min_age=0,
       max_age=99,
       country_id="710",
-      start_year=2023,
-      end_year=2023,
-      graph=False,
+      start_year=YEAR_TO_PLOT,
+      end_year=YEAR_TO_PLOT,
+      graph=True,
       plot_path=None,
       download_path=None,
   )
-
-  plt.plot(
-      np.arange(0, 101), np.hstack((inf_mort_rate, np.squeeze(mort_rates))),
-      linestyle="-", linewidth=1, color="black"
-  )
-  plt.scatter(
-      np.arange(0, 101), np.hstack((inf_mort_rate, np.squeeze(mort_rates))),
-      color="red", marker="o", s=4
-  )
-  plt.grid(
-      visible=True, which='major', axis='both', color='0.5', linestyle='--',
-      linewidth=0.3
-  )
   plt.xlabel(r"Age ($s$)")
   plt.ylabel(r"Mortality rate ($\rho_s$)")
-  plt.savefig('mort_rates_zaf.png')
+  plt.savefig(os.path.join(plot_path, "mort_rates.png"), dpi=300)
   plt.show()
   ```
 
-  ```{figure} ./images/mort_rates_zaf.png
+  ```{figure} ./images/mort_rates.png
   ---
   height: 400px
   name: FigMortRatesZAF
@@ -169,12 +143,12 @@ We discuss the approach to estimating fertility rates $f_{s,t}$, mortality rates
 
   ```{code-cell} ipython3
   :tags: ["hide-input", "remove-output"]
-
-  import numpy as np
+  import os
   import matplotlib.pyplot as plt
   import ogcore.demographics as demog
+  plot_path = os.path.join(os.path.abspath(''), 'images')
 
-  imm_rates = demog.get_imm_rates(
+  imm_rates, fig = demog.get_imm_rates(
       totpers=100,
       min_age=0,
       max_age=99,
@@ -183,36 +157,22 @@ We discuss the approach to estimating fertility rates $f_{s,t}$, mortality rates
       infmort_rates=None,
       pop_dist=None,
       country_id="710",
-      start_year=2023,
-      end_year=2023,
-      graph=False,
+      start_year=YEAR_TO_PLOT,
+      end_year=YEAR_TO_PLOT + 50,
+      graph=True,
       plot_path=None,
       download_path=None,
   )
-
-  plt.plot(
-      np.arange(1, 101), np.squeeze(imm_rates), linestyle="-", linewidth=1,
-      color="black"
-  )
-  plt.scatter(
-      np.arange(1, 101), np.squeeze(imm_rates), color="red", marker="o", s=4
-  )
-  plt.grid(
-      visible=True, which='major', axis='both', color='0.5', linestyle='--',
-      linewidth=0.3
-  )
-  plt.xlabel(r"Age ($s$)")
-  plt.ylabel(r"Immigration rate ($i_s$)")
-  plt.savefig('imm_rates_zaf.png')
+  plt.savefig(os.path.join(plot_path, "imm_rates.png"), dpi=300)
   plt.show()
   ```
 
-  ```{figure} ./images/imm_rates_zaf.png
+  ```{figure} ./images/imm_rates.png
   ---
   height: 400px
   name: FigImmRatesZAF
   ---
-  South Africa immigration rates by age $\left(\rho_s\right)$ for $E+S=100$: year 2023
+  South Africa immigration rates by age $\left(\i_s\right)$ for $E+S=100$: year 2023
   ```
 
   We calculate our immigration rates for the consecutive-year-periods of population distribution data 2022 and 2023. The immigration rates $i_{s,t}$ that we use in our model are the the residuals described in {eq}`EqPopImmRates` implied by these two consecutive periods. {numref}`Figure %s <FigImmRatesZAF>` shows the estimated immigration rates for $E+S=100$ and given the fertility rates from Section {ref}`SecDemogFert` and the mortality rates from Section {ref}`SecDemogMort`. These immigration rates show large out-migration from South Africa.[^out_migration]
@@ -345,7 +305,7 @@ We discuss the approach to estimating fertility rates $f_{s,t}$, mortality rates
 
   The most recent year of population data come from {cite}`Census:2015` population estimates for both sexes for 2013. We those data and use the population transition matrix {eq}`EqPopLOMstatmat2` to age it to the current model year of 2015. We then use {eq}`EqPopLOMstatmat2` to generate the transition path of the population distribution over the time period of the model. {numref}`Figure %s <FigPopDistPath>` shows the progression from the 2013 population data to the fixed steady-state at period $t=120$. The time path of the growth rate of the economically active population $\tilde{g}_{n,t}$ is shown in {numref}`Figure %s <FigPopDistPath>`.
 
-  ```{figure} ./images/PopDistPath.png
+  ```{figure} ./images/pop_distribution.png
   ---
   height: 500px
   name: FigPopDistPath
@@ -353,7 +313,35 @@ We discuss the approach to estimating fertility rates $f_{s,t}$, mortality rates
   Exogenous stationary population distribution at periods along transition path
   ```
 
-  ```{figure} ./images/GrowthPath.png
+  ```{code-cell} ipython3
+  :tags: ["hide-input", "remove-output"]
+  import os
+  import ogcore.demographics as demog
+  import matplotlib.pyplot as plt
+  YEAR_TO_PLOT = 2023
+  plot_path = os.path.join(os.path.abspath(''), 'images')
+  fig = pp.plot_pop_growth(
+      p,
+      start_year=YEAR_TO_PLOT,
+      num_years_to_plot=150,
+      include_title=False,
+      path=None,
+  )
+  # Add average growth rate with this
+  plt.plot(
+      np.arange(YEAR_TO_PLOT, YEAR_TO_PLOT + 150),
+      np.ones(150) * np.mean(p.g_n[:150]),
+      linestyle="-",
+      linewidth=1,
+      color="red",
+  )
+  plt.xlabel(r"Model Period ($t$)")
+  plt.ylabel(r"Population Growth Rate ($g_{n,t}$)")
+  plt.savefig(os.path.join(plot_path, "population_growth_rates.png"), dpi=300)
+  plt.show()
+  ```
+
+  ```{figure} ./images/population_growth_rates.png
   ---
   height: 500px
   name: FigGrowthPath
