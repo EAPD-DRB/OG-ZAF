@@ -26,7 +26,7 @@ def get_macro_params():
     end = datetime.date.today()  # go through today
     baseline_date = datetime.datetime(2019, 3, 31)
     baseline_yearquarter = (
-        "2019Q1"  # The WB QPSD database has the date in YYYYQQ format
+        "2024Q1"  # The WB QPSD database has the date in YYYYQQ format
     )
 
     """
@@ -44,43 +44,43 @@ def get_macro_params():
     }
 
     # pull series of interest using pandas_datareader
-    wb_data_a = wb.download(
-        indicator=wb_a_variable_dict.values(),
-        country=country_iso,
-        start=start,
-        end=end,
-    )
-    wb_data_a.rename(
-        columns=dict((y, x) for x, y in wb_a_variable_dict.items()),
-        inplace=True,
-    )
+    # wb_data_a = wb.download(
+    #     indicator=wb_a_variable_dict.values(),
+    #     country=country_iso,
+    #     start=start,
+    #     end=end,
+    # )
+    # wb_data_a.rename(
+    #     columns=dict((y, x) for x, y in wb_a_variable_dict.items()),
+    #     inplace=True,
+    # )
 
     """
     This retrieves quarterly data from the World Bank Quarterly Public Sector Debt database.
     The command extracts all available data even when start and end dates are specified.
     """
 
-    wb_q_variable_dict = {
-        "Gross PSD USD - domestic creditors": "DP.DOD.DECD.CR.PS.CD",
-        "Gross PSD USD - external creditors": "DP.DOD.DECX.CR.PS.CD",
-        "Gross PSD Gen Gov - percentage of GDP": "DP.DOD.DECT.CR.GG.Z1",
-    }
+    # wb_q_variable_dict = {
+    #     "Gross PSD USD - domestic creditors": "DP.DOD.DECD.CR.PS.CD",
+    #     "Gross PSD USD - external creditors": "DP.DOD.DECX.CR.PS.CD",
+    #     "Gross PSD Gen Gov - percentage of GDP": "DP.DOD.DECT.CR.GG.Z1",
+    # }
 
     # pull series of interest using pandas_datareader
-    wb_data_q = wb.download(
-        indicator=wb_q_variable_dict.values(),
-        country=country_iso,
-        start=start,
-        end=end,
-    )
-    wb_data_q.rename(
-        columns=dict((y, x) for x, y in wb_q_variable_dict.items()),
-        inplace=True,
-    )
+    # wb_data_q = wb.download(
+    #     indicator=wb_q_variable_dict.values(),
+    #     country=country_iso,
+    #     start=start,
+    #     end=end,
+    # )
+    # wb_data_q.rename(
+    #     columns=dict((y, x) for x, y in wb_q_variable_dict.items()),
+    #     inplace=True,
+    # )
 
-    # Remove the hierarchical index (country and year) of wb_data_q and create a single row index using year
-    wb_data_q = wb_data_q.reset_index()
-    wb_data_q = wb_data_q.set_index("year")
+    # # Remove the hierarchical index (country and year) of wb_data_q and create a single row index using year
+    # wb_data_q = wb_data_q.reset_index()
+    # wb_data_q = wb_data_q.set_index("year")
 
     """
     This retrieves labour share data from the ILOSTAT Data API
@@ -115,31 +115,31 @@ def get_macro_params():
 
     # print(fred_data.loc(str(baseline_date)))
     # find initial_debt_ratio
-    macro_parameters["initial_debt_ratio"] = (
-        pd.Series(wb_data_q["Gross PSD Gen Gov - percentage of GDP"]).loc[
-            baseline_yearquarter
-        ]
-    ) / 100
+    # macro_parameters["initial_debt_ratio"] = (
+    #     pd.Series(wb_data_q["Gross PSD Gen Gov - percentage of GDP"]).loc[
+    #         baseline_yearquarter
+    #     ]
+    # ) / 100
 
     # find initial_foreign_debt_ratio
-    macro_parameters["initial_foreign_debt_ratio"] = pd.Series(
-        wb_data_q["Gross PSD USD - external creditors"]
-        / (
-            wb_data_q["Gross PSD USD - domestic creditors"]
-            + wb_data_q["Gross PSD USD - external creditors"]
-        )
-    ).loc[baseline_yearquarter]
+    # macro_parameters["initial_foreign_debt_ratio"] = pd.Series(
+    #     wb_data_q["Gross PSD USD - external creditors"]
+    #     / (
+    #         wb_data_q["Gross PSD USD - domestic creditors"]
+    #         + wb_data_q["Gross PSD USD - external creditors"]
+    #     )
+    # ).loc[baseline_yearquarter]
 
     # find zeta_D (Share of new debt issues from government that are purchased by foreigners)
-    macro_parameters["zeta_D"] = [
-        pd.Series(
-            wb_data_q["Gross PSD USD - external creditors"]
-            / (
-                wb_data_q["Gross PSD USD - domestic creditors"]
-                + wb_data_q["Gross PSD USD - external creditors"]
-            )
-        ).loc[baseline_yearquarter]
-    ]
+    # macro_parameters["zeta_D"] = [
+    #     pd.Series(
+    #         wb_data_q["Gross PSD USD - external creditors"]
+    #         / (
+    #             wb_data_q["Gross PSD USD - domestic creditors"]
+    #             + wb_data_q["Gross PSD USD - external creditors"]
+    #         )
+    #     ).loc[baseline_yearquarter]
+    # ]
 
     # alpha_T, non-social security benefits as a fraction of GDP
     # source: https://data.imf.org/?sk=b052f0f0-c166-43b6-84fa-47cccae3e219&hide_uv=1
@@ -162,9 +162,9 @@ def get_macro_params():
     ]
 
     # find g_y
-    macro_parameters["g_y_annual"] = (
-        wb_data_a["GDP per capita (constant 2015 US$)"].pct_change(-1).mean()
-    )
+    # macro_parameters["g_y_annual"] = (
+    #     wb_data_a["GDP per capita (constant 2015 US$)"].pct_change(-1).mean()
+    # )
 
     """"
     We want to use the non linear relationship estimated by

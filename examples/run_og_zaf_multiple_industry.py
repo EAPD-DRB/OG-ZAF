@@ -14,7 +14,7 @@ from ogcore.parameters import Specifications
 from ogcore import output_tables as ot
 from ogcore import output_plots as op
 from ogcore.execute import runner
-from ogcore.utils import safe_read_pickle
+from ogcore.utils import safe_read_pickle, param_dump_json
 
 
 def main():
@@ -54,16 +54,9 @@ def main():
     p.M = 4
     p.I = 5
     c = Calibration(p)
-    updated_params = c.get_dict()
-    p.update_specifications(updated_params)
     updated_params_tax = {
-        "etr_params": [[[0.35]]],
-        "mtrx_params": [[[0.35]]],
-        "mtry_params": [[[0.35]]],
-        "cit_rate": [[0.28, 0.28, 0.28, 0.28]],
         # order of industries is primary, energy, tertiary, secondary ex energy
         "Z": [[0.5, 0.4, 1.7, 1.0]],
-        # Rick had good suggestion of using last successful run to find starting values and then keep churning.
         "epsilon": [1.0, 1.0, 1.0, 1.0],
         "gamma": [0.67, 0.50, 0.45, 0.53],
         "gamma_g": [0.0, 0.0, 0.0, 0.0],
@@ -71,6 +64,9 @@ def main():
         "io_matrix": c.io_matrix,
     }
     p.update_specifications(updated_params_tax)
+
+    # dump params to json
+    param_dump_json(p, os.path.join(base_dir, "model_params.json"))
 
     # Run model
     start_time = time.time()

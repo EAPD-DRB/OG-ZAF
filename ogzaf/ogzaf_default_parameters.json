@@ -798,7 +798,7 @@
     ],
     "rho_G": 0.1,
     "debt_ratio_ss": 1.2,
-    "initial_debt_ratio": 0.593066567243325,
+    "initial_debt_ratio": 0.74,
     "initial_Kg_ratio": 0.2,
     "r_gov_scale": [
         0.2448476359365782
