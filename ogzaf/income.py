@@ -334,7 +334,7 @@ def get_e_orig(age_wgts, abil_wgts, plot_path=None):
     2) Adjustment by age (S): adjust the shape/distribution of each J-income earning
         profile curve using data from NTA.
 
-    The methodoly is described here:
+    The methodology is described here:
     https://github.com/EAPD-DRB/OG-ZAF/issues/18#issuecomment-1368580323
 
     Args:
