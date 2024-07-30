@@ -14,9 +14,7 @@ from ogcore import demographics as demog
 
 CUR_DIR = os.path.dirname(os.path.realpath(__file__))
 UN_COUNTRY_CODE = "710"
-plot_path = os.path.join(
-    CUR_DIR, "book", "content", "calibration", "images"
-)
+plot_path = os.path.join(CUR_DIR, "book", "content", "calibration", "images")
 YEAR_TO_PLOT = 2023
 # update path for demographics graphdiag plots
 demog.OUTPUT_DIR = plot_path
