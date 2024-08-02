@@ -15,11 +15,7 @@ from ogcore.execute import runner
 from ogcore.utils import safe_read_pickle, param_dump_json
 
 # Use a custom matplotlib style file for plots
-style_file_url = (
-    "https://raw.githubusercontent.com/PSLmodels/OG-Core/"
-    + "master/ogcore/OGcorePlots.mplstyle"
-)
-plt.style.use(style_file_url)
+plt.style.use("ogcore.OGcorePlots")
 
 
 def main():
@@ -30,8 +26,9 @@ def main():
 
     # Directories to save data
     CUR_DIR = os.path.dirname(os.path.realpath(__file__))
-    base_dir = os.path.join(CUR_DIR, "OG-ZAF-Example", "OUTPUT_BASELINE")
-    reform_dir = os.path.join(CUR_DIR, "OG-ZAF-Example", "OUTPUT_REFORM")
+    save_dir = os.path.join(CUR_DIR, "OG-ZAF-Example")
+    base_dir = os.path.join(save_dir, "OUTPUT_BASELINE")
+    reform_dir = os.path.join(save_dir, "OUTPUT_REFORM")
 
     """
     ---------------------------------------------------------------------------
@@ -58,21 +55,7 @@ def main():
     # Update parameters from calibrate.py Calibration class
     c = Calibration(p)
     updated_params = c.get_dict()
-    p.tax_func_type = "linear"
-    p.age_specific = False
     p.update_specifications(updated_params)
-    # set underlying growth rate to zero, as value from data is negative
-    p.g_y = 0.0
-    # set tax rates
-    p.update_specifications(
-        {
-            "cit_rate": [[0.27]],
-            "etr_params": [[[0.22]]],
-            "mtrx_params": [[[0.31]]],
-            "mtry_params": [[[0.25]]],
-            "tau_c": [[0.15]],
-        }
-    )
 
     # Run model
     start_time = time.time()
@@ -90,7 +73,7 @@ def main():
     p2.baseline = False
     p2.output_base = reform_dir
 
-    # additional parameters to change
+    # Parameter change for the reform run
     updated_params_ref = {
         "cit_rate": [[0.30]],
     }
@@ -128,12 +111,12 @@ def main():
 
     # create plots of output
     op.plot_all(
-        base_dir, reform_dir, os.path.join(CUR_DIR, "OG-ZAF_example_plots")
+        base_dir, reform_dir, os.path.join(save_dir, "OG-ZAF_example_plots")
     )
 
     print("Percentage changes in aggregates:", ans)
     # save percentage change output to csv file
-    ans.to_csv("ogzaf_example_output.csv")
+    ans.to_csv(os.path.join(save_dir, "OG-ZAF_example_output.csv"))
 
 
 if __name__ == "__main__":

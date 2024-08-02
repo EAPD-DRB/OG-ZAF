@@ -6,9 +6,7 @@ import os
 import json
 import time
 import copy
-import numpy as np
-
-# from taxcalc import Calculator
+import matplotlib.pyplot as plt
 from ogzaf.calibrate import Calibration
 from ogcore.parameters import Specifications
 from ogcore import output_tables as ot
@@ -16,17 +14,21 @@ from ogcore import output_plots as op
 from ogcore.execute import runner
 from ogcore.utils import safe_read_pickle, param_dump_json
 
+# Use a custom matplotlib style file for plots
+plt.style.use("ogcore.OGcorePlots")
+
 
 def main():
     # Define parameters to use for multiprocessing
-    client = Client()
     num_workers = min(multiprocessing.cpu_count(), 7)
+    client = Client(n_workers=num_workers, threads_per_worker=1)
     print("Number of workers = ", num_workers)
 
     # Directories to save data
     CUR_DIR = os.path.dirname(os.path.realpath(__file__))
-    base_dir = os.path.join(CUR_DIR, "OG-ZAF-CIT_Example", "OUTPUT_BASELINE")
-    reform_dir = os.path.join(CUR_DIR, "OG-ZAF-CIT_Example", "OUTPUT_REFORM")
+    save_dir = os.path.join(CUR_DIR, "OG-ZAF-MultipleIndustry-example")
+    base_dir = os.path.join(save_dir, "OUTPUT_BASELINE")
+    reform_dir = os.path.join(save_dir, "OUTPUT_REFORM")
 
     """
     ---------------------------------------------------------------------------
@@ -84,12 +86,14 @@ def main():
     p2.baseline = False
     p2.output_base = reform_dir
 
-    # additional parameters to change
+    # Example reform is a corp tax rate cut (phased in) for all
+    # industries EXCEPT for secondary ex energy, which has a one point
+    # increae in the CIT rate
     updated_params_ref = {
         "cit_rate": [
-            [0.28, 0.28, 0.28, 0.28],
-            [0.28, 0.28, 0.28, 0.28],
-            [0.27, 0.27, 0.27, 0.27],
+            [0.27, 0.27, 0.27, 0.28],
+            [0.26, 0.26, 0.26, 0.28],
+            [0.25, 0.25, 0.25, 0.28],
         ],
         "baseline_spending": True,
     }
@@ -129,12 +133,12 @@ def main():
     op.plot_all(
         base_dir,
         reform_dir,
-        os.path.join(CUR_DIR, "OG-ZAF_CIT_multi_industry_plots"),
+        os.path.join(save_dir, "OG-ZAF-MultipleIndustry-example_plots"),
     )
 
     print("Percentage changes in aggregates:", ans)
     # save percentage change output to csv file
-    ans.to_csv("ogzaf_CIT_multi_industry_output.csv")
+    ans.to_csv(os.path.join(save_dir, "OG-ZAF-MultipleIndustry-example_output.csv"))
 
 
 if __name__ == "__main__":
