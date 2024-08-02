@@ -6,13 +6,14 @@ import os
 import json
 import time
 import copy
+import importlib.resources
 import matplotlib.pyplot as plt
 from ogzaf.calibrate import Calibration
 from ogcore.parameters import Specifications
 from ogcore import output_tables as ot
 from ogcore import output_plots as op
 from ogcore.execute import runner
-from ogcore.utils import safe_read_pickle, param_dump_json
+from ogcore.utils import safe_read_pickle
 
 # Use a custom matplotlib style file for plots
 plt.style.use("ogcore.OGcorePlots")
@@ -43,15 +44,12 @@ def main():
         output_base=base_dir,
     )
     # Update parameters for baseline from default json file
-    p.update_specifications(
-        json.load(
-            open(
-                os.path.join(
-                    CUR_DIR, "..", "ogzaf", "ogzaf_default_parameters.json"
-                )
-            )
-        )
-    )
+    with importlib.resources.open_text(
+        "ogzaf", "ogzaf_default_parameters.json"
+    ) as file:
+        defaults = json.load(file)
+    p.update_specifications(defaults)
+
     # Update parameters from calibrate.py Calibration class
     p.M = 4
     p.I = 5
@@ -67,12 +65,9 @@ def main():
     }
     p.update_specifications(updated_params_tax)
 
-    # dump params to json
-    param_dump_json(p, os.path.join(base_dir, "model_params.json"))
-
     # Run model
     start_time = time.time()
-    runner(p, time_path=True, client=client)
+    # runner(p, time_path=True, client=client)
     print("run time = ", time.time() - start_time)
 
     """
