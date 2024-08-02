@@ -15,10 +15,10 @@ from io import StringIO
 
 
 def get_macro_params(
-        data_start_date=datetime.datetime(1947, 1, 1),
-        data_end_date=datetime.date.today(),
-        country_iso="ZAF"
-        ):
+    data_start_date=datetime.datetime(1947, 1, 1),
+    data_end_date=datetime.date.today(),
+    country_iso="ZAF",
+):
     """
     Compute values of parameters that are derived from macro data
 
@@ -84,9 +84,10 @@ def get_macro_params(
 
         # Compute macro parameters from WB data
         macro_parameters["initial_debt_ratio"] = (
-            pd.Series(
-                wb_data_q["Gross PSD Gen Gov - percentage of GDP"]).loc[
-                    baseline_YYYYQ]) / 100
+            pd.Series(wb_data_q["Gross PSD Gen Gov - percentage of GDP"]).loc[
+                baseline_YYYYQ
+            ]
+        ) / 100
         macro_parameters["initial_foreign_debt_ratio"] = pd.Series(
             wb_data_q["Gross PSD USD - external creditors"]
             / (
@@ -106,7 +107,9 @@ def get_macro_params(
             ).loc[baseline_YYYYQ]
         ]
         macro_parameters["g_y_annual"] = (
-            wb_data_a["GDP per capita (constant 2015 US$)"].pct_change(-1).mean()
+            wb_data_a["GDP per capita (constant 2015 US$)"]
+            .pct_change(-1)
+            .mean()
         )
     except:
         print("Failed to retrieve data from World Bank")
@@ -184,11 +187,7 @@ def get_macro_params(
     res = mod.fit()
     # First term is the constant and needs to be divided by 100 to have
     # the correct unit. Second term is the coefficient
-    macro_parameters["r_gov_shift"] = [
-        (-res.params[0] / 100)
-    ]
-    macro_parameters["r_gov_scale"] = [
-        res.params[1]
-    ]
+    macro_parameters["r_gov_shift"] = [(-res.params[0] / 100)]
+    macro_parameters["r_gov_scale"] = [res.params[1]]
 
     return macro_parameters

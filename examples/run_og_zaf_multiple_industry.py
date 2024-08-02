@@ -138,7 +138,9 @@ def main():
 
     print("Percentage changes in aggregates:", ans)
     # save percentage change output to csv file
-    ans.to_csv(os.path.join(save_dir, "OG-ZAF-MultipleIndustry-example_output.csv"))
+    ans.to_csv(
+        os.path.join(save_dir, "OG-ZAF-MultipleIndustry-example_output.csv")
+    )
 
 
 if __name__ == "__main__":
