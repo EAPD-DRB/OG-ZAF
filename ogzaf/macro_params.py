@@ -14,20 +14,24 @@ import statsmodels.api as sm
 from io import StringIO
 
 
-def get_macro_params():
+def get_macro_params(
+        data_start_date=datetime.datetime(1947, 1, 1),
+        data_end_date=datetime.date.today()):
     """
     Compute values of parameters that are derived from macro data
+
+    Args:
+        data_start_date (datetime): start date for data
+        data_end_date (datetime): end date for data
+
+    Returns:
+        macro_parameters (dict): dictionary of parameter values
     """
 
     # set beginning and end dates for data
     # format is year (1940),month (1),day (1)
     country_iso = "ZAF"
-    start = datetime.datetime(1947, 1, 1)
-    end = datetime.date.today()  # go through today
-    baseline_date = datetime.datetime(2019, 3, 31)
-    baseline_yearquarter = (
-        "2024Q1"  # The WB QPSD database has the date in YYYYQQ format
-    )
+    baseline_YYYYQ = data_end_date.strftime("%YQ%q")
 
     """
     This retrieves annual data from the World Bank World Development Indicators.
@@ -47,7 +51,7 @@ def get_macro_params():
     # wb_data_a = wb.download(
     #     indicator=wb_a_variable_dict.values(),
     #     country=country_iso,
-    #     start=start,
+    #     start=data_start_date,
     #     end=end,
     # )
     # wb_data_a.rename(
@@ -70,7 +74,7 @@ def get_macro_params():
     # wb_data_q = wb.download(
     #     indicator=wb_q_variable_dict.values(),
     #     country=country_iso,
-    #     start=start,
+    #     start=data_start_date,
     #     end=end,
     # )
     # wb_data_q.rename(
@@ -93,9 +97,9 @@ def get_macro_params():
         + "&ref_area="
         + str(country_iso)
         + "&timefrom="
-        + str(start.year)
+        + str(data_start_date.year)
         + "&timeto="
-        + str(end.year)
+        + str(data_end_date.year)
         + "&type=both&format=.csv"
     )
 
@@ -117,7 +121,7 @@ def get_macro_params():
     # find initial_debt_ratio
     # macro_parameters["initial_debt_ratio"] = (
     #     pd.Series(wb_data_q["Gross PSD Gen Gov - percentage of GDP"]).loc[
-    #         baseline_yearquarter
+    #         baseline_YYYYQ
     #     ]
     # ) / 100
 
@@ -128,7 +132,7 @@ def get_macro_params():
     #         wb_data_q["Gross PSD USD - domestic creditors"]
     #         + wb_data_q["Gross PSD USD - external creditors"]
     #     )
-    # ).loc[baseline_yearquarter]
+    # ).loc[baseline_YYYYQ]
 
     # find zeta_D (Share of new debt issues from government that are purchased by foreigners)
     # macro_parameters["zeta_D"] = [
@@ -138,7 +142,7 @@ def get_macro_params():
     #             wb_data_q["Gross PSD USD - domestic creditors"]
     #             + wb_data_q["Gross PSD USD - external creditors"]
     #         )
-    #     ).loc[baseline_yearquarter]
+    #     ).loc[baseline_YYYYQ]
     # ]
 
     # alpha_T, non-social security benefits as a fraction of GDP
