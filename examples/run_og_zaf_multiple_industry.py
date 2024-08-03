@@ -8,12 +8,11 @@ import time
 import copy
 import importlib.resources
 import matplotlib.pyplot as plt
-from ogzaf.calibrate import Calibration
 from ogcore.parameters import Specifications
 from ogcore import output_tables as ot
 from ogcore import output_plots as op
 from ogcore.execute import runner
-from ogcore.utils import safe_read_pickle
+from ogcore.utils import safe_read_pickle, param_dump_json
 
 # Use a custom matplotlib style file for plots
 plt.style.use("ogcore.OGcorePlots")
@@ -45,29 +44,14 @@ def main():
     )
     # Update parameters for baseline from default json file
     with importlib.resources.open_text(
-        "ogzaf", "ogzaf_default_parameters.json"
+        "ogzaf", "ogzaf_default_parameters_multisector.json"
     ) as file:
         defaults = json.load(file)
     p.update_specifications(defaults)
 
-    # Update parameters from calibrate.py Calibration class
-    p.M = 4
-    p.I = 5
-    c = Calibration(p)
-    updated_params_tax = {
-        # order of industries is primary, energy, tertiary, secondary ex energy
-        "Z": [[0.5, 0.4, 1.7, 1.0]],
-        "epsilon": [1.0, 1.0, 1.0, 1.0],
-        "gamma": [0.67, 0.50, 0.45, 0.53],
-        "gamma_g": [0.0, 0.0, 0.0, 0.0],
-        "alpha_c": c.alpha_c,
-        "io_matrix": c.io_matrix,
-    }
-    p.update_specifications(updated_params_tax)
-
     # Run model
     start_time = time.time()
-    # runner(p, time_path=True, client=client)
+    runner(p, time_path=True, client=client)
     print("run time = ", time.time() - start_time)
 
     """
