@@ -1,6 +1,7 @@
 import requests
 import urllib3
 import ssl
+import socket
 
 
 class CustomHttpAdapter(requests.adapters.HTTPAdapter):
@@ -29,3 +30,15 @@ def get_legacy_session():
     session = requests.session()
     session.mount("https://", CustomHttpAdapter(ctx))
     return session
+
+
+# Function to check if connected to internet
+def is_connected():
+    try:
+        # connect to the host -- tells us if the host is actually
+        # reachable
+        socket.create_connection(("1.1.1.1", 53))
+        return True
+    except OSError:
+        pass
+    return False
