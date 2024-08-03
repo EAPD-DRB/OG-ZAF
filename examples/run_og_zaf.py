@@ -14,6 +14,7 @@ from ogcore import output_tables as ot
 from ogcore import output_plots as op
 from ogcore.execute import runner
 from ogcore.utils import safe_read_pickle
+from ogzaf.utils import is_connected
 
 # Use a custom matplotlib style file for plots
 plt.style.use("ogcore.OGcorePlots")
@@ -50,9 +51,10 @@ def main():
         defaults = json.load(file)
     p.update_specifications(defaults)
     # Update parameters from calibrate.py Calibration class
-    c = Calibration(p)
-    updated_params = c.get_dict()
-    p.update_specifications(updated_params)
+    if is_connected():  # only update if connected to internet
+        c = Calibration(p)
+        updated_params = c.get_dict()
+        p.update_specifications(updated_params)
 
     # Run model
     start_time = time.time()
