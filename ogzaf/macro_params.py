@@ -1,6 +1,6 @@
 """
 This module uses data from World Bank WDI, World Bank Quarterly Public
-Sector Debt (QPSD) database, UN Data Portal, and FRED to find values for
+Sector Debt (QPSD) database, the IMF, and UN ILO to find values for
 parameters for the OG-ZAF model that rely on macro data for calibration.
 """
 
