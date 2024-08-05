@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+from ogzaf.utils import is_connected
 from ogzaf.constants import CONS_DICT, PROD_DICT
 
 """
@@ -8,13 +9,16 @@ Read in Social Accounting Matrix (SAM) file
 # Read in SAM file
 storage_options = {"User-Agent": "Mozilla/5.0"}
 SAM_path = "https://www.wider.unu.edu/sites/default/files/Data/SASAM-2015-Data-Resource.xlsx"
-SAM = pd.read_excel(
-    SAM_path,
-    sheet_name="Micro SAM 2015",
-    skiprows=6,
-    index_col=0,
-    storage_options=storage_options,
-)
+if is_connected():
+    SAM = pd.read_excel(
+        SAM_path,
+        sheet_name="Micro SAM 2015",
+        skiprows=6,
+        index_col=0,
+        storage_options=storage_options,
+    )
+else:
+    SAM = None
 
 
 def get_alpha_c(sam=SAM, cons_dict=CONS_DICT):

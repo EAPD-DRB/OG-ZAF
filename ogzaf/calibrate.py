@@ -2,6 +2,7 @@ from ogzaf import macro_params, income
 from ogzaf import input_output as io
 import os
 import numpy as np
+import datetime
 from ogcore import demographics
 
 
@@ -11,8 +12,8 @@ class Calibration:
     def __init__(
         self,
         p,
-        estimate_tax_functions=False,
-        estimate_chi_n=False,
+        macro_data_start_year=datetime.datetime(1947, 1, 1),
+        macro_data_end_year=datetime.date.today(),
         demographic_data_path=None,
         output_path=None,
     ):
@@ -21,9 +22,6 @@ class Calibration:
 
         Args:
             p (OG-Core Specifications object): model parameters
-            estimate_tax_functions (bool): whether to estimate tax
-                function parameters
-            estimate_chi_n (bool): whether to estimate chi_n
             demographic_data_path (str): path to save demographic data
             output_path (str): path to save output to
 
@@ -35,11 +33,11 @@ class Calibration:
         if output_path is not None:
             if not os.path.exists(output_path):
                 os.makedirs(output_path)
-        self.estimate_tax_functions = estimate_tax_functions
-        self.estimate_chi_n = estimate_chi_n
 
         # Macro estimation
-        self.macro_params = macro_params.get_macro_params()
+        self.macro_params = macro_params.get_macro_params(
+            macro_data_start_year, macro_data_end_year
+        )
 
         # io matrix and alpha_c
         if p.I > 1:  # no need if just one consumption good
@@ -96,8 +94,6 @@ class Calibration:
     # method to return all newly calibrated parameters in a dictionary
     def get_dict(self):
         dict = {}
-        # if self.estimate_chi_n:
-        #     dict["chi_n"] = self.chi_n
         dict.update(self.macro_params)
         dict["e"] = self.e
         dict["alpha_c"] = self.alpha_c
