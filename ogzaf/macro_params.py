@@ -33,7 +33,11 @@ def get_macro_params(
     # initialize a dictionary of parameters
     macro_parameters = {}
     # baseline date formatted for World Bank data
-    baseline_YYYYQ = data_end_date.strftime(r"%YQ%q")
+    baseline_YYYYQ = (
+        str(data_end_date.year)
+        + "Q"
+        + str(pd.Timestamp(data_end_date).quarter)
+    )
 
     """
     Retrieve data from the World Bank World Development Indicators.
