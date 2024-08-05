@@ -313,7 +313,7 @@ def get_e_interp(S, age_wgts, age_wgts_80, abil_wgts, plot_path=None):
 
 
 def get_e_orig(age_wgts, abil_wgts, plot_path=None):
-    """
+    r"""
     This function generates the 80 x 7 matrix of lifetime earnings
     ability profiles, corresponding to annual ages from 21 to 100 and to
     paths based on income percentiles 0-25, 25-50, 50-70, 70-80, 80-90,
