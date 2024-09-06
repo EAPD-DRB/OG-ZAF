@@ -7,12 +7,14 @@ The [OG-Core firm theory documentation](https://pslmodels.github.io/OG-Core/cont
 
 The production function is given as:
 
+```{math}
 :label: EqFirmsCESprodfun
   \begin{split}
     Y_{m,t} &= F(K_{m,t}, K_{g,m,t}, L_{m,t}) \\
     &\equiv Z_{m,t}\biggl[(\gamma_m)^\frac{1}{\varepsilon_m}(K_{m,t})^\frac{\varepsilon_m-1}{\varepsilon_m} + (\gamma_{g,m})^\frac{1}{\varepsilon_m}(K_{g,m,t})^\frac{\varepsilon_m-1}{\varepsilon_m} + \\
     &\quad\quad\quad\quad\quad(1-\gamma_m-\gamma_{g,m})^\frac{1}{\varepsilon_m}(e^{g_y t}L_{m,t})^\frac{\varepsilon_m-1}{\varepsilon_m}\biggr]^\frac{\varepsilon_m}{\varepsilon_m-1} \quad\forall m,t
   \end{split}
+```
 
   This production function has the following parameters:
   * $\varepsilon_m$ is the elasticity of substitution between capital, labor, and infrastructure in sector $m$.
