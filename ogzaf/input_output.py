@@ -9,16 +9,39 @@ Read in Social Accounting Matrix (SAM) file
 # Read in SAM file
 storage_options = {"User-Agent": "Mozilla/5.0"}
 SAM_path = "https://www.wider.unu.edu/sites/default/files/Data/SASAM-2015-Data-Resource.xlsx"
+SAM_path_alt = "https://raw.githubusercontent.com/EAPD-DRB/SAM-files/main/Data/ZAF/SASAM-2015-Data-Resource.xlsx"
+
 if is_connected():
-    SAM = pd.read_excel(
-        SAM_path,
-        sheet_name="Micro SAM 2015",
-        skiprows=6,
-        index_col=0,
-        storage_options=storage_options,
-    )
+    try:
+        SAM = pd.read_excel(
+            SAM_path,
+            sheet_name="Micro SAM 2015",
+            skiprows=6,
+            index_col=0,
+            storage_options=storage_options,
+        )
+        print("Successfully read SAM from WIDER.")
+    except Exception as e:
+        print(f"Failed to read from WIDER: {e}")
+        try:
+            # Attempt to read from the GitHub repository
+            SAM = pd.read_excel(
+                SAM_path_alt,
+                sheet_name="Micro SAM 2015",
+                skiprows=6,
+                index_col=0,
+                storage_options=storage_options,
+            )
+            print("Successfully read SAM from GitHub repository.")
+        except Exception as e:
+            print(f"Failed to read from the GitHub repository: {e}")
+            SAM = None
+    # If both attempts fail, SAM will be None
+    if SAM is None:
+        print("Failed to read SAM from both sources.")
 else:
     SAM = None
+    print("No internet connection. SAM cannot be read.")
 
 
 def get_alpha_c(sam=SAM, cons_dict=CONS_DICT):
