@@ -34,7 +34,7 @@
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css?v=4fa983c6" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=87e54e7c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
@@ -412,7 +412,8 @@ document.write(`
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#aggregate-production-function-and-capital-accumulation">Aggregate Production Function and Capital Accumulation</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elasticity-of-substitution">Elasticity of substitution</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#capital-s-share-of-output">Capital’s share of output</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#factor-shares-of-output">Factor shares of output</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#total-factor-productivity">Total factor productivity</a></li>
 </ul>
 </li>
 </ul>
@@ -431,13 +432,32 @@ document.write(`
 <section id="aggregate-production-function-and-capital-accumulation">
 <h2>Aggregate Production Function and Capital Accumulation<a class="headerlink" href="#aggregate-production-function-and-capital-accumulation" title="Link to this heading">#</a></h2>
 <p>The <a class="reference external" href="https://pslmodels.github.io/OG-Core/content/theory/firms.html">OG-Core firm theory documentation</a> outlines the constant returns to scale, constant elasticity of substitution production function of the representative firm.  This function has two parameters; the elasticity of substitution and capital’s share of output.</p>
+<p>The production function is given as:</p>
+<div class="math notranslate nohighlight" id="equation-eqfirmscesprodfun">
+<span class="eqno">(1)<a class="headerlink" href="#equation-eqfirmscesprodfun" title="Link to this equation">#</a></span>\[\begin{split}  \begin{split}
+    Y_{m,t} &amp;= F(K_{m,t}, K_{g,m,t}, L_{m,t}) \\
+    &amp;\equiv Z_{m,t}\biggl[(\gamma_m)^\frac{1}{\varepsilon_m}(K_{m,t})^\frac{\varepsilon_m-1}{\varepsilon_m} + (\gamma_{g,m})^\frac{1}{\varepsilon_m}(K_{g,m,t})^\frac{\varepsilon_m-1}{\varepsilon_m} + \\
+    &amp;\quad\quad\quad\quad\quad(1-\gamma_m-\gamma_{g,m})^\frac{1}{\varepsilon_m}(e^{g_y t}L_{m,t})^\frac{\varepsilon_m-1}{\varepsilon_m}\biggr]^\frac{\varepsilon_m}{\varepsilon_m-1} \quad\forall m,t
+  \end{split}\end{split}\]</div>
+<p>This production function has the following parameters:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\varepsilon_m\)</span> is the elasticity of substitution between capital, labor, and infrastructure in sector <span class="math notranslate nohighlight">\(m\)</span>.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\gamma_m\)</span> is the share of capital in sector <span class="math notranslate nohighlight">\(m\)</span>.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\gamma_{g,m}\)</span> is the share of government capital in sector <span class="math notranslate nohighlight">\(m\)</span>.</p></li>
+<li><p><span class="math notranslate nohighlight">\(Z_{m,t}\)</span> is the total factor productivity in sector <span class="math notranslate nohighlight">\(m\)</span> at time <span class="math notranslate nohighlight">\(t\)</span>.</p></li>
+</ul>
 <section id="elasticity-of-substitution">
 <h3>Elasticity of substitution<a class="headerlink" href="#elasticity-of-substitution" title="Link to this heading">#</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">OG-ZAF</span></code>’s default parameterization has an elasticity of substitution of <span class="math notranslate nohighlight">\(\varepsilon=1.0\)</span>, which implies a Cobb-Douglas production function.</p>
 </section>
-<section id="capital-s-share-of-output">
-<h3>Capital’s share of output<a class="headerlink" href="#capital-s-share-of-output" title="Link to this heading">#</a></h3>
-<p>Here, we use a default value of <span class="math notranslate nohighlight">\(\gamma =0.40\)</span>.</p>
+<section id="factor-shares-of-output">
+<h3>Factor shares of output<a class="headerlink" href="#factor-shares-of-output" title="Link to this heading">#</a></h3>
+<p>In the default calibration, we set infrastructure’s share of output to <span class="math notranslate nohighlight">\(\gamma_{g,m}=0.0\)</span> for all sectors.  This parameter is hard to identify from national accounts data and would entail an empirical study to tease out the relationship between infrastructure and output.</p>
+<p>We use a default value of <span class="math notranslate nohighlight">\(\gamma =0.40\)</span>, which corresponds to one minus labor’s share of output, where labor’s share of output is found as 0.60 in in the <a class="reference external" href="https://rshiny.ilo.org/dataexplorer9/?lang=en">UN ILOSTAT database</a>.</p>
+</section>
+<section id="total-factor-productivity">
+<h3>Total factor productivity<a class="headerlink" href="#total-factor-productivity" title="Link to this heading">#</a></h3>
+<p>In the case of the single prodcution sector, we can normalize <span class="math notranslate nohighlight">\(Z_{m,t}=1.0\)</span>.  In the case of multiple production sectors, we use {cite}`PRS2020 who identify TFP for various sectors in South Africa.</p>
 </section>
 </section>
 </section>
@@ -508,7 +528,8 @@ document.write(`
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#aggregate-production-function-and-capital-accumulation">Aggregate Production Function and Capital Accumulation</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elasticity-of-substitution">Elasticity of substitution</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#capital-s-share-of-output">Capital’s share of output</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#factor-shares-of-output">Factor shares of output</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#total-factor-productivity">Total factor productivity</a></li>
 </ul>
 </li>
 </ul>

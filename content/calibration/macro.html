@@ -34,7 +34,7 @@
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css?v=4fa983c6" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=87e54e7c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
@@ -418,7 +418,10 @@ document.write(`
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#government-debt-spending-and-transfers">Government Debt, Spending and Transfers</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#government-debt">Government Debt</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#government-debt">Government Debt</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#interest-rates-on-government-debt">Interest rates on government debt</a></li>
+</ul>
+</li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#aggregate-transfers">Aggregate transfers</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#government-expenditures">Government expenditures</a></li>
 </ul>
@@ -460,6 +463,13 @@ document.write(`
 <section id="government-debt">
 <h3>Government Debt<a class="headerlink" href="#government-debt" title="Link to this heading">#</a></h3>
 <p>The path of government debt is endogenous.  But the initial value is exogenous.  To avoid converting between model units and dollars, we calibrate the initial debt to GDP ratio, rather than the dollar value of the debt.  This is the model parameter <span class="math notranslate nohighlight">\(\alpha_D\)</span>.  We compute this from the ratio of publicly held debt outstanding to GDP.  Based on 2023 values, this gives us a ratio of 0.59.</p>
+<section id="interest-rates-on-government-debt">
+<h4>Interest rates on government debt<a class="headerlink" href="#interest-rates-on-government-debt" title="Link to this heading">#</a></h4>
+<p>We assume that there is a wedge between the real rate of return on private capital and the real interest rate on government debt.  We model this wedge a scale and level shift.  Specifically, we assume that the real interest rate on government debt, <span class="math notranslate nohighlight">\(r_{gov,t}\)</span>, is related to the real rate of return on private capital, <span class="math notranslate nohighlight">\(r_{t}\)</span>, by the following equation:</p>
+<div class="math notranslate nohighlight" id="equation-eqn-r-gov">
+<span class="eqno">(2)<a class="headerlink" href="#equation-eqn-r-gov" title="Link to this equation">#</a></span>\[    r_{gov,t} = (1-\tau_{d,t})r_t + \mu_d\]</div>
+<p>where <span class="math notranslate nohighlight">\(\tau_d\)</span> is the scale parameter and <span class="math notranslate nohighlight">\(\mu_d\)</span> is the level shift parameter.  We set the values of these two parameters to 0.245 and -0.034, respectively.  These are found by using the estimated relationship between corporate and sovereign yields in <span id="id1">[<a class="reference internal" href="../OGZAF_references.html#id74" title="Delong Li, Nicolas E. Magud, and Alejandro Werner. The long-run impact of sovereign yields on corporate yields in emerging markets. Journal of International Money and Finance, 130(C):, 2023. URL: https://ideas.repec.org/a/eee/jimfin/v130y2023ics0261560622001516.html, doi:10.1016/j.jimonfin.2022.1.">Li <em>et al.</em>, 2023</a>]</span> (Table 8, Column 2) and simulating a series of corporate yields given a series of sovereign yields between 2% and 12%.  We then estimate the scale and level shift parameters that best fit these simulated data using ordinary least squares.</p>
+</section>
 </section>
 <section id="aggregate-transfers">
 <h3>Aggregate transfers<a class="headerlink" href="#aggregate-transfers" title="Link to this heading">#</a></h3>
@@ -546,7 +556,10 @@ With this definition, the share of government expenditure to GDP is 0.267 based 
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#government-debt-spending-and-transfers">Government Debt, Spending and Transfers</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#government-debt">Government Debt</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#government-debt">Government Debt</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#interest-rates-on-government-debt">Interest rates on government debt</a></li>
+</ul>
+</li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#aggregate-transfers">Aggregate transfers</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#government-expenditures">Government expenditures</a></li>
 </ul>

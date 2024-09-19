@@ -33,7 +33,7 @@
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css?v=4fa983c6" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=87e54e7c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
@@ -366,6 +366,7 @@ document.write(`
 <span class="kn">from</span> <span class="nn">ogzaf</span> <span class="kn">import</span> <span class="n">input_output</span> <span class="k">as</span> <span class="n">io</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
 <span class="kn">from</span> <span class="nn">ogcore</span> <span class="kn">import</span> <span class="n">demographics</span>
 
 
@@ -377,8 +378,8 @@ document.write(`
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">p</span><span class="p">,</span>
-        <span class="n">estimate_tax_functions</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">estimate_chi_n</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">macro_data_start_year</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">1947</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+        <span class="n">macro_data_end_year</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">(),</span>
         <span class="n">demographic_data_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">output_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
@@ -387,9 +388,6 @@ document.write(`
 
 <span class="sd">        Args:</span>
 <span class="sd">            p (OG-Core Specifications object): model parameters</span>
-<span class="sd">            estimate_tax_functions (bool): whether to estimate tax</span>
-<span class="sd">                function parameters</span>
-<span class="sd">            estimate_chi_n (bool): whether to estimate chi_n</span>
 <span class="sd">            demographic_data_path (str): path to save demographic data</span>
 <span class="sd">            output_path (str): path to save output to</span>
 
@@ -401,11 +399,11 @@ document.write(`
         <span class="k">if</span> <span class="n">output_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">output_path</span><span class="p">):</span>
                 <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_path</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">estimate_tax_functions</span> <span class="o">=</span> <span class="n">estimate_tax_functions</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">estimate_chi_n</span> <span class="o">=</span> <span class="n">estimate_chi_n</span>
 
         <span class="c1"># Macro estimation</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">macro_params</span> <span class="o">=</span> <span class="n">macro_params</span><span class="o">.</span><span class="n">get_macro_params</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">macro_params</span> <span class="o">=</span> <span class="n">macro_params</span><span class="o">.</span><span class="n">get_macro_params</span><span class="p">(</span>
+            <span class="n">macro_data_start_year</span><span class="p">,</span> <span class="n">macro_data_end_year</span>
+        <span class="p">)</span>
 
         <span class="c1"># io matrix and alpha_c</span>
         <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">I</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># no need if just one consumption good</span>
@@ -462,8 +460,6 @@ document.write(`
     <span class="c1"># method to return all newly calibrated parameters in a dictionary</span>
     <span class="k">def</span> <span class="nf">get_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">dict</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="c1"># if self.estimate_chi_n:</span>
-        <span class="c1">#     dict[&quot;chi_n&quot;] = self.chi_n</span>
         <span class="nb">dict</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">macro_params</span><span class="p">)</span>
         <span class="nb">dict</span><span class="p">[</span><span class="s2">&quot;e&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">e</span>
         <span class="nb">dict</span><span class="p">[</span><span class="s2">&quot;alpha_c&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha_c</span>

@@ -33,7 +33,7 @@
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css?v=4fa983c6" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=87e54e7c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
@@ -365,6 +365,7 @@ document.write(`
 <span></span><span class="kn">import</span> <span class="nn">requests</span>
 <span class="kn">import</span> <span class="nn">urllib3</span>
 <span class="kn">import</span> <span class="nn">ssl</span>
+<span class="kn">import</span> <span class="nn">socket</span>
 
 
 <div class="viewcode-block" id="CustomHttpAdapter">
@@ -399,6 +400,18 @@ document.write(`
     <span class="n">session</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">session</span><span class="p">()</span>
     <span class="n">session</span><span class="o">.</span><span class="n">mount</span><span class="p">(</span><span class="s2">&quot;https://&quot;</span><span class="p">,</span> <span class="n">CustomHttpAdapter</span><span class="p">(</span><span class="n">ctx</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">session</span>
+
+
+<span class="c1"># Function to check if connected to internet</span>
+<span class="k">def</span> <span class="nf">is_connected</span><span class="p">():</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># connect to the host -- tells us if the host is actually</span>
+        <span class="c1"># reachable</span>
+        <span class="n">socket</span><span class="o">.</span><span class="n">create_connection</span><span class="p">((</span><span class="s2">&quot;1.1.1.1&quot;</span><span class="p">,</span> <span class="mi">53</span><span class="p">))</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
+        <span class="k">pass</span>
+    <span class="k">return</span> <span class="kc">False</span>
 </pre></div>
 
                 </article>

@@ -33,7 +33,7 @@
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css?v=4fa983c6" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=87e54e7c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
@@ -364,6 +364,7 @@ document.write(`
   <h1>Source code for ogzaf.input_output</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">ogzaf.utils</span> <span class="kn">import</span> <span class="n">is_connected</span>
 <span class="kn">from</span> <span class="nn">ogzaf.constants</span> <span class="kn">import</span> <span class="n">CONS_DICT</span><span class="p">,</span> <span class="n">PROD_DICT</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
@@ -372,13 +373,39 @@ document.write(`
 <span class="c1"># Read in SAM file</span>
 <span class="n">storage_options</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;User-Agent&quot;</span><span class="p">:</span> <span class="s2">&quot;Mozilla/5.0&quot;</span><span class="p">}</span>
 <span class="n">SAM_path</span> <span class="o">=</span> <span class="s2">&quot;https://www.wider.unu.edu/sites/default/files/Data/SASAM-2015-Data-Resource.xlsx&quot;</span>
-<span class="n">SAM</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span>
-    <span class="n">SAM_path</span><span class="p">,</span>
-    <span class="n">sheet_name</span><span class="o">=</span><span class="s2">&quot;Micro SAM 2015&quot;</span><span class="p">,</span>
-    <span class="n">skiprows</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span>
-    <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-    <span class="n">storage_options</span><span class="o">=</span><span class="n">storage_options</span><span class="p">,</span>
-<span class="p">)</span>
+<span class="n">SAM_path_alt</span> <span class="o">=</span> <span class="s2">&quot;https://raw.githubusercontent.com/EAPD-DRB/SAM-files/main/Data/ZAF/SASAM-2015-Data-Resource.xlsx&quot;</span>
+
+<span class="k">if</span> <span class="n">is_connected</span><span class="p">():</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">SAM</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span>
+            <span class="n">SAM_path</span><span class="p">,</span>
+            <span class="n">sheet_name</span><span class="o">=</span><span class="s2">&quot;Micro SAM 2015&quot;</span><span class="p">,</span>
+            <span class="n">skiprows</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span>
+            <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">storage_options</span><span class="o">=</span><span class="n">storage_options</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Successfully read SAM from WIDER.&quot;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to read from WIDER: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Attempt to read from the GitHub repository</span>
+            <span class="n">SAM</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span>
+                <span class="n">SAM_path_alt</span><span class="p">,</span>
+                <span class="n">sheet_name</span><span class="o">=</span><span class="s2">&quot;Micro SAM 2015&quot;</span><span class="p">,</span>
+                <span class="n">skiprows</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span>
+                <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                <span class="n">storage_options</span><span class="o">=</span><span class="n">storage_options</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Successfully read SAM from GitHub repository.&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to read from the GitHub repository: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">SAM</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="c1"># If both attempts fail, SAM will be None</span>
+    <span class="k">if</span> <span class="n">SAM</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Failed to read SAM from both sources.&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">SAM</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No internet connection. SAM cannot be read.&quot;</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="get_alpha_c">

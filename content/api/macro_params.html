@@ -34,7 +34,7 @@
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css?v=4fa983c6" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=87e54e7c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
@@ -429,12 +429,27 @@ document.write(`
 <section id="module-ogzaf.macro_params">
 <span id="ogzaf-macro-params"></span><h2>ogzaf.macro_params<a class="headerlink" href="#module-ogzaf.macro_params" title="Link to this heading">#</a></h2>
 <p>This module uses data from World Bank WDI, World Bank Quarterly Public
-Sector Debt (QPSD) database, UN Data Portal, and FRED to find values for
+Sector Debt (QPSD) database, the IMF, and UN ILO to find values for
 parameters for the OG-ZAF model that rely on macro data for calibration.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="ogzaf.macro_params.get_macro_params">
-<span class="sig-prename descclassname"><span class="pre">ogzaf.macro_params.</span></span><span class="sig-name descname"><span class="pre">get_macro_params</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/ogzaf/macro_params.html#get_macro_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ogzaf.macro_params.get_macro_params" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">ogzaf.macro_params.</span></span><span class="sig-name descname"><span class="pre">get_macro_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_start_date</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">datetime.datetime(1947,</span> <span class="pre">1,</span> <span class="pre">1)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_end_date</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">datetime.date.today()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">country_iso</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'ZAF'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/ogzaf/macro_params.html#get_macro_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ogzaf.macro_params.get_macro_params" title="Link to this definition">#</a></dt>
 <dd><p>Compute values of parameters that are derived from macro data</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data_start_date</strong> (<em>datetime</em>) – start date for data</p></li>
+<li><p><strong>data_end_date</strong> (<em>datetime</em>) – end date for data</p></li>
+<li><p><strong>country_iso</strong> (<em>str</em>) – ISO code for country</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>dictionary of parameter values</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>macro_parameters (dict)</p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>

@@ -5,7 +5,7 @@ The government is not an optimizing agent in `OG-ZAF`. The government levies tax
 
 
 ## Personal income taxes
-The government sector influences households through two terms in the household budget constraint {eq}`EqHHBC`---government transfers $TR_{t}$ and through the total tax liability function $T_{s,t}$, which can be decomposed into the effective tax rate times total income {eq}`EqTaxCalcLiabETR2`. In this chapter, we detail the household tax component of government activity $T_{s,t}$ in `OG-ZAF`.
+The government sector influences households through two terms in the household budget constraint {eq}`EqHHBC`---government transfers $TR_{t}$ and through the total tax liability function $T_{s,t}$, which can be decomposed into the effective tax rate times total income. In this chapter, we detail the household tax component of government activity $T_{s,t}$ in `OG-ZAF`.
 
 ```{math}
 :label: EqHHBC
