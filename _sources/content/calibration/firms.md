@@ -34,4 +34,4 @@ We use a default value of $\gamma =0.40$, which corresponds to one minus labor's
 
 ### Total factor productivity
 
-In the case of the single prodcution sector, we can normalize $Z_{m,t}=1.0$.  In the case of multiple production sectors, we use {cite}`PRS2020 who identify TFP for various sectors in South Africa.
+In the case of the single production sector, we can normalize $Z_{m,t}=1.0$.  In the case of multiple production sectors, we use {cite}`PRS2020 who identify TFP for various sectors in South Africa.
