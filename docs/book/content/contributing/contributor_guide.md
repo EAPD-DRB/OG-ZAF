@@ -163,6 +163,6 @@ situations, in which case other contributors are here to help.
 (Sec_ContribFootnotes)=
 ## Footnotes
 
-[^recent_python]:The most recent version of Python from Anaconda is Python 3.12. `OG-ZAF` is currently tested to run on Python 3.10 and 3.11.
+[^recent_python]:The most recent version of Python from Anaconda is Python 3.12. `OG-ZAF` is currently tested to run on Python 3.11 and 3.12.
 
 [^commandline_note]:The dollar sign is the end of the command prompt on a Mac. If you are using the Windows operating system, this is usually the right angle bracket (>). No matter the symbol, you don't need to type it (or anything to its left, which shows the current working directory) at the command line before you enter a command; the prompt symbol and preceding characters should already be there.

@@ -20,7 +20,7 @@ setuptools.setup(
     packages=["ogzaf"],
     package_data={"ogzaf": ["ogzaf_default_parameters.json", "data/*"]},
     include_packages=True,
-    python_requires=">=3.7.7, <3.12",
+    python_requires=">=3.7.7, <3.13",
     install_requires=[
         "numpy",
         "psutil",
