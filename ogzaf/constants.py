@@ -127,20 +127,20 @@ GROUP_LABELS = {
 }
 
 CBO_UNITS = {
-    "Y": r"Billions of ₹",
+    "Y": r"Billions of R",
     "r": "Percent",
     "w_growth": "Percent",
     "L_growth": "Percent",
-    "I_total": r"Billions of ₹",
+    "I_total": r"Billions of R",
     "L": "2012=100",
-    "C": r"Billions of ₹",
-    "agg_pension_outlays": r"Billions of ₹",
-    "G": r"Billions of ₹",
-    "iit_revenue": r"Billions of ₹",
-    "payroll_tax_revenue": r"Billions of ₹",
-    "business_tax_revenue": r"Billions of ₹",
-    "wL": r"Billions of ₹",
-    "D": r"Billions of ₹",
+    "C": r"Billions of R",
+    "agg_pension_outlays": r"Billions of R",
+    "G": r"Billions of R",
+    "iit_revenue": r"Billions of R",
+    "payroll_tax_revenue": r"Billions of R",
+    "business_tax_revenue": r"Billions of R",
+    "wL": r"Billions of R",
+    "D": r"Billions of R",
 }
 
 PARAM_LABELS = {
