@@ -5,7 +5,7 @@ with open("README.md", "r") as readme_file:
 
 setuptools.setup(
     name="ogzaf",
-    version="0.0.3",
+    version="0.0.4",
     author="Marcelo LaFleur, Richard W. Evans, and Jason DeBacker",
     license="CC0 1.0 Universal (CC0 1.0) Public Domain Dedication",
     description="South Africa Calibration for OG-Core",
@@ -20,7 +20,7 @@ setuptools.setup(
     packages=["ogzaf"],
     package_data={"ogzaf": ["ogzaf_default_parameters.json", "data/*"]},
     include_packages=True,
-    python_requires=">=3.7.7, <3.12",
+    python_requires=">=3.7.7, <3.13",
     install_requires=[
         "numpy",
         "psutil",

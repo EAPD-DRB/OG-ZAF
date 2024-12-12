@@ -2,7 +2,7 @@ name: ogzaf-dev
 channels:
 - conda-forge
 dependencies:
-- python>=3.7.7, <3.12
+- python>=3.7.7, <3.13
 - numpy
 - setuptools
 - wheel

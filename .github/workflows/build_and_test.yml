@@ -24,7 +24,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        python-version: ["3.10", "3.11"]
+        python-version: ["3.11", "3.12"]
 
     steps:
       - name: Checkout
@@ -35,7 +35,7 @@ jobs:
       - name: Setup Miniconda using Python ${{ matrix.python-version }}
         uses: conda-incubator/setup-miniconda@v3
         with:
-          miniforge-variant: Mambaforge
+          miniconda-version: "latest"
           auto-update-conda: true
           activate-environment: ogzaf-dev
           environment-file: environment.yml
