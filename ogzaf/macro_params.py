@@ -191,7 +191,7 @@ def get_macro_params(
     res = mod.fit()
     # First term is the constant and needs to be divided by 100 to have
     # the correct unit. Second term is the coefficient
-    macro_parameters["r_gov_shift"] = [(-res.params[0] / 100)]
+    macro_parameters["r_gov_shift"] = [-res.params[0] / 100]
     macro_parameters["r_gov_scale"] = [res.params[1]]
 
     return macro_parameters
