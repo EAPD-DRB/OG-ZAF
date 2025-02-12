@@ -6,12 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
-## [0.0.5] - 2025-02-11 14:00:00
+## [0.0.5] - 2025-02-11 23:00:00
 
 ### Added
 
 - Updated Python 3.12 in GH Actions
 - Replaced miniforge and mambaforge with miniconda and "latest" in `deploy_docs.yml` and `docs_check.yml`
+- Added `pip install setuptools` to `publish_to_pypi.yml` GH Action
 - Updated Python 3.11 and 3.12 in `README.md`
 - Update documentation with "UN Tutorial" section
 
