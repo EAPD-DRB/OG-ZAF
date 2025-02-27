@@ -16,7 +16,7 @@ from io import StringIO
 
 def get_macro_params(
     data_start_date=datetime.datetime(1947, 1, 1),
-    data_end_date=datetime.date.today(),
+    data_end_date=datetime.datetime(2024, 12, 31),
     country_iso="ZAF",
 ):
     """
