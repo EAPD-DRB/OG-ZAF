@@ -15,22 +15,20 @@
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
-  <!--
-    this give us a css class that will be invisible only if js is disabled
-  -->
-  <noscript>
-    <style>
-      .pst-js-only { display: none !important; }
-
-    </style>
-  </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
-<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
     <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
@@ -39,11 +37,10 @@
     <link rel="stylesheet" type="text/css" href="../../_static/proof.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
   
-  <!-- So that users can add custom icons -->
-  <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
-<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
     <script src="../../_static/documentation_options.js?v=9eb32ce0"></script>
     <script src="../../_static/doctools.js?v=9a2dae69"></script>
@@ -67,7 +64,6 @@
     <link rel="search" title="Search" href="../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="" />
   </head>
   
   
@@ -83,8 +79,19 @@
     <i class="fa-solid fa-arrow-up"></i>Back to top</button>
 
   
-  <dialog id="pst-search-dialog">
-    
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
 <form class="bd-search d-flex align-items-center"
       action="../../search.html"
       method="get">
@@ -92,6 +99,7 @@
   <input type="search"
          class="form-control"
          name="q"
+         id="search-input"
          placeholder="Search this book..."
          aria-label="Search this book..."
          autocomplete="off"
@@ -99,8 +107,8 @@
          autocapitalize="off"
          spellcheck="false"/>
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
-</form>
-  </dialog>
+</form></div>
+  </div>
 
   <div class="pst-async-banner-revealer d-none">
   <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
@@ -118,8 +126,7 @@
       
         
       
-      <dialog id="pst-primary-sidebar-modal"></dialog>
-      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+      <div class="bd-sidebar-primary bd-sidebar">
         
 
   
@@ -149,17 +156,21 @@
     
     
     <img src="../../_static/OG-ZAF_logo.png" class="logo__image only-light" alt="OG-ZAF - Home"/>
-    <img src="../../_static/OG-ZAF_logo.png" class="logo__image only-dark pst-js-only" alt="OG-ZAF - Home"/>
+    <script>document.write(`<img src="../../_static/OG-ZAF_logo.png" class="logo__image only-dark" alt="OG-ZAF - Home"/>`);</script>
   
   
 </a></div>
         <div class="sidebar-primary-item">
 
-<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
- <i class="fa-solid fa-magnifying-glass"></i>
- <span class="search-button__default-text">Search</span>
- <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
-</button></div>
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
         <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         
@@ -217,14 +228,9 @@
   
   
   <div class="sidebar-primary-items__end sidebar-primary__section">
-      <div class="sidebar-primary-item">
-<div id="ethical-ad-placement"
-      class="flat"
-      data-ea-publisher="readthedocs"
-      data-ea-type="readthedocs-sidebar"
-      data-ea-manual="true">
-</div></div>
   </div>
+  
+  <div id="rtd-footer-container"></div>
 
 
       </div>
@@ -320,16 +326,24 @@
 
 
 
-<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
-  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
-  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
-  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
-</button>
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
 
 
-<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
-</button>
+  </button>
+`);
+</script>
 
 </div></div>
       
@@ -376,8 +390,9 @@
 <a class="viewcode-back" href="../../content/api/macro_params.html#ogzaf.macro_params.get_macro_params">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_macro_params</span><span class="p">(</span>
     <span class="n">data_start_date</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">1947</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
-    <span class="n">data_end_date</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">(),</span>
+    <span class="n">data_end_date</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2024</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">31</span><span class="p">),</span>
     <span class="n">country_iso</span><span class="o">=</span><span class="s2">&quot;ZAF&quot;</span><span class="p">,</span>
+    <span class="n">update_from_api</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compute values of parameters that are derived from macro data</span>
@@ -416,143 +431,239 @@
         <span class="s2">&quot;Gross PSD USD - external creditors&quot;</span><span class="p">:</span> <span class="s2">&quot;DP.DOD.DECX.CR.PS.CD&quot;</span><span class="p">,</span>
         <span class="s2">&quot;Gross PSD Gen Gov - percentage of GDP&quot;</span><span class="p">:</span> <span class="s2">&quot;DP.DOD.DECT.CR.GG.Z1&quot;</span><span class="p">,</span>
     <span class="p">}</span>
-
-    <span class="k">try</span><span class="p">:</span>
-        <span class="c1"># pull series of interest from the WB using pandas_datareader</span>
-        <span class="c1"># Annual data</span>
-        <span class="n">wb_data_a</span> <span class="o">=</span> <span class="n">wb</span><span class="o">.</span><span class="n">download</span><span class="p">(</span>
-            <span class="n">indicator</span><span class="o">=</span><span class="n">wb_a_variable_dict</span><span class="o">.</span><span class="n">values</span><span class="p">(),</span>
-            <span class="n">country</span><span class="o">=</span><span class="n">country_iso</span><span class="p">,</span>
-            <span class="n">start</span><span class="o">=</span><span class="n">data_start_date</span><span class="p">,</span>
-            <span class="n">end</span><span class="o">=</span><span class="n">data_end_date</span><span class="p">,</span>
-        <span class="p">)</span>
-        <span class="n">wb_data_a</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span>
-            <span class="n">columns</span><span class="o">=</span><span class="nb">dict</span><span class="p">((</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">wb_a_variable_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()),</span>
-            <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="p">)</span>
-        <span class="c1"># Quarterly data</span>
-        <span class="n">wb_data_q</span> <span class="o">=</span> <span class="n">wb</span><span class="o">.</span><span class="n">download</span><span class="p">(</span>
-            <span class="n">indicator</span><span class="o">=</span><span class="n">wb_q_variable_dict</span><span class="o">.</span><span class="n">values</span><span class="p">(),</span>
-            <span class="n">country</span><span class="o">=</span><span class="n">country_iso</span><span class="p">,</span>
-            <span class="n">start</span><span class="o">=</span><span class="n">data_start_date</span><span class="p">,</span>
-            <span class="n">end</span><span class="o">=</span><span class="n">data_end_date</span><span class="p">,</span>
-        <span class="p">)</span>
-        <span class="n">wb_data_q</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span>
-            <span class="n">columns</span><span class="o">=</span><span class="nb">dict</span><span class="p">((</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">wb_q_variable_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()),</span>
-            <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="p">)</span>
-        <span class="c1"># Remove the hierarchical index (country and year) of</span>
-        <span class="c1"># wb_data_q and create a single row index using year</span>
-        <span class="n">wb_data_q</span> <span class="o">=</span> <span class="n">wb_data_q</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
-        <span class="n">wb_data_q</span> <span class="o">=</span> <span class="n">wb_data_q</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;year&quot;</span><span class="p">)</span>
-
-        <span class="c1"># Compute macro parameters from WB data</span>
-        <span class="n">macro_parameters</span><span class="p">[</span><span class="s2">&quot;initial_debt_ratio&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">wb_data_q</span><span class="p">[</span><span class="s2">&quot;Gross PSD Gen Gov - percentage of GDP&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span>
-                <span class="n">baseline_YYYYQ</span>
-            <span class="p">]</span>
-        <span class="p">)</span> <span class="o">/</span> <span class="mi">100</span>
-        <span class="n">macro_parameters</span><span class="p">[</span><span class="s2">&quot;initial_foreign_debt_ratio&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span>
-            <span class="n">wb_data_q</span><span class="p">[</span><span class="s2">&quot;Gross PSD USD - external creditors&quot;</span><span class="p">]</span>
-            <span class="o">/</span> <span class="p">(</span>
-                <span class="n">wb_data_q</span><span class="p">[</span><span class="s2">&quot;Gross PSD USD - domestic creditors&quot;</span><span class="p">]</span>
-                <span class="o">+</span> <span class="n">wb_data_q</span><span class="p">[</span><span class="s2">&quot;Gross PSD USD - external creditors&quot;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">update_from_api</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># pull series of interest from the WB using pandas_datareader</span>
+            <span class="c1"># Annual data</span>
+            <span class="n">wb_data_a</span> <span class="o">=</span> <span class="n">wb</span><span class="o">.</span><span class="n">download</span><span class="p">(</span>
+                <span class="n">indicator</span><span class="o">=</span><span class="n">wb_a_variable_dict</span><span class="o">.</span><span class="n">values</span><span class="p">(),</span>
+                <span class="n">country</span><span class="o">=</span><span class="n">country_iso</span><span class="p">,</span>
+                <span class="n">start</span><span class="o">=</span><span class="n">data_start_date</span><span class="p">,</span>
+                <span class="n">end</span><span class="o">=</span><span class="n">data_end_date</span><span class="p">,</span>
             <span class="p">)</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">baseline_YYYYQ</span><span class="p">]</span>
-        <span class="c1"># zeta_D = share of new debt issues from government that are</span>
-        <span class="c1"># purchased by foreigners</span>
-        <span class="n">macro_parameters</span><span class="p">[</span><span class="s2">&quot;zeta_D&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span>
-                <span class="n">wb_data_q</span><span class="p">[</span><span class="s2">&quot;Gross PSD USD - external creditors&quot;</span><span class="p">]</span>
-                <span class="o">/</span> <span class="p">(</span>
+            <span class="n">wb_data_a</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span>
+                <span class="n">columns</span><span class="o">=</span><span class="nb">dict</span><span class="p">((</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">wb_a_variable_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()),</span>
+                <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="c1"># Quarterly data</span>
+            <span class="n">wb_data_q</span> <span class="o">=</span> <span class="n">wb</span><span class="o">.</span><span class="n">download</span><span class="p">(</span>
+                <span class="n">indicator</span><span class="o">=</span><span class="n">wb_q_variable_dict</span><span class="o">.</span><span class="n">values</span><span class="p">(),</span>
+                <span class="n">country</span><span class="o">=</span><span class="n">country_iso</span><span class="p">,</span>
+                <span class="n">start</span><span class="o">=</span><span class="n">data_start_date</span><span class="p">,</span>
+                <span class="n">end</span><span class="o">=</span><span class="n">data_end_date</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">wb_data_q</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span>
+                <span class="n">columns</span><span class="o">=</span><span class="nb">dict</span><span class="p">((</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">wb_q_variable_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()),</span>
+                <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="c1"># Remove the hierarchical index (country and year) of</span>
+            <span class="c1"># wb_data_q and create a single row index using year</span>
+            <span class="n">wb_data_q</span> <span class="o">=</span> <span class="n">wb_data_q</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+            <span class="n">wb_data_q</span> <span class="o">=</span> <span class="n">wb_data_q</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;year&quot;</span><span class="p">)</span>
+
+            <span class="c1"># Function to get the latest valid data if baseline_YYYYQ is missing or NaN</span>
+            <span class="k">def</span><span class="w"> </span><span class="nf">get_valid_data</span><span class="p">(</span><span class="n">series</span><span class="p">,</span> <span class="n">baseline_YYYYQ</span><span class="p">):</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="n">series</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">baseline_YYYYQ</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">pd</span><span class="o">.</span><span class="n">isna</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+                    <span class="n">latest_non_nan</span> <span class="o">=</span> <span class="n">series</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">last_valid_index</span><span class="p">()</span>
+
+                    <span class="k">if</span> <span class="n">latest_non_nan</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span>
+                            <span class="sa">f</span><span class="s2">&quot;Warning: No data for </span><span class="si">{</span><span class="n">baseline_YYYYQ</span><span class="si">}</span><span class="s2">. Using last available quarter: </span><span class="si">{</span><span class="n">latest_non_nan</span><span class="si">}</span><span class="s2">&quot;</span>
+                        <span class="p">)</span>
+                        <span class="n">value</span> <span class="o">=</span> <span class="n">series</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">latest_non_nan</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span>
+                            <span class="s2">&quot;Warning: No historical data available. Skipping update.&quot;</span>
+                        <span class="p">)</span>
+                        <span class="n">value</span> <span class="o">=</span> <span class="kc">None</span>
+
+                <span class="k">return</span> <span class="n">value</span>
+
+            <span class="c1"># Compute macro parameters from WB data</span>
+            <span class="n">macro_parameters</span><span class="p">[</span><span class="s2">&quot;initial_debt_ratio&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_valid_data</span><span class="p">(</span>
+                <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">wb_data_q</span><span class="p">[</span><span class="s2">&quot;Gross PSD Gen Gov - percentage of GDP&quot;</span><span class="p">])</span>
+                <span class="o">/</span> <span class="mi">100</span><span class="p">,</span>
+                <span class="n">baseline_YYYYQ</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;initial_debt_ratio updated from World Bank API: </span><span class="si">{</span><span class="n">macro_parameters</span><span class="p">[</span><span class="s1">&#39;initial_debt_ratio&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+
+            <span class="c1"># Compute initial_foreign_debt_ratio safely</span>
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="s2">&quot;Gross PSD USD - external creditors&quot;</span> <span class="ow">in</span> <span class="n">wb_data_q</span><span class="o">.</span><span class="n">columns</span>
+                <span class="ow">and</span> <span class="s2">&quot;Gross PSD USD - domestic creditors&quot;</span> <span class="ow">in</span> <span class="n">wb_data_q</span><span class="o">.</span><span class="n">columns</span>
+            <span class="p">):</span>
+
+                <span class="n">total_debt</span> <span class="o">=</span> <span class="p">(</span>
                     <span class="n">wb_data_q</span><span class="p">[</span><span class="s2">&quot;Gross PSD USD - domestic creditors&quot;</span><span class="p">]</span>
                     <span class="o">+</span> <span class="n">wb_data_q</span><span class="p">[</span><span class="s2">&quot;Gross PSD USD - external creditors&quot;</span><span class="p">]</span>
                 <span class="p">)</span>
-            <span class="p">)</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">baseline_YYYYQ</span><span class="p">]</span>
-        <span class="p">]</span>
-        <span class="n">macro_parameters</span><span class="p">[</span><span class="s2">&quot;g_y_annual&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">wb_data_a</span><span class="p">[</span><span class="s2">&quot;GDP per capita (constant 2015 US$)&quot;</span><span class="p">]</span>
-            <span class="o">.</span><span class="n">pct_change</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
-            <span class="o">.</span><span class="n">mean</span><span class="p">()</span>
-        <span class="p">)</span>
-    <span class="k">except</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Failed to retrieve data from World Bank&quot;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Will not update the following parameters:&quot;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[initial_debt_ratio, initial_foreign_debt_ratio, zeta_D, g_y]&quot;</span><span class="p">)</span>
+
+                <span class="c1"># Avoid division by zero</span>
+                <span class="n">wb_data_q</span><span class="p">[</span><span class="s2">&quot;foreign_debt_ratio&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">wb_data_q</span><span class="p">[</span>
+                    <span class="s2">&quot;Gross PSD USD - external creditors&quot;</span>
+                <span class="p">]</span> <span class="o">/</span> <span class="n">total_debt</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+
+                <span class="n">macro_parameters</span><span class="p">[</span><span class="s2">&quot;initial_foreign_debt_ratio&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">get_valid_data</span><span class="p">(</span>
+                        <span class="n">wb_data_q</span><span class="p">[</span><span class="s2">&quot;foreign_debt_ratio&quot;</span><span class="p">],</span> <span class="n">baseline_YYYYQ</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="s2">&quot;Warning: Missing debt variables in World Bank data. Skipping update for initial_foreign_debt_ratio.&quot;</span>
+                <span class="p">)</span>
+
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;initial_foreign_debt_ratio updated from World Bank API: </span><span class="si">{</span><span class="n">macro_parameters</span><span class="p">[</span><span class="s1">&#39;initial_foreign_debt_ratio&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+
+            <span class="c1"># Compute zeta_D safely</span>
+            <span class="n">macro_parameters</span><span class="p">[</span><span class="s2">&quot;zeta_D&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">macro_parameters</span><span class="p">[</span><span class="s2">&quot;initial_foreign_debt_ratio&quot;</span><span class="p">]</span>
+            <span class="p">]</span>  <span class="c1"># Since it&#39;s the same formula, we use the same calculated value</span>
+
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;zeta_D updated from World Bank API: </span><span class="si">{</span><span class="n">macro_parameters</span><span class="p">[</span><span class="s1">&#39;zeta_D&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+
+            <span class="c1"># Compute annual GDP growth safely</span>
+            <span class="k">if</span> <span class="s2">&quot;GDP per capita (constant 2015 US$)&quot;</span> <span class="ow">in</span> <span class="n">wb_data_a</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+                <span class="n">g_y_series</span> <span class="o">=</span> <span class="n">wb_data_a</span><span class="p">[</span>
+                    <span class="s2">&quot;GDP per capita (constant 2015 US$)&quot;</span>
+                <span class="p">]</span><span class="o">.</span><span class="n">pct_change</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+                <span class="c1"># If all values are NaN, return None</span>
+                <span class="n">macro_parameters</span><span class="p">[</span><span class="s2">&quot;g_y_annual&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">g_y_series</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">g_y_series</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">all</span><span class="p">()</span> <span class="k">else</span> <span class="kc">None</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="s2">&quot;Warning: Missing GDP per capita data in World Bank data. Skipping update for g_y_annual.&quot;</span>
+                <span class="p">)</span>
+
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;g_y_annual updated from World Bank API: </span><span class="si">{</span><span class="n">macro_parameters</span><span class="p">[</span><span class="s1">&#39;g_y_annual&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Failed to retrieve data from World Bank&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Will not update the following parameters:&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="s2">&quot;[initial_debt_ratio, initial_foreign_debt_ratio, zeta_D, g_y]&quot;</span>
+            <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Not updating from World Bank API&quot;</span><span class="p">)</span>
 
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Retrieve labour share data from the United Nations ILOSTAT Data API</span>
 <span class="sd">    (see https://rshiny.ilo.org/dataexplorer9/?lang=en)</span>
+<span class="sd">    The series code is SDG_1041_NOC_RT_A (capital share)</span>
+<span class="sd">    Labor share (gamma) = 1 - capital share</span>
+<span class="sd">    If this fails we will not update gamma in &#39;default_parameters.json&#39;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">target</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="s2">&quot;https://rplumber.ilo.org/data/indicator/&quot;</span>
-        <span class="o">+</span> <span class="s2">&quot;?id=LAP_2GDP_NOC_RT_A&quot;</span>
-        <span class="o">+</span> <span class="s2">&quot;&amp;ref_area=&quot;</span>
-        <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">country_iso</span><span class="p">)</span>
-        <span class="o">+</span> <span class="s2">&quot;&amp;timefrom=&quot;</span>
-        <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">data_start_date</span><span class="o">.</span><span class="n">year</span><span class="p">)</span>
-        <span class="o">+</span> <span class="s2">&quot;&amp;timeto=&quot;</span>
-        <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">data_end_date</span><span class="o">.</span><span class="n">year</span><span class="p">)</span>
-        <span class="o">+</span> <span class="s2">&quot;&amp;type=both&amp;format=.csv&quot;</span>
-    <span class="p">)</span>
-    <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
-        <span class="n">csv_content</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
-        <span class="n">df_temp</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">csv_content</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;Failed to retrieve data. HTTP status code: </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2">&quot;</span>
-        <span class="p">)</span>
-    <span class="n">ilo_data</span> <span class="o">=</span> <span class="n">df_temp</span><span class="p">[[</span><span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="s2">&quot;obs_value&quot;</span><span class="p">]]</span>
-    <span class="c1"># find gamma, capital&#39;s share of income</span>
-    <span class="n">macro_parameters</span><span class="p">[</span><span class="s2">&quot;gamma&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="mi">1</span>
-        <span class="o">-</span> <span class="p">(</span>
-            <span class="p">(</span>
-                <span class="n">ilo_data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span>
-                    <span class="n">ilo_data</span><span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">data_end_date</span><span class="o">.</span><span class="n">year</span><span class="p">,</span> <span class="s2">&quot;obs_value&quot;</span>
-                <span class="p">]</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">update_from_api</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">target</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="s2">&quot;https://rplumber.ilo.org/data/indicator/&quot;</span>
+                <span class="o">+</span> <span class="s2">&quot;?id=SDG_1041_NOC_RT_A&quot;</span>
+                <span class="o">+</span> <span class="s2">&quot;&amp;ref_area=&quot;</span>
+                <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">country_iso</span><span class="p">)</span>
+                <span class="o">+</span> <span class="s2">&quot;&amp;timefrom=&quot;</span>
+                <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">data_start_date</span><span class="o">.</span><span class="n">year</span><span class="p">)</span>
+                <span class="o">+</span> <span class="s2">&quot;&amp;timeto=&quot;</span>
+                <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">data_end_date</span><span class="o">.</span><span class="n">year</span><span class="p">)</span>
+                <span class="o">+</span> <span class="s2">&quot;&amp;type=both&amp;format=.csv&quot;</span>
             <span class="p">)</span>
-            <span class="o">/</span> <span class="mi">100</span>
-        <span class="p">)</span>
-    <span class="p">]</span>
+            <span class="c1"># Add headers</span>
+            <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;User-Agent&quot;</span><span class="p">:</span> <span class="s2">&quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36&quot;</span>
+            <span class="p">}</span>
+
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Attempting to update gamma from ILOSTAT&quot;</span><span class="p">)</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error: Received status code </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Request successful.&quot;</span><span class="p">)</span>
+            <span class="n">csv_content</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+            <span class="n">df_temp</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">csv_content</span><span class="p">)</span>
+            <span class="n">ilo_data</span> <span class="o">=</span> <span class="n">df_temp</span><span class="p">[[</span><span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="s2">&quot;obs_value&quot;</span><span class="p">]]</span>
+            <span class="c1"># find gamma, capital&#39;s share of income</span>
+            <span class="n">macro_parameters</span><span class="p">[</span><span class="s2">&quot;gamma&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="mi">1</span>
+                <span class="o">-</span> <span class="p">(</span>
+                    <span class="p">(</span>
+                        <span class="n">ilo_data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span>
+                            <span class="n">ilo_data</span><span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">data_end_date</span><span class="o">.</span><span class="n">year</span><span class="p">,</span> <span class="s2">&quot;obs_value&quot;</span>
+                        <span class="p">]</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
+                    <span class="p">)</span>
+                    <span class="o">/</span> <span class="mi">100</span>
+                <span class="p">)</span>
+            <span class="p">]</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;gamma updated from ILOSTAT API: </span><span class="si">{</span><span class="n">macro_parameters</span><span class="p">[</span><span class="s1">&#39;gamma&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Failed to retrieve data from ILOSTAT&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Will not update gamma&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Not updating from ILOSTAT API&quot;</span><span class="p">)</span>
 
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calibrate parameters from IMF data</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># alpha_T, non-social security benefits as a fraction of GDP</span>
-    <span class="c1"># source: https://data.imf.org/?sk=b052f0f0-c166-43b6-84fa-47cccae3e219&amp;hide_uv=1</span>
-    <span class="n">macro_parameters</span><span class="p">[</span><span class="s2">&quot;alpha_T&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.041</span> <span class="o">-</span> <span class="mf">0.0</span><span class="p">]</span>
-    <span class="c1"># alpha_G, gov&#39;t consumption expenditures as a fraction of GDP</span>
-    <span class="c1"># source: https://data.imf.org/?sk=edb0cd70-0af3-40e1-a9c3-bdef83ee4d1e&amp;hide_uv=1</span>
-    <span class="n">macro_parameters</span><span class="p">[</span><span class="s2">&quot;alpha_G&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.351</span> <span class="o">-</span> <span class="mf">0.043</span> <span class="o">-</span> <span class="mf">0.041</span><span class="p">]</span>
 
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;&quot;</span>
-<span class="sd">    Esimate the discount on sovereign yields relative to private debt</span>
-<span class="sd">    Follow the methodology in Li, Magud, Werner, Witte (2021)</span>
-<span class="sd">    available at:</span>
-<span class="sd">    https://www.imf.org/en/Publications/WP/Issues/2021/06/04/The-Long-Run-Impact-of-Sovereign-Yields-on-Corporate-Yields-in-Emerging-Markets-50224</span>
+    <span class="k">if</span> <span class="n">update_from_api</span><span class="p">:</span>
+        <span class="c1"># alpha_T, non-social security benefits as a fraction of GDP</span>
+        <span class="c1"># source: https://data.imf.org/?sk=b052f0f0-c166-43b6-84fa-47cccae3e219&amp;hide_uv=1</span>
+        <span class="c1"># alpha_T = Employment-related social benefits expense - Social security benefits expense</span>
+        <span class="n">macro_parameters</span><span class="p">[</span><span class="s2">&quot;alpha_T&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.041</span> <span class="o">-</span> <span class="mf">0.0</span><span class="p">]</span>  <span class="c1"># 2020</span>
 
-<span class="sd">    Steps:</span>
-<span class="sd">    1) Generate modelled corporate yields (corp_yhat) for a range of</span>
-<span class="sd">    sovereign yields (sov_y)  using the estimated equation in col 2 of</span>
-<span class="sd">    table 8 (and figure 3). 2) Estimate the OLS using sovereign yields</span>
-<span class="sd">    as the dependent variable</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+        <span class="c1"># alpha_G, gov&#39;t consumption expenditures as a fraction of GDP</span>
+        <span class="c1"># source: https://data.imf.org/?sk=edb0cd70-0af3-40e1-a9c3-bdef83ee4d1e&amp;hide_uv=1</span>
+        <span class="c1"># alpha_G = Expense	- Interest expense - Social benefits expense</span>
+        <span class="n">macro_parameters</span><span class="p">[</span><span class="s2">&quot;alpha_G&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.351</span> <span class="o">-</span> <span class="mf">0.043</span> <span class="o">-</span> <span class="mf">0.041</span><span class="p">]</span>  <span class="c1"># 2020</span>
 
-    <span class="c1"># # estimate r_gov_shift and r_gov_scale</span>
-    <span class="n">sov_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">120</span><span class="p">)</span> <span class="o">/</span> <span class="mi">10</span>
-    <span class="n">corp_yhat</span> <span class="o">=</span> <span class="mf">8.199</span> <span class="o">-</span> <span class="p">(</span><span class="mf">2.975</span> <span class="o">*</span> <span class="n">sov_y</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="mf">0.478</span> <span class="o">*</span> <span class="n">sov_y</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
-    <span class="n">corp_yhat</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">add_constant</span><span class="p">(</span><span class="n">corp_yhat</span><span class="p">)</span>
-    <span class="n">mod</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">OLS</span><span class="p">(</span>
-        <span class="n">sov_y</span><span class="p">,</span>
-        <span class="n">corp_yhat</span><span class="p">,</span>
-    <span class="p">)</span>
-    <span class="n">res</span> <span class="o">=</span> <span class="n">mod</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
-    <span class="c1"># First term is the constant and needs to be divided by 100 to have</span>
-    <span class="c1"># the correct unit. Second term is the coefficient</span>
-    <span class="n">macro_parameters</span><span class="p">[</span><span class="s2">&quot;r_gov_shift&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="n">res</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mi">100</span><span class="p">]</span>
-    <span class="n">macro_parameters</span><span class="p">[</span><span class="s2">&quot;r_gov_scale&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">res</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;&quot;</span>
+<span class="sd">        Esimate the discount on sovereign yields relative to private debt</span>
+<span class="sd">        Follow the methodology in Li, Magud, Werner, Witte (2021)</span>
+<span class="sd">        available at:</span>
+<span class="sd">        https://www.imf.org/en/Publications/WP/Issues/2021/06/04/The-Long-Run-Impact-of-Sovereign-Yields-on-Corporate-Yields-in-Emerging-Markets-50224</span>
+<span class="sd">        discussion is here: https://github.com/EAPD-DRB/OG-ZAF/issues/22</span>
+<span class="sd">        Steps:</span>
+<span class="sd">        1) Generate modelled corporate yields (corp_yhat) for a range of</span>
+<span class="sd">        sovereign yields (sov_y)  using the estimated equation in col 2 of</span>
+<span class="sd">        table 8 (and figure 3). 2) Estimate the OLS using sovereign yields</span>
+<span class="sd">        as the dependent variable</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># # estimate r_gov_shift and r_gov_scale</span>
+        <span class="n">sov_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">120</span><span class="p">)</span> <span class="o">/</span> <span class="mi">10</span>
+        <span class="n">corp_yhat</span> <span class="o">=</span> <span class="mf">8.199</span> <span class="o">-</span> <span class="p">(</span><span class="mf">2.975</span> <span class="o">*</span> <span class="n">sov_y</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="mf">0.478</span> <span class="o">*</span> <span class="n">sov_y</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">corp_yhat</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">add_constant</span><span class="p">(</span><span class="n">corp_yhat</span><span class="p">)</span>
+        <span class="n">mod</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">OLS</span><span class="p">(</span>
+            <span class="n">sov_y</span><span class="p">,</span>
+            <span class="n">corp_yhat</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">mod</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+        <span class="c1"># First term is the constant and needs to be divided by 100 to have</span>
+        <span class="c1"># the correct unit. Second term is the coefficient</span>
+        <span class="n">macro_parameters</span><span class="p">[</span><span class="s2">&quot;r_gov_shift&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="n">res</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mi">100</span><span class="p">]</span>
+        <span class="n">macro_parameters</span><span class="p">[</span><span class="s2">&quot;r_gov_scale&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">res</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+        <span class="c1"># Report new values</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;alpha_T updated from IMF data: </span><span class="si">{</span><span class="n">macro_parameters</span><span class="p">[</span><span class="s1">&#39;alpha_T&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;alpha_G updated from IMF data: </span><span class="si">{</span><span class="n">macro_parameters</span><span class="p">[</span><span class="s1">&#39;alpha_G&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;r_gov_shift updated from IMF data: </span><span class="si">{</span><span class="n">macro_parameters</span><span class="p">[</span><span class="s1">&#39;r_gov_shift&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;r_gov_scale updated from IMF data: </span><span class="si">{</span><span class="n">macro_parameters</span><span class="p">[</span><span class="s1">&#39;r_gov_scale&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Not updating alpha_T, alpha_G, r_gov_shift, r_gov_scale&quot;</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">macro_parameters</span></div>
 
@@ -618,8 +729,8 @@ By Marcelo LaFleur, Richard W. Evans, and Jason DeBacker
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
-<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
 
   <footer class="bd-footer">
   </footer>
