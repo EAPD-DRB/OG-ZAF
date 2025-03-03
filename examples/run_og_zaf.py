@@ -1,5 +1,4 @@
-# Need to fix references to Calculator, reform json, and substitute new tax
-# function call
+# imports
 import multiprocessing
 from distributed import Client
 import os
