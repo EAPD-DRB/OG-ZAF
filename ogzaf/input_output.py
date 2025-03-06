@@ -5,37 +5,26 @@ from ogzaf.constants import CONS_DICT, PROD_DICT
 
 """
 Read in Social Accounting Matrix (SAM) file
+This is the most recent SAM for 2019 available from the following page as a downloadable zip folder from UNU WIDER:
+https://www.wider.unu.edu/sites/default/files/Publications/Technical-note/tn2023-1-2019-SASAM-for-distribution.zip
 """
 # Read in SAM file
 storage_options = {"User-Agent": "Mozilla/5.0"}
-SAM_path = "https://www.wider.unu.edu/sites/default/files/Data/SASAM-2015-Data-Resource.xlsx"
-SAM_path_alt = "https://raw.githubusercontent.com/EAPD-DRB/SAM-files/main/Data/ZAF/SASAM-2015-Data-Resource.xlsx"
+SAM_path = "https://raw.githubusercontent.com/EAPD-DRB/SAM-files/main/Data/ZAF/tn2023-1-2019-SASAM-for-distribution.xlsx"
 
 if is_connected():
     try:
         SAM = pd.read_excel(
             SAM_path,
-            sheet_name="Micro SAM 2015",
+            sheet_name="SASAM 2019 61Ind 4Educ", # Can alternatively use sheet_name="SASM 2019 61Ind4Occ"
             skiprows=6,
             index_col=0,
             storage_options=storage_options,
         )
-        print("Successfully read SAM from WIDER.")
+        print("Successfully read SAM from Github repository.")
     except Exception as e:
-        print(f"Failed to read from WIDER: {e}")
-        try:
-            # Attempt to read from the GitHub repository
-            SAM = pd.read_excel(
-                SAM_path_alt,
-                sheet_name="Micro SAM 2015",
-                skiprows=6,
-                index_col=0,
-                storage_options=storage_options,
-            )
-            print("Successfully read SAM from GitHub repository.")
-        except Exception as e:
-            print(f"Failed to read from the GitHub repository: {e}")
-            SAM = None
+        print(f"Failed to read from the GitHub repository: {e}")
+        SAM = None
     # If both attempts fail, SAM will be None
     if SAM is None:
         print("Failed to read SAM from both sources.")
