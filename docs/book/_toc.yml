@@ -22,6 +22,7 @@ parts:
   chapters:
   - file: content/UNtutorial/getting_started
   - file: content/UNtutorial/3perOG
+  - file: content/UNtutorial/projects
 - caption: References
   chapters:
   - file: content/OGZAF_references
