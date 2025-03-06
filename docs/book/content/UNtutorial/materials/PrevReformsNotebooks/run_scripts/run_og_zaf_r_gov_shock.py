@@ -111,7 +111,9 @@ def main():
 
     # create plots of output
     op.plot_all(
-        base_dir, reform_dir, os.path.join(CUR_DIR, "OG-ZAF_r_gov_shock_example_plots")
+        base_dir,
+        reform_dir,
+        os.path.join(CUR_DIR, "OG-ZAF_r_gov_shock_example_plots"),
     )
 
     print("Percentage changes in aggregates:", ans)
