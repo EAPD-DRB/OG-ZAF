@@ -1,0 +1,75 @@
+Traceback (most recent call last):
+  File "/home/runner/miniconda3/envs/ogzaf-dev/lib/python3.12/site-packages/jupyter_cache/executors/utils.py", line 58, in single_nb_execution
+    executenb(
+  File "/home/runner/miniconda3/envs/ogzaf-dev/lib/python3.12/site-packages/nbclient/client.py", line 1319, in execute
+    return NotebookClient(nb=nb, resources=resources, km=km, **kwargs).execute()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/miniconda3/envs/ogzaf-dev/lib/python3.12/site-packages/jupyter_core/utils/__init__.py", line 165, in wrapped
+    return loop.run_until_complete(inner)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/miniconda3/envs/ogzaf-dev/lib/python3.12/asyncio/base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/home/runner/miniconda3/envs/ogzaf-dev/lib/python3.12/site-packages/nbclient/client.py", line 709, in async_execute
+    await self.async_execute_cell(
+  File "/home/runner/miniconda3/envs/ogzaf-dev/lib/python3.12/site-packages/nbclient/client.py", line 1062, in async_execute_cell
+    await self._check_raise_for_error(cell, cell_index, exec_reply)
+  File "/home/runner/miniconda3/envs/ogzaf-dev/lib/python3.12/site-packages/nbclient/client.py", line 918, in _check_raise_for_error
+    raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
+nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
+------------------
+# Load baseline and reform parameters, steady-state, and transition path
+# objects
+base_path = (
+    "/Users/richardevans/Docs/Economics/OSE/OG/OG-ZAF/examples/" +
+    "OG-ZAF-Example/OUTPUT_BASELINE"
+)
+ref_path = (
+    "/Users/richardevans/Docs/Economics/OSE/OG/OG-ZAF/examples/" +
+    "OG-ZAF-Example/OUTPUT_REFORM"
+)
+p_bas = pickle.load(open(os.path.join(base_path, "model_params.pkl"), "rb"))
+p_ref = pickle.load(open(os.path.join(ref_path, "model_params.pkl"), "rb"))
+ss_vars_bas = pickle.load(
+    open(os.path.join(base_path, "SS", "SS_vars.pkl"), "rb")
+)
+ss_vars_ref = pickle.load(
+    open(os.path.join(ref_path, "SS", "SS_vars.pkl"), "rb")
+)
+tpi_vars_bas = pickle.load(
+    open(os.path.join(base_path, "TPI", "TPI_vars.pkl"), "rb")
+)
+tpi_vars_ref = pickle.load(
+    open(os.path.join(ref_path, "TPI", "TPI_vars.pkl"), "rb")
+)
+------------------
+
+
+[31m---------------------------------------------------------------------------[39m
+[31mFileNotFoundError[39m                         Traceback (most recent call last)
+[36mCell[39m[36m [39m[32mIn[2][39m[32m, line 11[39m
+[32m      3[39m base_path = (
+[32m      4[39m     [33m"[39m[33m/Users/richardevans/Docs/Economics/OSE/OG/OG-ZAF/examples/[39m[33m"[39m +
+[32m      5[39m     [33m"[39m[33mOG-ZAF-Example/OUTPUT_BASELINE[39m[33m"[39m
+[32m      6[39m )
+[32m      7[39m ref_path = (
+[32m      8[39m     [33m"[39m[33m/Users/richardevans/Docs/Economics/OSE/OG/OG-ZAF/examples/[39m[33m"[39m +
+[32m      9[39m     [33m"[39m[33mOG-ZAF-Example/OUTPUT_REFORM[39m[33m"[39m
+[32m     10[39m )
+[32m---> [39m[32m11[39m p_bas = pickle.load([38;5;28;43mopen[39;49m[43m([49m[43mos[49m[43m.[49m[43mpath[49m[43m.[49m[43mjoin[49m[43m([49m[43mbase_path[49m[43m,[49m[43m [49m[33;43m"[39;49m[33;43mmodel_params.pkl[39;49m[33;43m"[39;49m[43m)[49m[43m,[49m[43m [49m[33;43m"[39;49m[33;43mrb[39;49m[33;43m"[39;49m[43m)[49m)
+[32m     12[39m p_ref = pickle.load([38;5;28mopen[39m(os.path.join(ref_path, [33m"[39m[33mmodel_params.pkl[39m[33m"[39m), [33m"[39m[33mrb[39m[33m"[39m))
+[32m     13[39m ss_vars_bas = pickle.load(
+[32m     14[39m     [38;5;28mopen[39m(os.path.join(base_path, [33m"[39m[33mSS[39m[33m"[39m, [33m"[39m[33mSS_vars.pkl[39m[33m"[39m), [33m"[39m[33mrb[39m[33m"[39m)
+[32m     15[39m )
+
+[36mFile [39m[32m~/miniconda3/envs/ogzaf-dev/lib/python3.12/site-packages/IPython/core/interactiveshell.py:325[39m, in [36m_modified_open[39m[34m(file, *args, **kwargs)[39m
+[32m    318[39m [38;5;28;01mif[39;00m file [38;5;129;01min[39;00m {[32m0[39m, [32m1[39m, [32m2[39m}:
+[32m    319[39m     [38;5;28;01mraise[39;00m [38;5;167;01mValueError[39;00m(
+[32m    320[39m         [33mf[39m[33m"[39m[33mIPython won[39m[33m'[39m[33mt let you open fd=[39m[38;5;132;01m{[39;00mfile[38;5;132;01m}[39;00m[33m by default [39m[33m"[39m
+[32m    321[39m         [33m"[39m[33mas it is likely to crash IPython. If you know what you are doing, [39m[33m"[39m
+[32m    322[39m         [33m"[39m[33myou can use builtins[39m[33m'[39m[33m open.[39m[33m"[39m
+[32m    323[39m     )
+[32m--> [39m[32m325[39m [38;5;28;01mreturn[39;00m [43mio_open[49m[43m([49m[43mfile[49m[43m,[49m[43m [49m[43m*[49m[43margs[49m[43m,[49m[43m [49m[43m*[49m[43m*[49m[43mkwargs[49m[43m)[49m
+
+[31mFileNotFoundError[39m: [Errno 2] No such file or directory: '/Users/richardevans/Docs/Economics/OSE/OG/OG-ZAF/examples/OG-ZAF-Example/OUTPUT_BASELINE/model_params.pkl'
+

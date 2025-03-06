@@ -24,36 +24,47 @@ For the March 3-7, 2025 United Nations `OG-ZAF` training in Cape Town, we will b
 * - Day
   - Session
   - Topic
+  - Materials
 * - Mon.
   - Morning
   - Organizer introductions <br> [Setup Python](https://eapd-drb.github.io/OG-ZAF/content/UNtutorial/getting_started.html#install-python), [Git, GitHub](https://eapd-drb.github.io/OG-ZAF/content/UNtutorial/getting_started.html#installing-git-and-github), and [OG-ZAF](https://eapd-drb.github.io/OG-ZAF/content/UNtutorial/getting_started.html#fork-and-clone-og-zaf-repository)
+  - [Intro slides](https://github.com/EAPD-DRB/OG-ZAF/blob/main/docs/book/content/UNtutorial/materials/OG-ZAF-Open.pdf)
 * -
   - Afternoon
   - Theory: ["Simple" 3-period-lived agent model](https://eapd-drb.github.io/OG-ZAF/content/UNtutorial/3perOG.html)
+  - [Solutions](https://github.com/EAPD-DRB/OG-ZAF/blob/main/docs/book/content/UNtutorial/solutions/3perOG/)
 * - Tue.
   - Morning
   - Review 3-period-lived-agent exercises (solutions in [this folder](https://github.com/EAPD-DRB/OG-ZAF/blob/main/docs/book/content/UNtutorial/solutions/3perOG/)) <br> Review OG-Core and OG-ZAF modules <br> Quick Git and GitHub workflow review
+  -
 * -
   - Afternoon
-  - Running OG-ZAF, inputs, outputs <br> Calibrating OG-ZAF, current state, still to do
+  - Running OG-ZAF, inputs, outputs <br> <br> Calibrating OG-ZAF, current state, still to do
+  - [I/O slides](https://github.com/EAPD-DRB/OG-ZAF/blob/main/docs/book/content/UNtutorial/materials/OG-ZAF-inputoutput.pdf) <br> [I/O Colab notebook](https://colab.research.google.com/drive/10toq2-SIctowK-yTL-RBsLMiQQGJX4QW?usp=sharing) <br> [Calibrate slides](https://github.com/EAPD-DRB/OG-ZAF/blob/main/docs/book/content/UNtutorial/materials/OG-ZAF-CurrentState.pdf)
 * - Wed.
   - Morning
-  - Running OG-ZAF: Revisit some reforms from 2-day visit <br> Talk about new reforms, create project teams
+  - Running OG-ZAF: Revisit some reforms from 2-day visit <br> Talk about new reforms <br> Create project teams (see "[Research Projects](https://eapd-drb.github.io/OG-ZAF/content/UNtutorial/projects.html)" chapter)
+  - [Reforms slides](https://github.com/EAPD-DRB/OG-ZAF/blob/main/docs/book/content/UNtutorial/materials/OG-ZAF-PrevAndNewReforms.pdf) <br> [Notebooks](https://github.com/EAPD-DRB/OG-ZAF/blob/main/docs/book/content/UNtutorial/materials/PrevReformsNotebooks/notebooks) <br> [Run scripts](https://github.com/EAPD-DRB/OG-ZAF/blob/main/docs/book/content/UNtutorial/materials/PrevReformsNotebooks/run_scripts)
 * -
   - Afternoon
   - OG-ZAF output: Tools to visualize/tabulate output <br> OG-ZAF built-in calibration helps
+  - [Built-in tools notebook](https://github.com/EAPD-DRB/OG-ZAF/blob/main/docs/book/content/UNtutorial/materials/OG-ZAF_builtintools.ipynb)
 * - Thu.
   - Morning
   - Calibrating OG-ZAF: Issues and hot spots
+  -
 * -
   - Afternoon
   - Calibrating OG-ZAF: Issues and hot spots
+  -
 * - Fri.
   - Morning
   - Open work, project hackathon, office hours <br> Advanced topics: Adding trade, connecting to other models
+  -
 * -
   - Afternoon
   - Presentation of projects <br> Future work, research, collaboration, final topics <br> Closing remarks
+  -
 ```
 
 (Sec_UNtutor_python)=
