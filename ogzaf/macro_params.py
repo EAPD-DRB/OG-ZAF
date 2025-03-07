@@ -244,14 +244,14 @@ def get_macro_params(
 
     if update_from_api:
         # alpha_T, non-social security benefits as a fraction of GDP
-        # source: https://data.imf.org/?sk=b052f0f0-c166-43b6-84fa-47cccae3e219&hide_uv=1
+        # source: https://data.imf.org/?sk=78d0bcc1-7a8f-44eb-8a2c-d4e472b8e64b&hide_uv=1
         # alpha_T = Employment-related social benefits expense - Social security benefits expense
-        macro_parameters["alpha_T"] = [0.041 - 0.0]  # 2020
+        macro_parameters["alpha_T"] = [0.36 - 0.0]  # 2022 = 0.36
 
         # alpha_G, gov't consumption expenditures as a fraction of GDP
-        # source: https://data.imf.org/?sk=edb0cd70-0af3-40e1-a9c3-bdef83ee4d1e&hide_uv=1
+        # source: https://data.imf.org/?sk=23ca1c1d-e6a5-4f18-bc2e-7e215837f971&hide_uv=1
         # alpha_G = Expense	- Interest expense - Social benefits expense
-        macro_parameters["alpha_G"] = [0.351 - 0.043 - 0.041]  # 2020
+        macro_parameters["alpha_G"] = [0.324 - 0.047 - 0.036]  # 2022 = 0.241
 
         """"
         Esimate the discount on sovereign yields relative to private debt
