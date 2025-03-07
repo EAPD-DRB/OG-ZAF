@@ -7,6 +7,7 @@ import json
 import time
 import copy
 import numpy as np
+from importlib.resources import files
 import matplotlib.pyplot as plt
 from ogzaf.calibrate import Calibration
 from ogcore.parameters import Specifications
@@ -47,15 +48,13 @@ def main():
         output_base=base_dir,
     )
     # Update parameters for baseline from default json file
-    p.update_specifications(
-        json.load(
-            open(
-                os.path.join(
-                    CUR_DIR, "..", "ogzaf", "ogzaf_default_parameters.json"
-                )
-            )
-        )
-    )
+    with (
+        files("ogzaf")
+        .joinpath("ogzaf_default_parameters.json")
+        .open("r") as file
+    ):
+        defaults = json.load(file)
+    p.update_specifications(defaults)
     # move closure rule out to 50 years since educaation phases in over 20 years
     p.tG1 = 50
 
