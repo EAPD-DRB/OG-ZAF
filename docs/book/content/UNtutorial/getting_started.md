@@ -48,7 +48,7 @@ For the March 3-7, 2025 United Nations `OG-ZAF` training in Cape Town, we will b
 * -
   - Afternoon
   - OG-ZAF output: Tools to visualize/tabulate output <br> OG-ZAF built-in calibration helps
-  - [Built-in tools notebook](https://github.com/EAPD-DRB/OG-ZAF/blob/main/docs/book/content/UNtutorial/materials/OG-ZAF_builtintools.ipynb)
+  - [Built-in tools notebook](https://github.com/EAPD-DRB/OG-ZAF/blob/main/docs/book/content/UNtutorial/materials/OG-ZAF_builtintools.ipynb), [Notebook with plotting using a forecast](https://github.com/EAPD-DRB/OG-ZAF/blob/main/docs/book/content/UNtutorial/materials/InterpretingOutputExample.ipynb)
 * - Thu.
   - Morning
   - Calibrating OG-ZAF: Issues and hot spots
@@ -64,8 +64,12 @@ For the March 3-7, 2025 United Nations `OG-ZAF` training in Cape Town, we will b
 * -
   - Afternoon
   - Presentation of projects <br> Future work, research, collaboration, final topics <br> Closing remarks
-  -
+  - [Repository with presentation slides and scripts](https://github.com/EAPD-DRB/OG-ZAF-sims)
 ```
+### Other materials:
+
+  * [Slides from the 2-day workshop in August, 2024](https://eapd-drb.github.io/og-model/south-africa/)
+  * [UN OG Online Training Materials](https://eapd-drb.github.io/UN-OG-Training/)
 
 (Sec_UNtutor_python)=
 ## Install Python
