@@ -41,7 +41,7 @@ def read_SAM():
         # If both attempts fail, SAM will be None
         if SAM is None:
             print("Failed to read SAM from both sources.")
-    else:
+    else:  # pragma: no cover
         SAM = None
         print("No internet connection. SAM cannot be read.")
     return SAM
