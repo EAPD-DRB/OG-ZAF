@@ -11,40 +11,43 @@ storage_options = {"User-Agent": "Mozilla/5.0"}
 SAM_path = "https://www.wider.unu.edu/sites/default/files/Data/SASAM-2015-Data-Resource.xlsx"
 SAM_path_alt = "https://raw.githubusercontent.com/EAPD-DRB/SAM-files/main/Data/ZAF/SASAM-2015-Data-Resource.xlsx"
 
-if is_connected():
-    try:
-        SAM = pd.read_excel(
-            SAM_path,
-            sheet_name="Micro SAM 2015",
-            skiprows=6,
-            index_col=0,
-            storage_options=storage_options,
-        )
-        print("Successfully read SAM from WIDER.")
-    except Exception as e:
-        print(f"Failed to read from WIDER: {e}")
+
+def read_SAM():
+    if is_connected():
         try:
-            # Attempt to read from the GitHub repository
             SAM = pd.read_excel(
-                SAM_path_alt,
+                SAM_path,
                 sheet_name="Micro SAM 2015",
                 skiprows=6,
                 index_col=0,
                 storage_options=storage_options,
             )
-            print("Successfully read SAM from GitHub repository.")
+            print("Successfully read SAM from WIDER.")
         except Exception as e:
-            print(f"Failed to read from the GitHub repository: {e}")
-            SAM = None
-    # If both attempts fail, SAM will be None
-    if SAM is None:
-        print("Failed to read SAM from both sources.")
-else:
-    SAM = None
-    print("No internet connection. SAM cannot be read.")
+            print(f"Failed to read from WIDER: {e}")
+            try:
+                # Attempt to read from the GitHub repository
+                SAM = pd.read_excel(
+                    SAM_path_alt,
+                    sheet_name="Micro SAM 2015",
+                    skiprows=6,
+                    index_col=0,
+                    storage_options=storage_options,
+                )
+                print("Successfully read SAM from GitHub repository.")
+            except Exception as e:
+                print(f"Failed to read from the GitHub repository: {e}")
+                SAM = None
+        # If both attempts fail, SAM will be None
+        if SAM is None:
+            print("Failed to read SAM from both sources.")
+    else:  # pragma: no cover
+        SAM = None
+        print("No internet connection. SAM cannot be read.")
+    return SAM
 
 
-def get_alpha_c(sam=SAM, cons_dict=CONS_DICT):
+def get_alpha_c(sam=None, cons_dict=CONS_DICT):
     """
     Calibrate the alpha_c vector, showing the shares of household
     expenditures for each consumption category
@@ -56,6 +59,8 @@ def get_alpha_c(sam=SAM, cons_dict=CONS_DICT):
     Returns:
         alpha_c (dict): Dictionary of shares of household expenditures
     """
+    if sam is None:
+        sam = read_SAM()
     alpha_c = {}
     overall_sum = 0
     for key, value in cons_dict.items():
@@ -72,7 +77,7 @@ def get_alpha_c(sam=SAM, cons_dict=CONS_DICT):
     return alpha_c
 
 
-def get_io_matrix(sam=SAM, cons_dict=CONS_DICT, prod_dict=PROD_DICT):
+def get_io_matrix(sam=None, cons_dict=CONS_DICT, prod_dict=PROD_DICT):
     """
     Calibrate the io_matrix array.  This array relates the share of each
     production category in each consumption category
@@ -85,6 +90,8 @@ def get_io_matrix(sam=SAM, cons_dict=CONS_DICT, prod_dict=PROD_DICT):
     Returns:
         io_df (pd.DataFrame): Dataframe of io_matrix
     """
+    if sam is None:
+        sam = read_SAM()
     # Create initial matrix as dataframe of 0's to fill in
     io_dict = {}
     for key in prod_dict.keys():
