@@ -3,7 +3,7 @@ Tests of macro_params.py module
 """
 
 import pytest
-from ogidn import macro_params
+from ogzaf import macro_params
 
 
 @pytest.mark.parametrize(
