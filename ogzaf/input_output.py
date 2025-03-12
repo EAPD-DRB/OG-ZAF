@@ -17,7 +17,7 @@ if is_connected():
         SAM = pd.read_excel(
             SAM_path,
             sheet_name="SASAM 2019 61Ind 4Educ", # Can alternatively use sheet_name="SASM 2019 61Ind4Occ"
-            skiprows=6,
+            skiprows=3,
             index_col=0,
             storage_options=storage_options,
         )
