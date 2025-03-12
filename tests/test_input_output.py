@@ -25,6 +25,15 @@ prod_dict = {
 }
 
 
+def test_read_sam():
+    """
+    Test of read_SAM() function
+    """
+    test_df = io.read_SAM()
+
+    assert isinstance(test_df, pd.DataFrame)
+
+
 @pytest.mark.parametrize(
     "sam_df, cons_dict",
     [

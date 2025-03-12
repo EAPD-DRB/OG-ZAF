@@ -6,7 +6,7 @@ import os
 import json
 import time
 import copy
-import importlib.resources
+from importlib.resources import files
 import matplotlib.pyplot as plt
 from ogcore.parameters import Specifications
 from ogcore import output_tables as ot
@@ -43,9 +43,11 @@ def main():
         output_base=base_dir,
     )
     # Update parameters for baseline from default json file
-    with importlib.resources.open_text(
-        "ogzaf", "ogzaf_default_parameters_multisector.json"
-    ) as file:
+    with (
+        files("ogzaf")
+        .joinpath("ogzaf_default_parameters.json")
+        .open("r") as file
+    ):
         defaults = json.load(file)
     p.update_specifications(defaults)
 
