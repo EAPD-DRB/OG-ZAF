@@ -5,7 +5,7 @@ with open("README.md", "r") as readme_file:
 
 setuptools.setup(
     name="ogzaf",
-    version="0.0.7",
+    version="0.0.8",
     author="Marcelo LaFleur, Richard W. Evans, and Jason DeBacker",
     license="CC0 1.0 Universal (CC0 1.0) Public Domain Dedication",
     description="South Africa Calibration for OG-Core",
@@ -35,6 +35,7 @@ setuptools.setup(
         "matplotlib",
         "dask>=2.30.0",
         "distributed>=2.30.1",
+        "marshmallow<4.0.0",
         "paramtools>=0.15.0",
         "requests",
         "pandas-datareader",
