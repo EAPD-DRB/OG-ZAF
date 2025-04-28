@@ -8,4 +8,4 @@ from ogzaf.input_output import *
 from ogzaf.macro_params import *
 from ogzaf.utils import *
 
-__version__ = "0.0.7"
+__version__ = "0.0.8"
