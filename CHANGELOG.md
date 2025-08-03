@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [0.0.8] - 2025-04-28 12:00:00
+
+### Added
+
+- Updates `environment.yml` and `setup.py` to pin to version `marshmallow<4.0.0`
+
 ## [0.0.7] - 2025-03-12 4:00:00
 
 ### Added
@@ -75,6 +81,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - This version is a pre-release alpha. The example run script OG-ZAF/examples/run_og_zaf.py runs, but the model is not currently calibrated to represent the South African economy and population.
 
 
+[0.0.8]: https://github.com/EAPD-DRB/OG-ZAF/compare/v0.0.7...v0.0.8
 [0.0.7]: https://github.com/EAPD-DRB/OG-ZAF/compare/v0.0.6...v0.0.7
 [0.0.6]: https://github.com/EAPD-DRB/OG-ZAF/compare/v0.0.5...v0.0.6
 [0.0.5]: https://github.com/EAPD-DRB/OG-ZAF/compare/v0.0.4...v0.0.5
