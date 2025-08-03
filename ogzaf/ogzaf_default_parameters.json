@@ -2440,7 +2440,6 @@
     "RC_TPI": 0.001,
     "reform_use_baseline_solution": true,
     "initial_guess_r_SS": 0.04,
-    "initial_guess_w_SS": 1.1617041226785383,
     "initial_guess_TR_SS": 0.042,
     "initial_guess_factor_SS": 6766.0,
     "omega": [
