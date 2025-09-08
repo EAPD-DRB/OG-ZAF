@@ -2451,9 +2451,6 @@
     "PIA_rate_bkt_3": 0.0,
     "PIA_maxpayment": 0.0,
     "PIA_minpayment": 0.0,
-    "replacement_rate_adjust": [
-        1.0
-    ],
     "budget_balance": false,
     "baseline_spending": false,
     "start_year": 2025,
