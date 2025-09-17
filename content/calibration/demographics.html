@@ -32,7 +32,7 @@
     <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
     <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="../../_static/exercise.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/proof.css" />
@@ -506,10 +506,10 @@ document.write(`
 <p>Our data for South Africa fertility rates by age come from United Nations fertility rate data for a country for some range of years (at least one year) and by age. The country_id=710 is for South Africa. These data come from the United Nations Data Portal API for UN population data (see <a class="reference external" href="https://population.un.org/dataportal/about/dataapi">https://population.un.org/dataportal/about/dataapi</a>). The UN variable code for Population by 1-year age groups and sex is “47” and that for Fertility rates by age of mother (1-year) is “68”.</p>
 <p><a class="reference internal" href="#figfertrateszaf"><span class="std std-numref">Figure 1</span></a> was created using the <a class="reference external" href="https://github.com/PSLmodels/OG-Core/blob/master/ogcore/demographics.py#L146"><code class="docutils literal notranslate"><span class="pre">ogcore.demographics.get_fert()</span></code></a> function, which downloaded the data from the United National Data Portal API and plotted it in Python.<a class="footnote-reference brackets" href="#un-data-portal" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a></p>
 <div class="cell tag_hide-input tag_remove-output docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
@@ -548,10 +548,10 @@ document.write(`
 <p>The mortality rates in our model <span class="math notranslate nohighlight">\(\rho_{s,t}\)</span> are a one-period hazard rate and represent the probability of dying within one year, given that an household is alive at the beginning of the period in which they are age-<span class="math notranslate nohighlight">\(s\)</span>. These data come from the United Nations Population Data Portal API for UN population data (see <a class="reference external" href="https://population.un.org/dataportal/about/dataapi">https://population.un.org/dataportal/about/dataapi</a>). The model uses neonatal mortality rates (deaths per 1,000 live births, divided by 1,000) for the infant mortality rate from World Bank World Development Indicators, available at <a class="reference external" href="https://data.worldbank.org/indicator/SH.DYN.NMRT">https://data.worldbank.org/indicator/SH.DYN.NMRT</a></p>
 <p>The mortality rates are a population-weighted average of the male and female mortality rates by one-year age increments reported by United Nations. The maximum age in years in our model is truncated to 100-years old. In addition, we constrain the mortality rate to be 1.0 or 100 percent at the maximum age of 100.</p>
 <div class="cell tag_hide-input tag_remove-output docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
@@ -594,10 +594,10 @@ document.write(`
 <span class="eqno">(8)<a class="headerlink" href="#equation-eqpopimmrates" title="Link to this equation">#</a></span>\[\begin{split}    i_{1,t} &amp;= \frac{\omega_{1,t+1} - (1 - \rho_{0,t})\sum_{s=1}^{E+S}f_{s,t}\omega_{s,t}}{\omega_{1,t}}\quad\forall t \\
     i_{s+1,t+1} &amp;= \frac{\omega_{s+1,t+1} - (1 - \rho_{s,t})\omega_{s,t}}{\omega_{s+1,t}}\qquad\qquad\forall t\quad\text{and}\quad 1\leq s \leq E+S-1\end{split}\]</div>
 <div class="cell tag_hide-input tag_remove-output docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
@@ -744,10 +744,10 @@ First, note that the matrix <span class="math notranslate nohighlight">\(\boldsy
 </figcaption>
 </figure>
 <div class="cell tag_hide-input tag_remove-output docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
