@@ -3,6 +3,7 @@ from ogzaf import input_output as io
 import os
 import numpy as np
 import datetime
+from ogcore import demographics
 
 
 class Calibration:
@@ -60,8 +61,6 @@ class Calibration:
             self.io_matrix = np.array([[1.0]])
 
         # demographics
-        from ogcore import demographics
-
         self.demographic_params = demographics.get_pop_objs(
             p.E,
             p.S,
