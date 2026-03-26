@@ -17,7 +17,6 @@ import ogcore
 from ogcore.execute import runner
 from ogcore.utils import safe_read_pickle
 
-
 # Use a custom matplotlib style file for plots
 plt.style.use("ogcore.OGcorePlots")
 

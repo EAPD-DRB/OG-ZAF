@@ -6,7 +6,6 @@ import pandas as pd
 import pytest
 from ogzaf import input_output as io
 
-
 sam_dict = {
     # "index": ["Beer", "Chocolate", "Car", "House"],
     "Ag": [30, 160, 0, 5],

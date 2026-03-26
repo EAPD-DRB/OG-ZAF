@@ -37,7 +37,6 @@ setuptools.setup(
         "distributed>=2.30.1",
         "paramtools>=0.20.0",
         "requests",
-        "pandas-datareader",
         "xlwt",
         "openpyxl>=3.1.2",
         "statsmodels",
