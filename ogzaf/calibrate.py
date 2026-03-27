@@ -57,9 +57,7 @@ class Calibration:
                 update_from_api=update_from_api,
             )
         except Exception as exc:
-            warnings.warn(
-                f"Macro params update failed: {exc}", stacklevel=2
-            )
+            warnings.warn(f"Macro params update failed: {exc}", stacklevel=2)
 
         # io matrix and alpha_c (multi-sector only)
         if p.I > 1:
@@ -68,18 +66,14 @@ class Calibration:
                 assert p.I == len(list(alpha_c_dict.keys()))
                 self.alpha_c = np.array(list(alpha_c_dict.values()))
             except Exception as exc:
-                warnings.warn(
-                    f"alpha_c update failed: {exc}", stacklevel=2
-                )
+                warnings.warn(f"alpha_c update failed: {exc}", stacklevel=2)
         if p.M > 1:
             try:
                 io_df = io.get_io_matrix()
                 assert p.M == len(list(io_df.keys()))
                 self.io_matrix = io_df.values
             except Exception as exc:
-                warnings.warn(
-                    f"io_matrix update failed: {exc}", stacklevel=2
-                )
+                warnings.warn(f"io_matrix update failed: {exc}", stacklevel=2)
 
         # Demographics + income (atomic — e depends on demographic output)
         try:

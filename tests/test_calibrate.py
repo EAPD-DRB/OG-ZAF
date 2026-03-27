@@ -18,9 +18,7 @@ def _make_mock_p(I=1, M=1):
     p.S = 80
     p.T = 160
     p.start_year = 2025
-    p.lambdas = np.array(
-        [0.25, 0.25, 0.0625, 0.0625, 0.0625, 0.0625, 0.25]
-    )
+    p.lambdas = np.array([0.25, 0.25, 0.0625, 0.0625, 0.0625, 0.0625, 0.25])
     return p
 
 
@@ -105,9 +103,7 @@ class TestOnlinePartialFailure:
                 c = Calibration(p, update_from_api=True)
 
         # Macro warning should have been emitted
-        macro_warnings = [
-            x for x in w if "Macro params" in str(x.message)
-        ]
+        macro_warnings = [x for x in w if "Macro params" in str(x.message)]
         assert len(macro_warnings) == 1
 
         d = c.get_dict()
@@ -129,12 +125,8 @@ class TestOnlinePartialFailure:
                 mock_demog.side_effect = RuntimeError("skip")
                 c = Calibration(p, update_from_api=True)
 
-        alpha_warnings = [
-            x for x in w if "alpha_c" in str(x.message)
-        ]
-        io_warnings = [
-            x for x in w if "io_matrix" in str(x.message)
-        ]
+        alpha_warnings = [x for x in w if "alpha_c" in str(x.message)]
+        io_warnings = [x for x in w if "io_matrix" in str(x.message)]
         assert len(alpha_warnings) == 1
         assert len(io_warnings) == 1
 
@@ -156,9 +148,7 @@ class TestOnlinePartialFailure:
                 mock_demog.side_effect = RuntimeError("UN API down")
                 c = Calibration(p, update_from_api=True)
 
-        demo_warnings = [
-            x for x in w if "Demographics" in str(x.message)
-        ]
+        demo_warnings = [x for x in w if "Demographics" in str(x.message)]
         assert len(demo_warnings) == 1
 
         d = c.get_dict()

@@ -51,9 +51,7 @@ def get_alpha_c(sam=None, cons_dict=CONS_DICT):
     if sam is None:
         sam = read_SAM()
     if sam is None:
-        raise RuntimeError(
-            "SAM data is unavailable. Cannot compute alpha_c."
-        )
+        raise RuntimeError("SAM data is unavailable. Cannot compute alpha_c.")
     alpha_c = {}
     overall_sum = 0
     for key, value in cons_dict.items():
