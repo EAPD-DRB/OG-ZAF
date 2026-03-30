@@ -16,8 +16,26 @@ kernelspec:
 
 The JSON file [`ogzaf_default_parameters.json`](https://github.com/EAPD-DRB/OG-ZAF/blob/master/ogzaf/ogzaf_default_parameters.json) provides values for all the model parameters used as defaults for `OG-ZAF`. Below, we provide a table highlighting some of the parameters describing the scale of the model (number of periods, aged, productivity types) and some parameters of the solution method (dampening parameter for TPI). The table below provides a list of the exogenous parameters and their baseline calibration values.
 
+<!-- +++
+  ```{code-cell} ogzaf-dev
+  :tags: [hide-cell]
+  from myst_nb import glue
+  import ogcore.parameter_tables as pt
+  from ogcore import Specifications
+  import ogzaf
+  import importlib
+  import json
+  p = Specifications()
+  with importlib.resources.open_text(
+      "ogzaf", "ogzaf_default_parameters.json"
+      ) as file:
+          defaults = json.load(file)
+  table = pt.param_table(p, table_format="md", path=None)
+  glue("param_table", table, display=False)
+  ```
+-->
 
- | Symbol                           | Description                                                             | Value                                                 |
+| Symbol                           | Description                                                             | Value                                                 |
 |:---------------------------------|:------------------------------------------------------------------------|:------------------------------------------------------|
 | $\texttt{start_year}$           | Initial year                                                            | 2025                                                  |
 | $\omega_{s,t}$                   | Population by age over time                                             | Too large to report here, see default parameters JSON |
