@@ -17,7 +17,6 @@ from ogcore import demographics as demog
 
 from ogcore import Specifications
 
-
 CUR_DIR = os.path.dirname(os.path.realpath(__file__))
 UN_COUNTRY_CODE = "710"
 plot_path = os.path.join(CUR_DIR, "book", "content", "calibration", "images")
