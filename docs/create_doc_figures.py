@@ -6,10 +6,17 @@ This script creates tables and figures from the OG-ZAF documentation.
 import os
 import numpy as np
 import matplotlib.pyplot as plt
+import importlib
+import json
 import ogcore
 from ogcore.parameters import Specifications
+import ogcore.parameter_tables as pt
 from ogcore import parameter_plots as pp
 from ogcore import demographics as demog
+
+
+from ogcore import Specifications
+
 
 CUR_DIR = os.path.dirname(os.path.realpath(__file__))
 UN_COUNTRY_CODE = "710"
@@ -25,10 +32,12 @@ plt.style.use("ogcore.OGcorePlots")
 Load specifications object with default parameters
 """
 p = Specifications()
-p.update_specifications(
-    "github://EAPD-DRB:OG-ZAF@main/ogzaf/ogzaf_default_parameters.json"
-)
+with importlib.resources.open_text(
+    "ogzaf", "ogzaf_default_parameters.json"
+) as file:
+    defaults = json.load(file)
 p.start_year = YEAR_TO_PLOT
+p.update_specifications(defaults)
 
 # also load parameters from OG-USA for comparison
 p2 = Specifications()
@@ -44,7 +53,7 @@ fert_rates, fig = demog.get_fert(
     totpers=100,
     min_age=0,
     max_age=99,
-    country_id="710",
+    country_id=UN_COUNTRY_CODE,
     start_year=YEAR_TO_PLOT,
     end_year=YEAR_TO_PLOT,
     graph=True,
@@ -57,7 +66,7 @@ mort_rates, _, fig = demog.get_mort(
     totpers=100,
     min_age=0,
     max_age=99,
-    country_id="710",
+    country_id=UN_COUNTRY_CODE,
     start_year=YEAR_TO_PLOT,
     end_year=YEAR_TO_PLOT,
     graph=True,
@@ -76,7 +85,7 @@ imm_rates, fig = demog.get_imm_rates(
     mort_rates=None,
     infmort_rates=None,
     pop_dist=None,
-    country_id="710",
+    country_id=UN_COUNTRY_CODE,
     start_year=YEAR_TO_PLOT,
     end_year=YEAR_TO_PLOT + 50,
     graph=True,
@@ -148,6 +157,9 @@ pp.plot_ability_profiles(
     p, p2=None, t=None, log_scale=True, include_title=False, path=plot_path
 )
 # Plotting with USA also is too busy, so do separately
+# create directory for USA plots
+if not os.path.exists(os.path.join(plot_path, "USA_plots")):
+    os.makedirs(os.path.join(plot_path, "USA_plots"))
 pp.plot_ability_profiles(
     p2,
     p2=None,
@@ -155,4 +167,13 @@ pp.plot_ability_profiles(
     log_scale=True,
     include_title=False,
     path=os.path.join(plot_path, "USA_plots"),
+)
+
+"""
+Create table for exogenous parameters
+"""
+table = pt.param_table(
+    p,
+    table_format="md",
+    path=os.path.join(plot_path, "exogenous_parameters_table.md"),
 )
