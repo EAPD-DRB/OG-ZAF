@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Adds `.md` and `.md` from [PR #105](https://github.com/EAPD-DRB/OG-ZAF/pull/105)
 - Fixed typos in tags in the `README.md` and documentation `intro.md`
 
 ## [0.0.10] - 2026-03-30 22:00:00
