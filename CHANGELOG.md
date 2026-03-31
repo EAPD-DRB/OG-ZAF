@@ -6,6 +6,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [0.0.10] - 2026-03-30 22:00:00
+
+### Added
+
+- Updates the `jupyter-book` package pin to be `jupyter-book<2.0.0` in `environment.yml`, `deploy_docs.yml`, and `docs_check.yml`. The newer packages of `jupyter-book>=2.0.0` have no support for many Sphinx functions that we use in our Jupyter Book (see [this issue](https://github.com/jupyter-book/mystmd/issues/1259)).
+- Updates the Copyright year to 2026 in `_config.yml`
+- Removes the UBI chapter from `_toc.yml`
+- Adds a function to `utils.rst`
+- Updates the metadata in `earnings.md` and `exogenous_parameters.md`
+- Small typographical updates in `demographics.md`
+
 ## [0.0.9] - 2025-08-15 21:00:00
 
 ### Added
@@ -88,6 +99,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - This version is a pre-release alpha. The example run script OG-ZAF/examples/run_og_zaf.py runs, but the model is not currently calibrated to represent the South African economy and population.
 
 
+[0.0.10]: https://github.com/EAPD-DRB/OG-ZAF/compare/v0.0.9...v0.0.10
 [0.0.9]: https://github.com/EAPD-DRB/OG-ZAF/compare/v0.0.8...v0.0.9
 [0.0.8]: https://github.com/EAPD-DRB/OG-ZAF/compare/v0.0.7...v0.0.8
 [0.0.7]: https://github.com/EAPD-DRB/OG-ZAF/compare/v0.0.6...v0.0.7
