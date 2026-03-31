@@ -16,39 +16,42 @@
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-
-  
-  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+  <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
     <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="../../_static/exercise.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/proof.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
   
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
-<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
-  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
     <script src="../../_static/documentation_options.js?v=9eb32ce0"></script>
     <script src="../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../../_static/copybutton.js?v=f281be69"></script>
-    <script src="../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
@@ -65,10 +68,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Matching Labor, Wealth, and Income Moments" href="matching_lwi.html" />
-    <link rel="prev" title="Taxes in OG-ZAF" href="taxes.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
   </head>
   
   
@@ -84,19 +86,8 @@
     <i class="fa-solid fa-arrow-up"></i>Back to top</button>
 
   
-  <input type="checkbox"
-          class="sidebar-toggle"
-          id="pst-primary-sidebar-checkbox"/>
-  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
-  
-  <input type="checkbox"
-          class="sidebar-toggle"
-          id="pst-secondary-sidebar-checkbox"/>
-  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
-  
-  <div class="search-button__wrapper">
-    <div class="search-button__overlay"></div>
-    <div class="search-button__search-container">
+  <dialog id="pst-search-dialog">
+    
 <form class="bd-search d-flex align-items-center"
       action="../../search.html"
       method="get">
@@ -104,7 +95,6 @@
   <input type="search"
          class="form-control"
          name="q"
-         id="search-input"
          placeholder="Search this book..."
          aria-label="Search this book..."
          autocomplete="off"
@@ -112,8 +102,8 @@
          autocapitalize="off"
          spellcheck="false"/>
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
-</form></div>
-  </div>
+</form>
+  </dialog>
 
   <div class="pst-async-banner-revealer d-none">
   <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
@@ -129,7 +119,10 @@
       
       
       
-      <div class="bd-sidebar-primary bd-sidebar">
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
         
 
   
@@ -159,21 +152,17 @@
     
     
     <img src="../../_static/OG-ZAF_logo.png" class="logo__image only-light" alt="OG-ZAF - Home"/>
-    <script>document.write(`<img src="../../_static/OG-ZAF_logo.png" class="logo__image only-dark" alt="OG-ZAF - Home"/>`);</script>
+    <img src="../../_static/OG-ZAF_logo.png" class="logo__image only-dark pst-js-only" alt="OG-ZAF - Home"/>
   
   
 </a></div>
         <div class="sidebar-primary-item">
 
- <script>
- document.write(`
-   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="fa-solid fa-magnifying-glass"></i>
-    <span class="search-button__default-text">Search</span>
-    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
-   </button>
- `);
- </script></div>
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
         <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         
@@ -200,14 +189,13 @@
 </details></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Calibration</span></p>
-<ul class="current nav bd-sidenav">
+<ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="households.html">Calibration of Household Preference Parameters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="firms.html">Calibration of Firms Parameters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="macro.html">Calibration of Macroeconomic Parameters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="demographics.html">Demographics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="earnings.html">Lifetime Earnings Profiles</a></li>
 <li class="toctree-l1"><a class="reference internal" href="taxes.html">Taxes in OG-ZAF</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Universal Basic Income (UBI)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="matching_lwi.html">Matching Labor, Wealth, and Income Moments</a></li>
 <li class="toctree-l1"><a class="reference internal" href="exogenous_parameters.html">Exogenous Parameters</a></li>
 </ul>
@@ -232,9 +220,14 @@
   
   
   <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
   </div>
-  
-  <div id="rtd-footer-container"></div>
 
 
       </div>
@@ -364,7 +357,7 @@
 
 
 <button onclick="toggleFullScreen()"
-  class="btn btn-sm btn-fullscreen-button"
+  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
   title="Fullscreen mode"
   data-bs-placement="bottom" data-bs-toggle="tooltip"
 >
@@ -378,25 +371,17 @@
 
 
 
-<script>
-document.write(`
-  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
-    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
-    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
-  </button>
-`);
-</script>
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
 
 
-<script>
-document.write(`
-  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
-  </button>
-`);
-</script>
-<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="fa-solid fa-list"></span>
 </button>
 </div></div>
@@ -444,7 +429,7 @@ document.write(`
 <p>From the <a class="reference external" href="https://github.com/EAPD-DRB/OG-ZAF">OG-ZAF</a> repository, we have four <span class="math notranslate nohighlight">\(S\times J\)</span> matrices <code class="docutils literal notranslate"><span class="pre">ubi_num_017_mat</span></code><span class="math notranslate nohighlight">\(_{j,s}\)</span>, <code class="docutils literal notranslate"><span class="pre">ubi_num_1864_mat</span></code><span class="math notranslate nohighlight">\(_{j,s}\)</span>, and <code class="docutils literal notranslate"><span class="pre">ubi_num_65p_mat</span></code><span class="math notranslate nohighlight">\(_{j,s}\)</span> representing the number of children under age 0-17, number of adults ages 18-64, and the number of seniors age 65 and over, respectively, by lifetime ability group <span class="math notranslate nohighlight">\(j\)</span> and age <span class="math notranslate nohighlight">\(s\)</span> of head of household. Because our demographic age data match up well with head-of-household data from other datasets, we do not have to adjust the values in these matrices.<a class="footnote-reference brackets" href="#hoh-age-dist-note" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a></p>
 <p>Now we can solve for the dollar-valued (as opposed to model-unit-valued) UBI transfer to each household in the first period <span class="math notranslate nohighlight">\(ubi^{\$}_{j,s,t=0}\)</span> in the following way. Let the parameter <code class="docutils literal notranslate"><span class="pre">ubi_nom_017</span></code> be the dollar value of the UBI transfer to each household per dependent child age 17 and under. Let the parameter <code class="docutils literal notranslate"><span class="pre">ubi_nom_1864</span></code> be the dollar value of the UBI transfer to each household per adult between the ages of 18 and 64. Let <code class="docutils literal notranslate"><span class="pre">ubi_nom_65p</span></code> be the dollar value of UBI transfer to each household per senior 65 and over. And let <code class="docutils literal notranslate"><span class="pre">ubi_nom_max</span></code> be the maximum UBI benefit per household.</p>
 <div class="math notranslate nohighlight" id="equation-equbiubi-dol-jst0">
-<span class="eqno">(15)<a class="headerlink" href="#equation-equbiubi-dol-jst0" title="Link to this equation">#</a></span>\[\begin{split}  \begin{split}
+<span class="eqno">()<a class="headerlink" href="#equation-equbiubi-dol-jst0" title="Link to this equation">#</a></span>\[\begin{split}  \begin{split}
     ubi^{\$}_{j,s,t=0} = \min\Bigl(&amp;\texttt{ubi_nom_max}, \\
     &amp;\texttt{ubi_nom_017} * \texttt{ubi_num_017_mat}_{j,s} + \\
     &amp;\texttt{ubi_nom_1864} * \texttt{ubi_num_1864_mat}_{j,s} + \\
@@ -456,10 +441,10 @@ document.write(`
 <span id="secubi-nongrowthadj"></span><h2>UBI specification not adjusted for economic growth<a class="headerlink" href="#ubi-specification-not-adjusted-for-economic-growth" title="Link to this heading">#</a></h2>
 <p>A non-growth adjusted UBI (<code class="docutils literal notranslate"><span class="pre">ubi_growthadj</span> <span class="pre">=</span> <span class="pre">False</span></code>) is one in which the initial nonstationary dollar-valued <span class="math notranslate nohighlight">\(t=0\)</span> UBI matrix <span class="math notranslate nohighlight">\(ubi^{\$}_{j,s,t=0}\)</span> does not grow, while the economy’s long-run growth rate is <span class="math notranslate nohighlight">\(g_y\)</span> for the most common parameterization where the long-run growth rate is positive <span class="math notranslate nohighlight">\(g_y&gt;0\)</span>.</p>
 <div class="math notranslate nohighlight" id="equation-equbiubi-dol-nongrwadj-jst">
-<span class="eqno">(16)<a class="headerlink" href="#equation-equbiubi-dol-nongrwadj-jst" title="Link to this equation">#</a></span>\[  ubi^{\$}_{j,s,t} = ubi^{\$}_{j,s,t=0} \quad\forall j,s,t\]</div>
+<span class="eqno">()<a class="headerlink" href="#equation-equbiubi-dol-nongrwadj-jst" title="Link to this equation">#</a></span>\[  ubi^{\$}_{j,s,t} = ubi^{\$}_{j,s,t=0} \quad\forall j,s,t\]</div>
 <p>As described in the <a class="reference external" href="https://pslmodels.github.io/OG-Core/content/theory/stationarization.html">OG-Core chapter on stationarization</a>, the stationarized UBI transfer to each household <span class="math notranslate nohighlight">\(\hat{ubi}_{j,s,t}\)</span> is the nonstationary transfer divided by the growth rate since the initial period. When the long-run economic growth rate is positive <span class="math notranslate nohighlight">\(g_y&gt;0\)</span> and the UBI specification is not growth-adjusted the steady-state stationary UBI household transfer is zero <span class="math notranslate nohighlight">\(\overline{ubi}_{j,s}=0\)</span> for all lifetime income groups <span class="math notranslate nohighlight">\(j\)</span> and ages <span class="math notranslate nohighlight">\(s\)</span> as time periods <span class="math notranslate nohighlight">\(t\)</span> go to infinity. However, to simplify, we assume in this case that the stationarized steady-state UBI transfer matrix to households is the stationarized value of that matrix in period <span class="math notranslate nohighlight">\(T\)</span>.</p>
 <div class="math notranslate nohighlight" id="equation-equbiubi-mod-nongrwadj-ss">
-<span class="eqno">(17)<a class="headerlink" href="#equation-equbiubi-mod-nongrwadj-ss" title="Link to this equation">#</a></span>\[  \overline{ubi}_{j,s} = ubi_{j,s,t=T} \quad\forall j,s\]</div>
+<span class="eqno">()<a class="headerlink" href="#equation-equbiubi-mod-nongrwadj-ss" title="Link to this equation">#</a></span>\[  \overline{ubi}_{j,s} = ubi_{j,s,t=T} \quad\forall j,s\]</div>
 <p>Note that in non-growth-adjusted case, if <span class="math notranslate nohighlight">\(g_y&lt;0\)</span>, then the stationary value of <span class="math notranslate nohighlight">\(\hat{ubi}_{j,s,t}\)</span> is going to infinity as <span class="math notranslate nohighlight">\(t\)</span> goes to infinity. Therefore, a UBI specification must be growth adjusted for any assumed negative long run growth <span class="math notranslate nohighlight">\(g_y&lt;0\)</span>.<a class="footnote-reference brackets" href="#growthadj-note" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a></p>
 </section>
 <section id="ubi-specification-adjusted-for-economic-growth">
@@ -512,24 +497,6 @@ document.write(`
                 <footer class="prev-next-footer d-print-none">
                   
 <div class="prev-next-area">
-    <a class="left-prev"
-       href="taxes.html"
-       title="previous page">
-      <i class="fa-solid fa-angle-left"></i>
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Taxes in OG-ZAF</p>
-      </div>
-    </a>
-    <a class="right-next"
-       href="matching_lwi.html"
-       title="next page">
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Matching Labor, Wealth, and Income Moments</p>
-      </div>
-      <i class="fa-solid fa-angle-right"></i>
-    </a>
 </div>
                 </footer>
               
@@ -537,14 +504,16 @@ document.write(`
             
             
               
-                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
 
-  <div class="sidebar-secondary-item">
-  <div class="page-toc tocsection onthispage">
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
     <i class="fa-solid fa-list"></i> Contents
   </div>
-  <nav class="bd-toc-nav page-toc">
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#calculating-ubi">Calculating UBI</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ubi-specification-not-adjusted-for-economic-growth">UBI specification not adjusted for economic growth</a></li>
@@ -574,7 +543,7 @@ By Marcelo LaFleur, Richard W. Evans, and Jason DeBacker
 
   <p class="copyright">
     
-      © Copyright 2025.
+      © Copyright 2026.
       <br/>
     
   </p>
@@ -598,8 +567,8 @@ By Marcelo LaFleur, Richard W. Evans, and Jason DeBacker
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
-<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <script defer src="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
 
   <footer class="bd-footer">
   </footer>

@@ -1,14 +1,13 @@
 ---
 jupytext:
+  formats: md:myst
   text_representation:
     extension: .md
     format_name: myst
-    format_version: '0.8'
-    jupytext_version: '1.4.1'
 kernelspec:
   display_name: Python 3
   language: python
-  name: ogzaf-dev
+  name: python3
 ---
 
 (Chap_LfEarn)=
@@ -41,5 +40,7 @@ Exogenous life cycle income ability paths $\log(e_{j,s})$ with $S=80$ and $J=7$
 ```
 
 {numref}`Figure %s <FigLogAbil>` shows a calibration for $J=7$ deterministic lifetime ability paths $e_{j,s}$ corresponding to labor income percentiles $\boldsymbol{\lambda}=[0.25, 0.25, 0.20, 0.10, 0.10, 0.09, 0.01]$. Because there are few individuals above age 80 in the data, {cite}`DeBackerEtAl:2017` extrapolate these estimates for model ages 80-100 using an arctan function.
+
+## Footnotes
 
 [^PS_note]: These data are available from the website of Emmanuel Saez: [https://eml.berkeley.edu/~saez/](https://eml.berkeley.edu/~saez/).  We use numbers from Table0, Panel B, "Income excluding realized capital gains."

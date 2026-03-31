@@ -53,7 +53,7 @@ We discuss the approach to estimating fertility rates $f_{s,t}$, mortality rates
 (SecDemogFert)=
 ## Fertility rates
 
-   Our data for South Africa fertility rates by age come from United Nations fertility rate data for a country for some range of years (at least one year) and by age. The country_id=710 is for South Africa. These data come from the United Nations Data Portal API for UN population data (see https://population.un.org/dataportal/about/dataapi). The UN variable code for Population by 1-year age groups and sex is "47" and that for Fertility rates by age of mother (1-year) is "68".
+   Our data for South Africa fertility rates by age come from United Nations fertility rate data for a country for some range of years (at least one year) and by age. The `country_id=710` is for South Africa. These data come from the United Nations Data Portal API for UN population data (see https://population.un.org/dataportal/about/dataapi). The UN variable code for Population by 1-year age groups and sex is "47" and that for Fertility rates by age of mother (1-year) is "68".
 
   {numref}`Figure %s <FigFertRatesZAF>` was created using the [`ogcore.demographics.get_fert()`](https://github.com/PSLmodels/OG-Core/blob/master/ogcore/demographics.py#L146) function, which downloaded the data from the United National Data Portal API and plotted it in Python.[^un_data_portal]
 
@@ -349,6 +349,7 @@ We discuss the approach to estimating fertility rates $f_{s,t}$, mortality rates
   Time path of the population growth rate $\tilde{g}_{n,t}$
   ```
 
+## Footnotes
 
 [^calibage_note]: Theoretically, the model works without loss of generality for $S\geq 3$. However, because we are calibrating the ages outside of the economy to be one-fourth of $S$ (e.g., ages 21 to 100 in the economy, and ages 1 to 20 outside of the economy), it is convenient for $S$ to be at least 4.
 [^houseprob_note]: The parameter $\rho_s$ is the probability that a household of age $s$ dies before age $s+1$.

@@ -14,4 +14,4 @@ ogzaf.utils
   :members: init_poolmanager
 
 .. automodule:: ogzaf.utils
-  :members: get_legacy_session
+  :members: get_legacy_session, is_connected

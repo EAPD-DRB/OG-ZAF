@@ -1,12 +1,4 @@
 Traceback (most recent call last):
-  File "/home/runner/miniconda3/envs/ogzaf-dev/lib/python3.13/site-packages/jupyter_core/utils/__init__.py", line 154, in wrapped
-    asyncio.get_running_loop()
-    ~~~~~~~~~~~~~~~~~~~~~~~~^^
-RuntimeError: no running event loop
-
-During handling of the above exception, another exception occurred:
-
-Traceback (most recent call last):
   File "/home/runner/miniconda3/envs/ogzaf-dev/lib/python3.13/site-packages/jupyter_cache/executors/utils.py", line 58, in single_nb_execution
     executenb(
     ~~~~~~~~~^
@@ -17,10 +9,10 @@ Traceback (most recent call last):
         ^^^^^^^^^
     )
     ^
-  File "/home/runner/miniconda3/envs/ogzaf-dev/lib/python3.13/site-packages/nbclient/client.py", line 1319, in execute
+  File "/home/runner/miniconda3/envs/ogzaf-dev/lib/python3.13/site-packages/nbclient/client.py", line 1323, in execute
     return NotebookClient(nb=nb, resources=resources, km=km, **kwargs).execute()
            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
-  File "/home/runner/miniconda3/envs/ogzaf-dev/lib/python3.13/site-packages/jupyter_core/utils/__init__.py", line 158, in wrapped
+  File "/home/runner/miniconda3/envs/ogzaf-dev/lib/python3.13/site-packages/jupyter_core/utils/__init__.py", line 165, in wrapped
     return loop.run_until_complete(inner)
            ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
   File "/home/runner/miniconda3/envs/ogzaf-dev/lib/python3.13/asyncio/base_events.py", line 725, in run_until_complete
@@ -65,21 +57,10 @@ reform_tpi = safe_read_pickle(
 [31mFileNotFoundError[39m                         Traceback (most recent call last)
 [36mCell[39m[36m [39m[32mIn[3][39m[32m, line 2[39m
 [32m      1[39m [38;5;66;03m# read in output from health ins simulation[39;00m
-[32m----> [39m[32m2[39m base_params = [43msafe_read_pickle[49m[43m([49m
-[32m      3[39m [43m    [49m[43mos[49m[43m.[49m[43mpath[49m[43m.[49m[43mjoin[49m[43m([49m
-[32m      4[39m [43m        [49m[43msim_path[49m[43m,[49m[43m [49m[33;43m"[39;49m[33;43mOUTPUT_BASELINE[39;49m[33;43m"[39;49m[43m,[49m[43m [49m[33;43m"[39;49m[33;43mmodel_params.pkl[39;49m[33;43m"[39;49m
-[32m      5[39m [43m        [49m[43m)[49m
-[32m      6[39m [43m    [49m[43m)[49m
-[32m      7[39m base_tpi = safe_read_pickle(
-[32m      8[39m     os.path.join(
-[32m      9[39m         sim_path, [33m"[39m[33mOUTPUT_BASELINE[39m[33m"[39m, [33m"[39m[33mTPI[39m[33m"[39m, [33m"[39m[33mTPI_vars.pkl[39m[33m"[39m
-[32m     10[39m         )
-[32m     11[39m     )
-[32m     12[39m reform_params = safe_read_pickle(
-[32m     13[39m     os.path.join(
-[32m     14[39m         sim_path, [33m"[39m[33mOUTPUT_REFORM[39m[33m"[39m, [33m"[39m[33mmodel_params.pkl[39m[33m"[39m
-[32m     15[39m         )
-[32m     16[39m     )
+[32m----> [39m[32m2[39m base_params = safe_read_pickle(
+[32m      3[39m     os.path.join(
+[32m      4[39m         sim_path, [33m"OUTPUT_BASELINE"[39m, [33m"model_params.pkl"[39m
+[32m      5[39m         )
 
 [36mFile [39m[32m~/miniconda3/envs/ogzaf-dev/lib/python3.13/site-packages/ogcore/utils.py:372[39m, in [36msafe_read_pickle[39m[34m(file_path)[39m
 [32m    361[39m [38;5;28;01mdef[39;00m[38;5;250m [39m[34msafe_read_pickle[39m(file_path):
