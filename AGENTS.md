@@ -1,6 +1,6 @@
 ## Project: OG-ZAF
 
-OG-ZAF is a South Africa country calibration of the OG-Core overlapping-generations model.
+OG-ZAF is a South Africa country calibration of the OG-Core overlapping-generations model of demographics and fiscal policy.
 
 ## Environment
 
