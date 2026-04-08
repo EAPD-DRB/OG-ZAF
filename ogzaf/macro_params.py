@@ -10,6 +10,7 @@ import numpy as np
 import requests
 import datetime
 from io import StringIO
+from pathlib import Path
 
 
 def _fetch_wb_data(indicators, country_iso, start_year, end_year, source):
@@ -88,11 +89,131 @@ def _fetch_wb_data(indicators, country_iso, start_year, end_year, source):
     return data
 
 
+def _get_imf_macro_params(
+    country_iso,
+    target_year,
+    data_path=None,
+):
+    """
+    Fetch IMF GFS data and compute alpha_T and alpha_G.
+
+    Args:
+        country_iso (str): ISO alpha-3 country code
+        target_year (int): preferred calibration year
+        data_path (str | Path | None): optional path to save IMF CSV data
+
+    Returns:
+        dict: IMF-derived macro parameters
+    """
+    required_indicators = {"G2_T", "G24_T", "G27_T", "G271_T"}
+    data_path = Path(data_path) if data_path is not None else None
+    response = requests.get(
+        (
+            "https://api.imf.org/external/sdmx/3.0/data/dataflow/"
+            f"IMF.STA/GFS_SOO/12.0.0/"
+            f"{country_iso}.S1311.G2M.*.POGDP_PT.A"
+        ),
+        timeout=30,
+    )
+    response.raise_for_status()
+    try:
+        payload = response.json()
+        data = payload["data"]
+        structure = data["structures"][0]
+        data_set = data["dataSets"][0]
+        series_dimensions = structure["dimensions"]["series"]
+        observation_years = [
+            value.get("id", value.get("value"))
+            for value in structure["dimensions"]["observation"][0]["values"]
+        ]
+    except (ValueError, KeyError, IndexError, TypeError) as exc:
+        raise ValueError(
+            "Empty or malformed IMF response for GFS_SOO"
+        ) from exc
+
+    records = []
+    for series_key, series in data_set["series"].items():
+        dimension_indexes = [int(idx) for idx in series_key.split(":")]
+        labels = {
+            dim["id"]: dim["values"][idx]["id"]
+            for dim, idx in zip(series_dimensions, dimension_indexes)
+        }
+        indicator = labels.get("INDICATOR")
+        if indicator not in required_indicators:
+            continue
+        for observation_key, observation in series.get(
+            "observations", {}
+        ).items():
+            value = observation[0]
+            if value is None:
+                continue
+            records.append(
+                {
+                    "year": observation_years[int(observation_key)],
+                    "indicator": indicator,
+                    "value": float(value),
+                    "country_iso": country_iso,
+                    "sector": "S1311",
+                    "dataset": "IMF.STA:GFS_SOO(12.0.0)",
+                }
+            )
+
+    imf_data = pd.DataFrame(records)
+    if imf_data.empty:
+        raise ValueError("Empty or malformed IMF response for GFS_SOO")
+
+    if data_path is not None:
+        data_path.parent.mkdir(parents=True, exist_ok=True)
+        imf_data.sort_values(["indicator", "year"]).to_csv(
+            data_path, index=False
+        )
+        print(f"IMF data saved to {data_path}")
+
+    imf_data["year"] = pd.to_numeric(imf_data["year"], errors="coerce")
+    imf_data["value"] = pd.to_numeric(imf_data["value"], errors="coerce")
+    imf_data = imf_data.dropna(subset=["year", "value"])
+
+    available = (
+        imf_data.pivot_table(
+            index="year", columns="indicator", values="value", aggfunc="first"
+        )
+        .sort_index()
+        .dropna(subset=sorted(required_indicators))
+    )
+    available = available.loc[available.index <= int(target_year)]
+
+    if available.empty:
+        raise ValueError(
+            f"No complete IMF data available for {country_iso} up to {target_year}"
+        )
+
+    selected_year = (
+        int(target_year)
+        if int(target_year) in available.index
+        else int(available.index.max())
+    )
+    if selected_year != int(target_year):
+        print(
+            f"Warning: No IMF data for {target_year}. "
+            f"Using last available year: {selected_year}"
+        )
+
+    values = available.loc[selected_year]
+    return {
+        "alpha_T": [(values["G27_T"] - values["G271_T"]) / 100],
+        "alpha_G": [
+            (values["G2_T"] - values["G24_T"] - values["G27_T"]) / 100
+        ],
+    }
+
+
 def get_macro_params(
     data_start_date=datetime.datetime(1947, 1, 1),
     data_end_date=datetime.datetime(2024, 12, 31),
     country_iso="ZAF",
     update_from_api=False,
+    imf_data_year=None,
+    imf_data_path=None,
 ):
     """
     Compute values of parameters that are derived from macro data
@@ -101,6 +222,9 @@ def get_macro_params(
         data_start_date (datetime): start date for data
         data_end_date (datetime): end date for data
         country_iso (str): ISO code for country
+        imf_data_year (int | None): IMF target year override. Defaults to
+            data_end_date.year when None.
+        imf_data_path (str | Path | None): optional path to save IMF CSV data
 
     Returns:
         macro_parameters (dict): dictionary of parameter values
@@ -304,17 +428,26 @@ def get_macro_params(
     """
 
     if update_from_api:
-        import statsmodels.api as sm
-
-        # alpha_T, non-social security benefits as a fraction of GDP
-        # source: https://data.imf.org/?sk=78d0bcc1-7a8f-44eb-8a2c-d4e472b8e64b&hide_uv=1
-        # alpha_T = Employment-related social benefits expense - Social security benefits expense
-        macro_parameters["alpha_T"] = [0.36 - 0.0]  # 2022 = 0.36
-
-        # alpha_G, gov't consumption expenditures as a fraction of GDP
-        # source: https://data.imf.org/?sk=23ca1c1d-e6a5-4f18-bc2e-7e215837f971&hide_uv=1
-        # alpha_G = Expense	- Interest expense - Social benefits expense
-        macro_parameters["alpha_G"] = [0.324 - 0.047 - 0.036]  # 2022 = 0.241
+        try:
+            imf_year = (
+                data_end_date.year if imf_data_year is None else imf_data_year
+            )
+            macro_parameters.update(
+                _get_imf_macro_params(
+                    country_iso,
+                    imf_year,
+                    data_path=imf_data_path,
+                )
+            )
+            print(
+                f"alpha_T updated from IMF data: {macro_parameters['alpha_T']}"
+            )
+            print(
+                f"alpha_G updated from IMF data: {macro_parameters['alpha_G']}"
+            )
+        except Exception:
+            print("Failed to retrieve data from IMF")
+            print("Will not update alpha_T, alpha_G")
 
         """"
         Esimate the discount on sovereign yields relative to private debt
@@ -328,29 +461,31 @@ def get_macro_params(
         table 8 (and figure 3). 2) Estimate the OLS using sovereign yields
         as the dependent variable
         """
+        try:
+            import statsmodels.api as sm
 
-        # # estimate r_gov_shift and r_gov_scale
-        sov_y = np.arange(20, 120) / 10
-        corp_yhat = 8.199 - (2.975 * sov_y) + (0.478 * sov_y**2)
-        corp_yhat = sm.add_constant(corp_yhat)
-        mod = sm.OLS(
-            sov_y,
-            corp_yhat,
-        )
-        res = mod.fit()
-        # First term is the constant and needs to be divided by 100 to have
-        # the correct unit. Second term is the coefficient
-        macro_parameters["r_gov_shift"] = [-res.params[0] / 100]
-        macro_parameters["r_gov_scale"] = [res.params[1]]
-        # Report new values
-        print(f"alpha_T updated from IMF data: {macro_parameters['alpha_T']}")
-        print(f"alpha_G updated from IMF data: {macro_parameters['alpha_G']}")
-        print(
-            f"r_gov_shift updated from IMF data: {macro_parameters['r_gov_shift']}"
-        )
-        print(
-            f"r_gov_scale updated from IMF data: {macro_parameters['r_gov_scale']}"
-        )
+            # # estimate r_gov_shift and r_gov_scale
+            sov_y = np.arange(20, 120) / 10
+            corp_yhat = 8.199 - (2.975 * sov_y) + (0.478 * sov_y**2)
+            corp_yhat = sm.add_constant(corp_yhat)
+            mod = sm.OLS(
+                sov_y,
+                corp_yhat,
+            )
+            res = mod.fit()
+            # First term is the constant and needs to be divided by 100 to have
+            # the correct unit. Second term is the coefficient
+            macro_parameters["r_gov_shift"] = [-res.params[0] / 100]
+            macro_parameters["r_gov_scale"] = [res.params[1]]
+            print(
+                f"r_gov_shift updated from IMF data: {macro_parameters['r_gov_shift']}"
+            )
+            print(
+                f"r_gov_scale updated from IMF data: {macro_parameters['r_gov_scale']}"
+            )
+        except Exception:
+            print("Failed to compute r_gov_shift, r_gov_scale")
+            print("Will not update r_gov_shift, r_gov_scale")
     else:
         print("Not updating alpha_T, alpha_G, r_gov_shift, r_gov_scale")
 
