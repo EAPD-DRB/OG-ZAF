@@ -13,11 +13,13 @@ def main():
     CUR_DIR = os.path.dirname(os.path.realpath(__file__))
 
     # Set up baseline parameterization
-    p = Specifications(
-        baseline=True
-    )
+    p = Specifications(baseline=True)
     # Update parameters for baseline from default json file
-    content = files("ogzaf").joinpath("ogzaf_default_parameters.json").read_text(encoding="utf-8")
+    content = (
+        files("ogzaf")
+        .joinpath("ogzaf_default_parameters.json")
+        .read_text(encoding="utf-8")
+    )
     defaults = json.loads(content)
     p.update_specifications(defaults)
     c = Calibration(
