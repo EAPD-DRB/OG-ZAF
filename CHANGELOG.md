@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.0] - 2026-04-14 22:00:00
+
+### Added
+
+- Adds `use_api` flag to `Calibration` object to gate API use [PR #106](https://github.com/EAPD-DRB/OG-ZAF/pull/106)
+- Fixes broken IMF data link in `macro_params.py` [PR #111](https://github.com/EAPD-DRB/OG-ZAF/pull/111)
+- Fixed typos in tags in the `README.md` and documentation `intro.md` and other documentation updates [PR #107](https://github.com/EAPD-DRB/OG-ZAF/pull/107), [PR #108](https://github.com/EAPD-DRB/OG-ZAF/pull/108), [PR #109](https://github.com/EAPD-DRB/OG-ZAF/pull/109)
+
 ## [0.0.11] - 2026-03-31 22:00:00
 
 ### Added
@@ -105,6 +113,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - This version is a pre-release alpha. The example run script OG-ZAF/examples/run_og_zaf.py runs, but the model is not currently calibrated to represent the South African economy and population.
 
 
+[0.1.0]: https://github.com/EAPD-DRB/OG-ZAF/compare/v0.0.11...v0.1.0
 [0.0.11]: https://github.com/EAPD-DRB/OG-ZAF/compare/v0.0.10...v0.0.11
 [0.0.10]: https://github.com/EAPD-DRB/OG-ZAF/compare/v0.0.9...v0.0.10
 [0.0.9]: https://github.com/EAPD-DRB/OG-ZAF/compare/v0.0.8...v0.0.9
