@@ -6,7 +6,7 @@ This script creates tables and figures from the OG-ZAF documentation.
 import os
 import numpy as np
 import matplotlib.pyplot as plt
-import importlib
+from importlib.resources import files
 import json
 from ogcore.parameters import Specifications
 from ogcore import parameter_plots as pp
@@ -29,10 +29,13 @@ def main():
     Load specifications object with default parameters
     """
     p = Specifications()
-    with importlib.resources.open_text(
-        "ogzaf", "ogzaf_default_parameters.json"
-    ) as file:
-        defaults = json.load(file)
+    # Update parameters for baseline from default json file
+    content = (
+        files("ogzaf")
+        .joinpath("ogzaf_default_parameters.json")
+        .read_text(encoding="utf-8")
+    )
+    defaults = json.loads(content)
     p.update_specifications(defaults)
     YEAR_TO_PLOT = int(p.start_year)
     """
