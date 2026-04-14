@@ -52,14 +52,100 @@ def _wb_payload(observations):
     ]
 
 
-def _mock_requests_get(monkeypatch, wb_payloads, ilo_text=None):
-    def fake_get(url, params=None, headers=None):
+def _imf_payload(indicator_year_values):
+    years = sorted(
+        {
+            int(year)
+            for observations in indicator_year_values.values()
+            for year in observations.keys()
+        }
+    )
+    indicators = list(indicator_year_values.keys())
+    return {
+        "meta": {},
+        "data": {
+            "dataSets": [
+                {
+                    "structure": 0,
+                    "action": "Replace",
+                    "series": {
+                        f"0:0:0:{indicator_idx}:0:0": {
+                            "attributes": [0, None, None],
+                            "observations": {
+                                str(years.index(int(year))): [str(value)]
+                                for year, value in observations.items()
+                            },
+                        }
+                        for indicator_idx, observations in enumerate(
+                            indicator_year_values.values()
+                        )
+                    },
+                }
+            ],
+            "structures": [
+                {
+                    "dimensions": {
+                        "series": [
+                            {"id": "COUNTRY", "values": [{"id": "ZAF"}]},
+                            {"id": "SECTOR", "values": [{"id": "S1311"}]},
+                            {"id": "GFS_GRP", "values": [{"id": "G2M"}]},
+                            {
+                                "id": "INDICATOR",
+                                "values": [
+                                    {"id": indicator}
+                                    for indicator in indicators
+                                ],
+                            },
+                            {
+                                "id": "TYPE_OF_TRANSFORMATION",
+                                "values": [{"id": "POGDP_PT"}],
+                            },
+                            {"id": "FREQUENCY", "values": [{"id": "A"}]},
+                        ],
+                        "observation": [
+                            {
+                                "id": "TIME_PERIOD",
+                                "values": [
+                                    {"value": str(year)} for year in years
+                                ],
+                            }
+                        ],
+                    },
+                    "measures": {
+                        "observation": [{"id": "OBS_VALUE", "roles": []}]
+                    },
+                    "attributes": {
+                        "dimensionGroup": [],
+                        "series": [],
+                        "observation": [],
+                    },
+                    "annotations": [],
+                }
+            ],
+        },
+    }
+
+
+def _mock_requests_get(monkeypatch, wb_payloads, ilo_text=None, imf_json=None):
+    def fake_get(url, params=None, headers=None, timeout=None):
         if "worldbank.org" in url:
             indicator_code = url.rstrip("/").split("/")[-1]
             return MockResponse(json_data=wb_payloads[indicator_code])
         if "rplumber.ilo.org" in url:
             return MockResponse(
                 text=ilo_text or "time,obs_value\n2024,40\n2023,39\n"
+            )
+        if "api.imf.org" in url:
+            return MockResponse(
+                json_data=imf_json
+                or _imf_payload(
+                    {
+                        "G2_T": {2023: 31.8, 2024: 32.4},
+                        "G24_T": {2023: 4.1, 2024: 4.7},
+                        "G27_T": {2023: 3.9, 2024: 3.6},
+                        "G271_T": {2023: 0.0, 2024: 0.0},
+                    }
+                )
             )
         raise AssertionError(f"Unexpected URL requested in test: {url}")
 
@@ -210,6 +296,8 @@ def test_get_macro_params_update_from_api_true(monkeypatch):
     assert test_dict["zeta_D"] == [0.4]
     assert test_dict["g_y_annual"] == pytest.approx(0.25)
     assert test_dict["gamma"] == [0.6]
+    assert test_dict["alpha_T"] == [pytest.approx(0.036)]
+    assert test_dict["alpha_G"] == [pytest.approx(0.241)]
     assert test_dict["r_gov_shift"] == [-0.01]
     assert test_dict["r_gov_scale"] == [0.5]
 
@@ -249,3 +337,70 @@ def test_get_macro_params_uses_last_valid_quarter(monkeypatch):
     assert test_dict["initial_debt_ratio"] == 0.5
     assert test_dict["initial_foreign_debt_ratio"] == 0.4
     assert test_dict["zeta_D"] == [0.4]
+
+
+def test_get_imf_macro_params_overwrites_saved_file(monkeypatch, tmp_path):
+    _mock_requests_get(
+        monkeypatch,
+        {},
+        imf_json=_imf_payload(
+            {
+                "G2_T": {2023: 31.8, 2024: 32.4},
+                "G24_T": {2023: 4.1, 2024: 4.7},
+                "G27_T": {2023: 3.9, 2024: 3.6},
+                "G271_T": {2023: 0.0, 2024: 0.0},
+            }
+        ),
+    )
+
+    data_file = tmp_path / "imf_gfs_soo_zaf_s1311_g2m_pogdp_pt_a.csv"
+    result = macro_params._get_imf_macro_params(
+        "ZAF", 2024, data_path=data_file
+    )
+
+    assert result["alpha_T"] == [pytest.approx(0.036)]
+    assert result["alpha_G"] == [pytest.approx(0.241)]
+    assert data_file.exists()
+
+    _mock_requests_get(
+        monkeypatch,
+        {},
+        imf_json=_imf_payload(
+            {
+                "G2_T": {2023: 31.8, 2024: 32.8},
+                "G24_T": {2023: 4.1, 2024: 4.8},
+                "G27_T": {2023: 3.9, 2024: 3.7},
+                "G271_T": {2023: 0.0, 2024: 0.1},
+            }
+        ),
+    )
+
+    refreshed = macro_params._get_imf_macro_params(
+        "ZAF", 2024, data_path=data_file
+    )
+
+    assert refreshed != result
+    saved_data = macro_params.pd.read_csv(data_file)
+    saved_2024 = saved_data[saved_data["year"] == 2024].set_index("indicator")
+    assert saved_2024.loc["G27_T", "value"] == pytest.approx(3.7)
+    assert saved_2024.loc["G271_T", "value"] == pytest.approx(0.1)
+
+
+def test_get_imf_macro_params_falls_back_to_last_available_year(monkeypatch):
+    _mock_requests_get(
+        monkeypatch,
+        {},
+        imf_json=_imf_payload(
+            {
+                "G2_T": {2023: 31.8},
+                "G24_T": {2023: 4.1},
+                "G27_T": {2023: 3.9},
+                "G271_T": {2023: 0.0},
+            }
+        ),
+    )
+
+    result = macro_params._get_imf_macro_params("ZAF", 2024)
+
+    assert result["alpha_T"] == [pytest.approx(0.039)]
+    assert result["alpha_G"] == [pytest.approx(0.238)]
