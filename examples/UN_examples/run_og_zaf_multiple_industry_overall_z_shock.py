@@ -61,7 +61,7 @@ def main():
     # Update parameters from calibrate.py Calibration class
     p.M = 4
     p.I = 5
-    c = Calibration(p)
+    c = Calibration(p, update_from_api=True)
     updated_params = c.get_dict()
     p.update_specifications(updated_params)
     updated_params_tax = {
