@@ -359,9 +359,9 @@
 <span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ogzaf</span><span class="w"> </span><span class="kn">import</span> <span class="n">macro_params</span><span class="p">,</span> <span class="n">income</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">ogzaf</span><span class="w"> </span><span class="kn">import</span> <span class="n">input_output</span> <span class="k">as</span> <span class="n">io</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">ogcore</span><span class="w"> </span><span class="kn">import</span> <span class="n">demographics</span>
 
 
 <div class="viewcode-block" id="Calibration">
@@ -397,75 +397,101 @@
             <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">output_path</span><span class="p">):</span>
                 <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_path</span><span class="p">)</span>
 
+        <span class="c1"># Initialize attributes — populated only when update succeeds</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">macro_params</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">demographic_params</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">e</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alpha_c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">])</span> <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">I</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">io_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">1.0</span><span class="p">]])</span> <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">M</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">update_from_api</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="c1"># --- Online path: try each source independently ---</span>
+
         <span class="c1"># Macro estimation</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">macro_params</span> <span class="o">=</span> <span class="n">macro_params</span><span class="o">.</span><span class="n">get_macro_params</span><span class="p">(</span>
-            <span class="n">macro_data_start_year</span><span class="p">,</span>
-            <span class="n">macro_data_end_year</span><span class="p">,</span>
-            <span class="n">update_from_api</span><span class="o">=</span><span class="n">update_from_api</span><span class="p">,</span>
-        <span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">macro_params</span> <span class="o">=</span> <span class="n">macro_params</span><span class="o">.</span><span class="n">get_macro_params</span><span class="p">(</span>
+                <span class="n">macro_data_start_year</span><span class="p">,</span>
+                <span class="n">macro_data_end_year</span><span class="p">,</span>
+                <span class="n">update_from_api</span><span class="o">=</span><span class="n">update_from_api</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Macro params update failed: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 
-        <span class="c1"># io matrix and alpha_c</span>
-        <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">I</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># no need if just one consumption good</span>
-            <span class="n">alpha_c_dict</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">get_alpha_c</span><span class="p">()</span>
-            <span class="c1"># check that model dimensions are consistent with alpha_c</span>
-            <span class="k">assert</span> <span class="n">p</span><span class="o">.</span><span class="n">I</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">alpha_c_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">alpha_c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">alpha_c_dict</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">alpha_c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">])</span>
-        <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">M</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># no need if just one production good</span>
-            <span class="n">io_df</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">get_io_matrix</span><span class="p">()</span>
-            <span class="c1"># check that model dimensions are consistent with io_matrix</span>
-            <span class="k">assert</span> <span class="n">p</span><span class="o">.</span><span class="n">M</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">io_df</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">io_matrix</span> <span class="o">=</span> <span class="n">io_df</span><span class="o">.</span><span class="n">values</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">io_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">1.0</span><span class="p">]])</span>
+        <span class="c1"># io matrix and alpha_c (multi-sector only)</span>
+        <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">I</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">alpha_c_dict</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">get_alpha_c</span><span class="p">()</span>
+                <span class="k">assert</span> <span class="n">p</span><span class="o">.</span><span class="n">I</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">alpha_c_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">alpha_c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">alpha_c_dict</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;alpha_c update failed: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">M</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">io_df</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">get_io_matrix</span><span class="p">()</span>
+                <span class="k">assert</span> <span class="n">p</span><span class="o">.</span><span class="n">M</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">io_df</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">io_matrix</span> <span class="o">=</span> <span class="n">io_df</span><span class="o">.</span><span class="n">values</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;io_matrix update failed: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 
-        <span class="c1"># demographics</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">demographic_params</span> <span class="o">=</span> <span class="n">demographics</span><span class="o">.</span><span class="n">get_pop_objs</span><span class="p">(</span>
-            <span class="n">p</span><span class="o">.</span><span class="n">E</span><span class="p">,</span>
-            <span class="n">p</span><span class="o">.</span><span class="n">S</span><span class="p">,</span>
-            <span class="n">p</span><span class="o">.</span><span class="n">T</span><span class="p">,</span>
-            <span class="mi">0</span><span class="p">,</span>
-            <span class="mi">99</span><span class="p">,</span>
-            <span class="n">country_id</span><span class="o">=</span><span class="s2">&quot;710&quot;</span><span class="p">,</span>
-            <span class="n">initial_data_year</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">start_year</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span>
-            <span class="n">final_data_year</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">start_year</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
-            <span class="n">GraphDiag</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-            <span class="n">download_path</span><span class="o">=</span><span class="n">demographic_data_path</span><span class="p">,</span>
-        <span class="p">)</span>
+        <span class="c1"># Demographics + income (atomic — e depends on demographic output)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="kn">from</span><span class="w"> </span><span class="nn">ogcore</span><span class="w"> </span><span class="kn">import</span> <span class="n">demographics</span>
 
-        <span class="c1"># demographics for 80 period lives (needed for getting e below)</span>
-        <span class="n">demog80</span> <span class="o">=</span> <span class="n">demographics</span><span class="o">.</span><span class="n">get_pop_objs</span><span class="p">(</span>
-            <span class="mi">20</span><span class="p">,</span>
-            <span class="mi">80</span><span class="p">,</span>
-            <span class="n">p</span><span class="o">.</span><span class="n">T</span><span class="p">,</span>
-            <span class="mi">0</span><span class="p">,</span>
-            <span class="mi">99</span><span class="p">,</span>
-            <span class="n">country_id</span><span class="o">=</span><span class="s2">&quot;710&quot;</span><span class="p">,</span>
-            <span class="n">initial_data_year</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">start_year</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span>
-            <span class="n">final_data_year</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">start_year</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
-            <span class="n">GraphDiag</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">demographic_params</span> <span class="o">=</span> <span class="n">demographics</span><span class="o">.</span><span class="n">get_pop_objs</span><span class="p">(</span>
+                <span class="n">p</span><span class="o">.</span><span class="n">E</span><span class="p">,</span>
+                <span class="n">p</span><span class="o">.</span><span class="n">S</span><span class="p">,</span>
+                <span class="n">p</span><span class="o">.</span><span class="n">T</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">99</span><span class="p">,</span>
+                <span class="n">country_id</span><span class="o">=</span><span class="s2">&quot;710&quot;</span><span class="p">,</span>
+                <span class="n">initial_data_year</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">start_year</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="n">final_data_year</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">start_year</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="n">GraphDiag</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">download_path</span><span class="o">=</span><span class="n">demographic_data_path</span><span class="p">,</span>
+            <span class="p">)</span>
 
-        <span class="c1"># earnings profiles</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">e</span> <span class="o">=</span> <span class="n">income</span><span class="o">.</span><span class="n">get_e_interp</span><span class="p">(</span>
-            <span class="n">p</span><span class="o">.</span><span class="n">S</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">demographic_params</span><span class="p">[</span><span class="s2">&quot;omega_SS&quot;</span><span class="p">],</span>
-            <span class="n">demog80</span><span class="p">[</span><span class="s2">&quot;omega_SS&quot;</span><span class="p">],</span>
-            <span class="n">p</span><span class="o">.</span><span class="n">lambdas</span><span class="p">,</span>
-            <span class="n">plot_path</span><span class="o">=</span><span class="n">output_path</span><span class="p">,</span>
-        <span class="p">)</span>
+            <span class="c1"># demographics for 80 period lives (needed for getting e below)</span>
+            <span class="n">demog80</span> <span class="o">=</span> <span class="n">demographics</span><span class="o">.</span><span class="n">get_pop_objs</span><span class="p">(</span>
+                <span class="mi">20</span><span class="p">,</span>
+                <span class="mi">80</span><span class="p">,</span>
+                <span class="n">p</span><span class="o">.</span><span class="n">T</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">99</span><span class="p">,</span>
+                <span class="n">country_id</span><span class="o">=</span><span class="s2">&quot;710&quot;</span><span class="p">,</span>
+                <span class="n">initial_data_year</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">start_year</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="n">final_data_year</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">start_year</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="n">GraphDiag</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="p">)</span>
+
+            <span class="c1"># earnings profiles</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">e</span> <span class="o">=</span> <span class="n">income</span><span class="o">.</span><span class="n">get_e_interp</span><span class="p">(</span>
+                <span class="n">p</span><span class="o">.</span><span class="n">S</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">demographic_params</span><span class="p">[</span><span class="s2">&quot;omega_SS&quot;</span><span class="p">],</span>
+                <span class="n">demog80</span><span class="p">[</span><span class="s2">&quot;omega_SS&quot;</span><span class="p">],</span>
+                <span class="n">p</span><span class="o">.</span><span class="n">lambdas</span><span class="p">,</span>
+                <span class="n">plot_path</span><span class="o">=</span><span class="n">output_path</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Demographics/income update failed: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">demographic_params</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">e</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="c1"># method to return all newly calibrated parameters in a dictionary</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="nb">dict</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="nb">dict</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">macro_params</span><span class="p">)</span>
-        <span class="nb">dict</span><span class="p">[</span><span class="s2">&quot;e&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">e</span>
-        <span class="nb">dict</span><span class="p">[</span><span class="s2">&quot;alpha_c&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha_c</span>
-        <span class="nb">dict</span><span class="p">[</span><span class="s2">&quot;io_matrix&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">io_matrix</span>
-        <span class="nb">dict</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">demographic_params</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="nb">dict</span></div>
+        <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">d</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">macro_params</span><span class="p">)</span>
+        <span class="n">d</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">demographic_params</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">e</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">d</span><span class="p">[</span><span class="s2">&quot;e&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">e</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha_c</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">d</span><span class="p">[</span><span class="s2">&quot;alpha_c&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha_c</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">io_matrix</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">d</span><span class="p">[</span><span class="s2">&quot;io_matrix&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">io_matrix</span>
+        <span class="k">return</span> <span class="n">d</span></div>
 
 </pre></div>
 
