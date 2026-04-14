@@ -368,6 +368,7 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">io</span><span class="w"> </span><span class="kn">import</span> <span class="n">StringIO</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_wb_data</span><span class="p">(</span><span class="n">indicators</span><span class="p">,</span> <span class="n">country_iso</span><span class="p">,</span> <span class="n">start_year</span><span class="p">,</span> <span class="n">end_year</span><span class="p">,</span> <span class="n">source</span><span class="p">):</span>
@@ -446,6 +447,124 @@
     <span class="k">return</span> <span class="n">data</span>
 
 
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_imf_macro_params</span><span class="p">(</span>
+    <span class="n">country_iso</span><span class="p">,</span>
+    <span class="n">target_year</span><span class="p">,</span>
+    <span class="n">data_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Fetch IMF GFS data and compute alpha_T and alpha_G.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        country_iso (str): ISO alpha-3 country code</span>
+<span class="sd">        target_year (int): preferred calibration year</span>
+<span class="sd">        data_path (str | Path | None): optional path to save IMF CSV data</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: IMF-derived macro parameters</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">required_indicators</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;G2_T&quot;</span><span class="p">,</span> <span class="s2">&quot;G24_T&quot;</span><span class="p">,</span> <span class="s2">&quot;G27_T&quot;</span><span class="p">,</span> <span class="s2">&quot;G271_T&quot;</span><span class="p">}</span>
+    <span class="n">data_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">data_path</span><span class="p">)</span> <span class="k">if</span> <span class="n">data_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+        <span class="p">(</span>
+            <span class="s2">&quot;https://api.imf.org/external/sdmx/3.0/data/dataflow/&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;IMF.STA/GFS_SOO/12.0.0/&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">country_iso</span><span class="si">}</span><span class="s2">.S1311.G2M.*.POGDP_PT.A&quot;</span>
+        <span class="p">),</span>
+        <span class="n">timeout</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">response</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">payload</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]</span>
+        <span class="n">structure</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;structures&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">data_set</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;dataSets&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">series_dimensions</span> <span class="o">=</span> <span class="n">structure</span><span class="p">[</span><span class="s2">&quot;dimensions&quot;</span><span class="p">][</span><span class="s2">&quot;series&quot;</span><span class="p">]</span>
+        <span class="n">observation_years</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">value</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;value&quot;</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">structure</span><span class="p">[</span><span class="s2">&quot;dimensions&quot;</span><span class="p">][</span><span class="s2">&quot;observation&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;values&quot;</span><span class="p">]</span>
+        <span class="p">]</span>
+    <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">KeyError</span><span class="p">,</span> <span class="ne">IndexError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">)</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;Empty or malformed IMF response for GFS_SOO&quot;</span>
+        <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
+
+    <span class="n">records</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">series_key</span><span class="p">,</span> <span class="n">series</span> <span class="ow">in</span> <span class="n">data_set</span><span class="p">[</span><span class="s2">&quot;series&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">dimension_indexes</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span> <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">series_key</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)]</span>
+        <span class="n">labels</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">dim</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]:</span> <span class="n">dim</span><span class="p">[</span><span class="s2">&quot;values&quot;</span><span class="p">][</span><span class="n">idx</span><span class="p">][</span><span class="s2">&quot;id&quot;</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">dim</span><span class="p">,</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">series_dimensions</span><span class="p">,</span> <span class="n">dimension_indexes</span><span class="p">)</span>
+        <span class="p">}</span>
+        <span class="n">indicator</span> <span class="o">=</span> <span class="n">labels</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;INDICATOR&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">indicator</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">required_indicators</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="k">for</span> <span class="n">observation_key</span><span class="p">,</span> <span class="n">observation</span> <span class="ow">in</span> <span class="n">series</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="s2">&quot;observations&quot;</span><span class="p">,</span> <span class="p">{}</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">observation</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">records</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;year&quot;</span><span class="p">:</span> <span class="n">observation_years</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">observation_key</span><span class="p">)],</span>
+                    <span class="s2">&quot;indicator&quot;</span><span class="p">:</span> <span class="n">indicator</span><span class="p">,</span>
+                    <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">value</span><span class="p">),</span>
+                    <span class="s2">&quot;country_iso&quot;</span><span class="p">:</span> <span class="n">country_iso</span><span class="p">,</span>
+                    <span class="s2">&quot;sector&quot;</span><span class="p">:</span> <span class="s2">&quot;S1311&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;dataset&quot;</span><span class="p">:</span> <span class="s2">&quot;IMF.STA:GFS_SOO(12.0.0)&quot;</span><span class="p">,</span>
+                <span class="p">}</span>
+            <span class="p">)</span>
+
+    <span class="n">imf_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">records</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">imf_data</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Empty or malformed IMF response for GFS_SOO&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">data_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">data_path</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">imf_data</span><span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="s2">&quot;indicator&quot;</span><span class="p">,</span> <span class="s2">&quot;year&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span>
+            <span class="n">data_path</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span>
+        <span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;IMF data saved to </span><span class="si">{</span><span class="n">data_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">imf_data</span><span class="p">[</span><span class="s2">&quot;year&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span><span class="n">imf_data</span><span class="p">[</span><span class="s2">&quot;year&quot;</span><span class="p">],</span> <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;coerce&quot;</span><span class="p">)</span>
+    <span class="n">imf_data</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span><span class="n">imf_data</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">],</span> <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;coerce&quot;</span><span class="p">)</span>
+    <span class="n">imf_data</span> <span class="o">=</span> <span class="n">imf_data</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;year&quot;</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">])</span>
+
+    <span class="n">available</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">imf_data</span><span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span>
+            <span class="n">index</span><span class="o">=</span><span class="s2">&quot;year&quot;</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="s2">&quot;indicator&quot;</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">,</span> <span class="n">aggfunc</span><span class="o">=</span><span class="s2">&quot;first&quot;</span>
+        <span class="p">)</span>
+        <span class="o">.</span><span class="n">sort_index</span><span class="p">()</span>
+        <span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="nb">sorted</span><span class="p">(</span><span class="n">required_indicators</span><span class="p">))</span>
+    <span class="p">)</span>
+    <span class="n">available</span> <span class="o">=</span> <span class="n">available</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">available</span><span class="o">.</span><span class="n">index</span> <span class="o">&lt;=</span> <span class="nb">int</span><span class="p">(</span><span class="n">target_year</span><span class="p">)]</span>
+
+    <span class="k">if</span> <span class="n">available</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;No complete IMF data available for </span><span class="si">{</span><span class="n">country_iso</span><span class="si">}</span><span class="s2"> up to </span><span class="si">{</span><span class="n">target_year</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+
+    <span class="n">selected_year</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="nb">int</span><span class="p">(</span><span class="n">target_year</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">target_year</span><span class="p">)</span> <span class="ow">in</span> <span class="n">available</span><span class="o">.</span><span class="n">index</span>
+        <span class="k">else</span> <span class="nb">int</span><span class="p">(</span><span class="n">available</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="n">selected_year</span> <span class="o">!=</span> <span class="nb">int</span><span class="p">(</span><span class="n">target_year</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Warning: No IMF data for </span><span class="si">{</span><span class="n">target_year</span><span class="si">}</span><span class="s2">. &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;Using last available year: </span><span class="si">{</span><span class="n">selected_year</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+
+    <span class="n">values</span> <span class="o">=</span> <span class="n">available</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">selected_year</span><span class="p">]</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;alpha_T&quot;</span><span class="p">:</span> <span class="p">[(</span><span class="n">values</span><span class="p">[</span><span class="s2">&quot;G27_T&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">values</span><span class="p">[</span><span class="s2">&quot;G271_T&quot;</span><span class="p">])</span> <span class="o">/</span> <span class="mi">100</span><span class="p">],</span>
+        <span class="s2">&quot;alpha_G&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">(</span><span class="n">values</span><span class="p">[</span><span class="s2">&quot;G2_T&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">values</span><span class="p">[</span><span class="s2">&quot;G24_T&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">values</span><span class="p">[</span><span class="s2">&quot;G27_T&quot;</span><span class="p">])</span> <span class="o">/</span> <span class="mi">100</span>
+        <span class="p">],</span>
+    <span class="p">}</span>
+
+
 <div class="viewcode-block" id="get_macro_params">
 <a class="viewcode-back" href="../../content/api/macro_params.html#ogzaf.macro_params.get_macro_params">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_macro_params</span><span class="p">(</span>
@@ -453,6 +572,8 @@
     <span class="n">data_end_date</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2024</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">31</span><span class="p">),</span>
     <span class="n">country_iso</span><span class="o">=</span><span class="s2">&quot;ZAF&quot;</span><span class="p">,</span>
     <span class="n">update_from_api</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">imf_data_year</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">imf_data_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compute values of parameters that are derived from macro data</span>
@@ -461,6 +582,9 @@
 <span class="sd">        data_start_date (datetime): start date for data</span>
 <span class="sd">        data_end_date (datetime): end date for data</span>
 <span class="sd">        country_iso (str): ISO code for country</span>
+<span class="sd">        imf_data_year (int | None): IMF target year override. Defaults to</span>
+<span class="sd">            data_end_date.year when None.</span>
+<span class="sd">        imf_data_path (str | Path | None): optional path to save IMF CSV data</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        macro_parameters (dict): dictionary of parameter values</span>
@@ -664,17 +788,26 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">if</span> <span class="n">update_from_api</span><span class="p">:</span>
-        <span class="kn">import</span><span class="w"> </span><span class="nn">statsmodels.api</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sm</span>
-
-        <span class="c1"># alpha_T, non-social security benefits as a fraction of GDP</span>
-        <span class="c1"># source: https://data.imf.org/?sk=78d0bcc1-7a8f-44eb-8a2c-d4e472b8e64b&amp;hide_uv=1</span>
-        <span class="c1"># alpha_T = Employment-related social benefits expense - Social security benefits expense</span>
-        <span class="n">macro_parameters</span><span class="p">[</span><span class="s2">&quot;alpha_T&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.36</span> <span class="o">-</span> <span class="mf">0.0</span><span class="p">]</span>  <span class="c1"># 2022 = 0.36</span>
-
-        <span class="c1"># alpha_G, gov&#39;t consumption expenditures as a fraction of GDP</span>
-        <span class="c1"># source: https://data.imf.org/?sk=23ca1c1d-e6a5-4f18-bc2e-7e215837f971&amp;hide_uv=1</span>
-        <span class="c1"># alpha_G = Expense	- Interest expense - Social benefits expense</span>
-        <span class="n">macro_parameters</span><span class="p">[</span><span class="s2">&quot;alpha_G&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.324</span> <span class="o">-</span> <span class="mf">0.047</span> <span class="o">-</span> <span class="mf">0.036</span><span class="p">]</span>  <span class="c1"># 2022 = 0.241</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">imf_year</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">data_end_date</span><span class="o">.</span><span class="n">year</span> <span class="k">if</span> <span class="n">imf_data_year</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">imf_data_year</span>
+            <span class="p">)</span>
+            <span class="n">macro_parameters</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+                <span class="n">_get_imf_macro_params</span><span class="p">(</span>
+                    <span class="n">country_iso</span><span class="p">,</span>
+                    <span class="n">imf_year</span><span class="p">,</span>
+                    <span class="n">data_path</span><span class="o">=</span><span class="n">imf_data_path</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;alpha_T updated from IMF data: </span><span class="si">{</span><span class="n">macro_parameters</span><span class="p">[</span><span class="s1">&#39;alpha_T&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;alpha_G updated from IMF data: </span><span class="si">{</span><span class="n">macro_parameters</span><span class="p">[</span><span class="s1">&#39;alpha_G&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Failed to retrieve data from IMF&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Will not update alpha_T, alpha_G&quot;</span><span class="p">)</span>
 
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;&quot;</span>
 <span class="sd">        Esimate the discount on sovereign yields relative to private debt</span>
@@ -688,29 +821,31 @@
 <span class="sd">        table 8 (and figure 3). 2) Estimate the OLS using sovereign yields</span>
 <span class="sd">        as the dependent variable</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="kn">import</span><span class="w"> </span><span class="nn">statsmodels.api</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sm</span>
 
-        <span class="c1"># # estimate r_gov_shift and r_gov_scale</span>
-        <span class="n">sov_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">120</span><span class="p">)</span> <span class="o">/</span> <span class="mi">10</span>
-        <span class="n">corp_yhat</span> <span class="o">=</span> <span class="mf">8.199</span> <span class="o">-</span> <span class="p">(</span><span class="mf">2.975</span> <span class="o">*</span> <span class="n">sov_y</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="mf">0.478</span> <span class="o">*</span> <span class="n">sov_y</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
-        <span class="n">corp_yhat</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">add_constant</span><span class="p">(</span><span class="n">corp_yhat</span><span class="p">)</span>
-        <span class="n">mod</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">OLS</span><span class="p">(</span>
-            <span class="n">sov_y</span><span class="p">,</span>
-            <span class="n">corp_yhat</span><span class="p">,</span>
-        <span class="p">)</span>
-        <span class="n">res</span> <span class="o">=</span> <span class="n">mod</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
-        <span class="c1"># First term is the constant and needs to be divided by 100 to have</span>
-        <span class="c1"># the correct unit. Second term is the coefficient</span>
-        <span class="n">macro_parameters</span><span class="p">[</span><span class="s2">&quot;r_gov_shift&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="n">res</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mi">100</span><span class="p">]</span>
-        <span class="n">macro_parameters</span><span class="p">[</span><span class="s2">&quot;r_gov_scale&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">res</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
-        <span class="c1"># Report new values</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;alpha_T updated from IMF data: </span><span class="si">{</span><span class="n">macro_parameters</span><span class="p">[</span><span class="s1">&#39;alpha_T&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;alpha_G updated from IMF data: </span><span class="si">{</span><span class="n">macro_parameters</span><span class="p">[</span><span class="s1">&#39;alpha_G&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;r_gov_shift updated from IMF data: </span><span class="si">{</span><span class="n">macro_parameters</span><span class="p">[</span><span class="s1">&#39;r_gov_shift&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
-        <span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;r_gov_scale updated from IMF data: </span><span class="si">{</span><span class="n">macro_parameters</span><span class="p">[</span><span class="s1">&#39;r_gov_scale&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
-        <span class="p">)</span>
+            <span class="c1"># # estimate r_gov_shift and r_gov_scale</span>
+            <span class="n">sov_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">120</span><span class="p">)</span> <span class="o">/</span> <span class="mi">10</span>
+            <span class="n">corp_yhat</span> <span class="o">=</span> <span class="mf">8.199</span> <span class="o">-</span> <span class="p">(</span><span class="mf">2.975</span> <span class="o">*</span> <span class="n">sov_y</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="mf">0.478</span> <span class="o">*</span> <span class="n">sov_y</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+            <span class="n">corp_yhat</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">add_constant</span><span class="p">(</span><span class="n">corp_yhat</span><span class="p">)</span>
+            <span class="n">mod</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">OLS</span><span class="p">(</span>
+                <span class="n">sov_y</span><span class="p">,</span>
+                <span class="n">corp_yhat</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="n">mod</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+            <span class="c1"># First term is the constant and needs to be divided by 100 to have</span>
+            <span class="c1"># the correct unit. Second term is the coefficient</span>
+            <span class="n">macro_parameters</span><span class="p">[</span><span class="s2">&quot;r_gov_shift&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="n">res</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mi">100</span><span class="p">]</span>
+            <span class="n">macro_parameters</span><span class="p">[</span><span class="s2">&quot;r_gov_scale&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">res</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;r_gov_shift updated from IMF data: </span><span class="si">{</span><span class="n">macro_parameters</span><span class="p">[</span><span class="s1">&#39;r_gov_shift&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;r_gov_scale updated from IMF data: </span><span class="si">{</span><span class="n">macro_parameters</span><span class="p">[</span><span class="s1">&#39;r_gov_scale&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Failed to compute r_gov_shift, r_gov_scale&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Will not update r_gov_shift, r_gov_scale&quot;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Not updating alpha_T, alpha_G, r_gov_shift, r_gov_scale&quot;</span><span class="p">)</span>
 
