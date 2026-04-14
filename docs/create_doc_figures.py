@@ -1,5 +1,5 @@
 """
-This script creates tables and figures from the OG-USA documentation.
+This script creates tables and figures from the OG-ZAF documentation.
 """
 
 # import
