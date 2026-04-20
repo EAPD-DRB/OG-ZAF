@@ -450,7 +450,7 @@ def get_macro_params(
             print("Will not update alpha_T, alpha_G")
 
         """"
-        Esimate the discount on sovereign yields relative to private debt
+        Estimate the discount on sovereign yields relative to private debt
         Follow the methodology in Li, Magud, Werner, Witte (2021)
         available at:
         https://www.imf.org/en/Publications/WP/Issues/2021/06/04/The-Long-Run-Impact-of-Sovereign-Yields-on-Corporate-Yields-in-Emerging-Markets-50224

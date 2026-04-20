@@ -38,7 +38,7 @@ jobs:
           pip install "sphinxcontrib-bibtex>=2.0.0"
           pip install -e .
           python -m ipykernel install --user --name=ogzaf-dev
-          jb build ./docs/book
+          make documentation
 
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@releases/v4
