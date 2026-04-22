@@ -28,14 +28,47 @@ The path of government debt is endogenous.  But the initial value is exogenous. 
 
 #### Interest rates on government debt
 
-We assume that there is a wedge between the real rate of return on private capital and the real interest rate on government debt.  We model this wedge a scale and level shift.  Specifically, we assume that the real interest rate on government debt, $r_{gov,t}$, is related to the real rate of return on private capital, $r_{t}$, by the following equation:
+We assume a wedge between the real rate of return on private capital and the real interest rate on government debt, modeled as a scale and level shift. The real interest rate on government debt, $r_{gov,t}$, relates to the real rate of return on private capital, $r_t$, by
 
 ```{math}
 :label: eqn:r_gov
-    r_{gov,t} = (1-\tau_{d,t})r_t + \mu_d
+    r_{gov,t} = (1-\tau_{d,t}) r_t + \mu_d
 ```
 
-where $\tau_d$ is the scale parameter and $\mu_d$ is the level shift parameter.  We set the values of these two parameters to 0.245 and -0.034, respectively.  These are found by using the estimated relationship between corporate and sovereign yields in {cite}`LMW2023` (Table 8, Column 2) and simulating a series of corporate yields given a series of sovereign yields between 2% and 12%.  We then estimate the scale and level shift parameters that best fit these simulated data using ordinary least squares.
+where $(1-\tau_d)$ is the pass-through coefficient and $\mu_d$ is the level shift. For South Africa we use $1-\tau_d = 0.24485$ (so $\tau_d = 0.75515$) and $\mu_d = 0.03377$.
+
+These values come from {cite}`LMW2023`, who estimate the long-run pass-through of sovereign yields to corporate yields across 46 emerging economies using corporate yields from IHS Markit and sovereign yields from Bloomberg, predominantly U.S.-dollar secondary-market yields. They are therefore a cross-country emerging-market relationship rather than South Africa-specific bond data. Their preferred specification (Table 8, Column 2) fits a quadratic of the corporate yield on the sovereign yield of the same country:
+
+```{math}
+:label: eqn:lmw_quadratic
+    y_{corp} = 8.199 - 2.975\, y_{sov} + 0.478\, y_{sov}^2
+```
+
+with both yields in percentage points. The quadratic captures the empirical fact that pass-through rises with the level of sovereign risk, consistent with the credit-risk and liquidity-premium channels the paper identifies. The paper is available as an IMF Working Paper, [Li, Magud, Werner, and Witte (2021)](https://www.imf.org/en/Publications/WP/Issues/2021/06/04/The-Long-Run-Impact-of-Sovereign-Yields-on-Corporate-Yields-in-Emerging-Markets-50224), and was later published in the *Journal of International Money and Finance* {cite}`LMW2023`.
+
+OG-Core models the wedge in the opposite direction: it takes $r_t$ as an input and produces $r_{gov,t}$. We therefore invert the LMW relationship. We evaluate their quadratic on a grid of sovereign yields from 2% to 12%, compute the implied corporate yields, and then regress sovereign yields linearly on those corporate yields. Calling the resulting slope $b$ and intercept $a$ (both in percentage points), we identify $1-\tau_d = b$ and $\mu_d = a/100$.
+
+OG-Core's operational formula is $r_{gov,t} = \max\!\big(\texttt{r\_gov\_scale}\cdot r_t - \texttt{r\_gov\_shift},\; 0\big)$, so the JSON stores `r_gov_scale = 1-\tau_d = 0.24485` and `r_gov_shift = -\mu_d = -0.03377`. The negative sign on `r_gov_shift` reflects the subtraction in the OG-Core rule, not a negative level shift in the theoretical equation.
+
+Because the inputs to this inversion are deterministic and contain no South Africa-specific bond data, the resulting values do not change across calibration runs. The packaged values in `ogzaf/ogzaf_default_parameters.json` and `ogzaf/ogzaf_default_parameters_multisector.json` are the authoritative source. The snippet below reproduces them for transparency:
+
+```python
+import numpy as np
+import statsmodels.api as sm
+
+# LMW (2023) Table 8, Column 2: corp = 8.199 - 2.975 sov + 0.478 sov^2  (pct pts)
+sov_y = np.arange(20, 120) / 10
+corp_yhat = 8.199 - (2.975 * sov_y) + (0.478 * sov_y**2)
+
+# Invert: regress sov on corp -> linear pass-through
+X = sm.add_constant(corp_yhat)
+res = sm.OLS(sov_y, X).fit()
+
+r_gov_shift = -res.params[0] / 100  # -0.03377  (= -\mu_d in the theoretical equation)
+r_gov_scale = res.params[1]         #  0.24485  (= 1-\tau_d in the theoretical equation)
+```
+
+If the LMW estimates are superseded, re-run the inversion above with the new coefficients and update the JSON values.
 
 ### Aggregate transfers
 
@@ -46,4 +79,3 @@ Aggregate (non-Social Security) transfers to households are set as a share of GD
 Government spending on goods and services are also set as a share of GDP with the parameter $\alpha_G$. We define government spending as:
     <center>Government Spending = Total Outlays - Transfers - Net Interest on Debt - Social Security</center>
 With this definition, the share of government expenditure to GDP is 0.267 based on [data from the IMF](https://data.imf.org/?sk=b052f0f0-c166-43b6-84fa-47cccae3e219&hide_uv=1).
-

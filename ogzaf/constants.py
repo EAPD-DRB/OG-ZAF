@@ -239,12 +239,12 @@ PARAM_LABELS = {
         r"$\alpha_{D,0}$",
     ],
     "r_gov_scale": [
-        "Scale parameter in government interest rate wedge",
-        r"$\tau_{d,t}$",
+        "Coefficient on the market interest rate in the government interest rate wedge",
+        r"$1-\tau_{d,t}$",
     ],
     "r_gov_shift": [
-        "Shift parameter in government interest rate wedge",
-        r"$\mu_{d,t}$",
+        "Stored negative of the level shift in the government interest rate wedge",
+        r"$-\mu_{d,t}$",
     ],
     "AIME_num_years": [
         "Number of years over which compute AIME",
