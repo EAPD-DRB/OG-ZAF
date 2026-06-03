@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.0] - 2026-06-03 12:00:00
+
+### Changed
+
+- Migrated the project from conda to uv. Install with `uv sync --extra dev`; `pyproject.toml` is the single source of truth for dependencies and `uv.lock` pins exact versions.
+- CI uses `astral-sh/setup-uv`, and ruff replaces black for formatting and linting (`check_format.yml` -> `check_ruff.yml`).
+- Updated the README, `AGENTS.md`, and the Makefile to the uv workflow.
+
+### Removed
+
+- `setup.py`, `environment.yml`, `pytest.ini`, and `MANIFEST.in` (their settings moved into `pyproject.toml`).
+
 ## [0.1.1] - 2026-04-20 13:00:00
 
 ### Added
@@ -119,6 +131,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - This version is a pre-release alpha. The example run script OG-ZAF/examples/run_og_zaf.py runs, but the model is not currently calibrated to represent the South African economy and population.
 
 
+[0.2.0]: https://github.com/EAPD-DRB/OG-ZAF/compare/v0.1.1...v0.2.0
 [0.1.1]: https://github.com/EAPD-DRB/OG-ZAF/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/EAPD-DRB/OG-ZAF/compare/v0.0.11...v0.1.0
 [0.0.11]: https://github.com/EAPD-DRB/OG-ZAF/compare/v0.0.10...v0.0.11

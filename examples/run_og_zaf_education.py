@@ -9,11 +9,9 @@ import copy
 import numpy as np
 from importlib.resources import files
 import matplotlib.pyplot as plt
-from ogzaf.calibrate import Calibration
 from ogcore.parameters import Specifications
 from ogcore import output_tables as ot
 from ogcore import output_plots as op
-import ogcore
 from ogcore.execute import runner
 from ogcore.utils import safe_read_pickle
 
@@ -54,7 +52,8 @@ def main():
     ):
         defaults = json.load(file)
     p.update_specifications(defaults)
-    # move closure rule out to 50 years since educaation phases in over 20 years
+    # move closure rule out to 50 years since educaation phases in
+    # over 20 years
     p.tG1 = 50
 
     # Run model
@@ -74,8 +73,11 @@ def main():
     p2.output_base = reform_dir
 
     # adjust labor productivity to account for education investment
-    # Public spending may be able to obtain universal enrollment in Africa: https://www.inderscienceonline.com/doi/abs/10.1504/IJEED.2015.075794
-    # no time for paper, but let's assume this increases productivity of those bottom 70% by 20% for all ages 20+
+    # Public spending may be able to obtain universal enrollment in
+    # Africa:
+    # https://www.inderscienceonline.com/doi/abs/10.1504/IJEED.2015.075794
+    # no time for paper, but let's assume this increases productivity
+    # of those bottom 70% by 20% for all ages 20+
     # Let's assume this phases in linearly over 20 years
     num_years = 20  # 20 years to phase in
     total_benefit = 0.2  # total effect on productivity when fully phased in

@@ -16,7 +16,8 @@ class Calibration:
         macro_data_end_year=datetime.datetime(2024, 12, 31),
         demographic_data_path=None,
         output_path=None,
-        update_from_api=False,  # Set True to update from World Bank and UN APIs
+        # Set True to update from World Bank and UN APIs
+        update_from_api=False,
     ):
         """
         Constructor for the Calibration class.
@@ -25,8 +26,8 @@ class Calibration:
             p (OG-Core Specifications object): model parameters
             demographic_data_path (str): path to save demographic data
             output_path (str): path to save output to
-            update_from_api (bool): Set True if you want to pull updated macro data
-                from World Bank and UN APIs
+            update_from_api (bool): Set True if you want to pull
+                updated macro data from World Bank and UN APIs
 
         Returns:
             None

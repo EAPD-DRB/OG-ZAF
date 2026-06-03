@@ -329,10 +329,10 @@ def get_e_orig(age_wgts, abil_wgts, plot_path=None):
             + \beta_{3}\text{age}^3
 
     To calibrate for ZAF, the USA curves are adjusted in 2 ways (in this order)
-    1) Adjustment by income (J): adjust the gaps between the J-income earning curves
-        using data from WID.
-    2) Adjustment by age (S): adjust the shape/distribution of each J-income earning
-        profile curve using data from NTA.
+    1) Adjustment by income (J): adjust the gaps between the J-income
+        earning curves using data from WID.
+    2) Adjustment by age (S): adjust the shape/distribution of each
+        J-income earning profile curve using data from NTA.
 
     The methodology is described here:
     https://github.com/EAPD-DRB/OG-ZAF/issues/18#issuecomment-1368580323
@@ -357,8 +357,8 @@ def get_e_orig(age_wgts, abil_wgts, plot_path=None):
         err = "Vector abil_wgts does not have 7 elements."
         raise RuntimeError(err)
 
-    # 1) Generate polynomials using USA data and use them to get income profiles for
-    #    ages 21 to 80.
+    # 1) Generate polynomials using USA data and use them to get
+    #    income profiles for ages 21 to 80.
     one = np.array(
         [
             -0.09720122,
@@ -411,7 +411,8 @@ def get_e_orig(age_wgts, abil_wgts, plot_path=None):
         + (three * (ages_short**3))
     )
 
-    # New estimated coefficients for ZAF after adjustment by income (J) and by age (S)
+    # New estimated coefficients for ZAF after adjustment by income (J)
+    # and by age (S)
     const = np.array(
         [
             1.10766851280735,

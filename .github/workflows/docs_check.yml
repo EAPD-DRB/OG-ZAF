@@ -2,12 +2,12 @@ name: Check that docs build
 on:
   pull_request:
     paths:
+      - '**.md'
+      - './docs/**.py'
       - './docs/**.png'
-      - './docs/book/content/calibration/images/**.png'
-      - './docs/README.md'
       - './docs/book/**.yml'
       - './docs/book/**.bib'
-      - '**.md'
+      - './docs/book/content/calibration/images/**.png'
       - './docs/book/content/api/**.rst'
       - './ogzaf/**.py'
 
@@ -16,24 +16,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           persist-credentials: false
 
-      - name: Setup Miniconda
-        uses: conda-incubator/setup-miniconda@v3
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
         with:
-          miniconda-version: "latest"
-          activate-environment: ogzaf-dev
-          environment-file: environment.yml
           python-version: "3.13"
-          auto-activate-base: false
+
+      - name: Install package and dependencies
+        run: uv sync --extra dev --extra docs
 
       - name: Build # Build Jupyter Book
-        shell: bash -l {0}
-        run: |
-          pip install "jupyter-book<2.0.0"
-          pip install "sphinxcontrib-bibtex>=2.0.0"
-          pip install -e .
-          python -m ipykernel install --user --name=ogzaf-dev
-          make documentation
+        run: uv run make documentation

@@ -35,7 +35,6 @@ import SS as ss
 import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MultipleLocator
-from mpl_toolkits.mplot3d import Axes3D
 import sys
 import os
 

@@ -7,7 +7,6 @@ import os
 import json
 import time
 import copy
-import numpy as np
 
 # from taxcalc import Calculator
 from ogzaf.calibrate import Calibration
@@ -49,7 +48,8 @@ def main():
     ):
         defaults = json.load(file)
     p.update_specifications(defaults)
-    # Update parameters from calibrate.py Calibration class for multiple industries
+    # Update parameters from calibrate.py Calibration class for
+    # multiple industries
     p.M = 4
     p.I = 5
     c = Calibration(p, update_from_api=True)
