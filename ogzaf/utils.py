@@ -6,8 +6,12 @@ import socket
 
 class CustomHttpAdapter(requests.adapters.HTTPAdapter):
     """
-    The UN Data Portal server doesn't support "RFC 5746 secure renegotiation". This causes and error when the client is using OpenSSL 3, which enforces that standard by default.
-    The fix is to create a custom SSL context that allows for legacy connections. This defines a function get_legacy_session() that should be used instead of requests().
+    The UN Data Portal server doesn't support
+    "RFC 5746 secure renegotiation". This causes and error when the
+    client is using OpenSSL 3, which enforces that standard by default.
+    The fix is to create a custom SSL context that allows for legacy
+    connections. This defines a function get_legacy_session() that
+    should be used instead of requests().
     """
 
     # "Transport adapter" that allows us to use custom ssl_context.
@@ -26,7 +30,9 @@ class CustomHttpAdapter(requests.adapters.HTTPAdapter):
 
 def get_legacy_session():
     ctx = ssl.create_default_context(ssl.Purpose.SERVER_AUTH)
-    ctx.options |= 0x4  # OP_LEGACY_SERVER_CONNECT  #in Python 3.12 you will be able to switch from 0x4 to ssl.OP_LEGACY_SERVER_CONNECT.
+    # OP_LEGACY_SERVER_CONNECT. In Python 3.12+ you can switch from 0x4
+    # to ssl.OP_LEGACY_SERVER_CONNECT.
+    ctx.options |= 0x4
     session = requests.session()
     session.mount("https://", CustomHttpAdapter(ctx))
     return session

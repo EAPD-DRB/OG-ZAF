@@ -5,7 +5,8 @@ from ogzaf.constants import CONS_DICT, PROD_DICT
 
 """
 Read in Social Accounting Matrix (SAM) file
-This is the most recent SAM for 2019 available from the following page as a downloadable zip folder from UNU WIDER:
+This is the most recent SAM for 2019 available from the following
+page as a downloadable zip folder from UNU WIDER:
 https://www.wider.unu.edu/sites/default/files/Publications/Technical-note/tn2023-1-2019-SASAM-for-distribution.zip
 """
 # Read in SAM file
@@ -18,7 +19,8 @@ def read_SAM():
         try:
             SAM = pd.read_excel(
                 SAM_path,
-                sheet_name="SASAM 2019 61Ind 4Educ",  # Can alternatively use sheet_name="SASM 2019 61Ind4Occ"
+                # Can alternatively use sheet_name="SASM 2019 61Ind4Occ"
+                sheet_name="SASAM 2019 61Ind 4Educ",
                 skiprows=3,
                 index_col=0,
                 storage_options=storage_options,
