@@ -31,7 +31,7 @@
 
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
-    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css?v=4fa983c6" />
@@ -54,7 +54,7 @@
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="../../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script src="../../_static/togglebutton.js?v=b8b12719"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="../../_static/design-tabs.js?v=f930bc37"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
@@ -704,10 +704,10 @@
 <span class="sd">            + \beta_{3}\text{age}^3</span>
 
 <span class="sd">    To calibrate for ZAF, the USA curves are adjusted in 2 ways (in this order)</span>
-<span class="sd">    1) Adjustment by income (J): adjust the gaps between the J-income earning curves</span>
-<span class="sd">        using data from WID.</span>
-<span class="sd">    2) Adjustment by age (S): adjust the shape/distribution of each J-income earning</span>
-<span class="sd">        profile curve using data from NTA.</span>
+<span class="sd">    1) Adjustment by income (J): adjust the gaps between the J-income</span>
+<span class="sd">        earning curves using data from WID.</span>
+<span class="sd">    2) Adjustment by age (S): adjust the shape/distribution of each</span>
+<span class="sd">        J-income earning profile curve using data from NTA.</span>
 
 <span class="sd">    The methodology is described here:</span>
 <span class="sd">    https://github.com/EAPD-DRB/OG-ZAF/issues/18#issuecomment-1368580323</span>
@@ -732,8 +732,8 @@
         <span class="n">err</span> <span class="o">=</span> <span class="s2">&quot;Vector abil_wgts does not have 7 elements.&quot;</span>
         <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
 
-    <span class="c1"># 1) Generate polynomials using USA data and use them to get income profiles for</span>
-    <span class="c1">#    ages 21 to 80.</span>
+    <span class="c1"># 1) Generate polynomials using USA data and use them to get</span>
+    <span class="c1">#    income profiles for ages 21 to 80.</span>
     <span class="n">one</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
         <span class="p">[</span>
             <span class="o">-</span><span class="mf">0.09720122</span><span class="p">,</span>
@@ -786,7 +786,8 @@
         <span class="o">+</span> <span class="p">(</span><span class="n">three</span> <span class="o">*</span> <span class="p">(</span><span class="n">ages_short</span><span class="o">**</span><span class="mi">3</span><span class="p">))</span>
     <span class="p">)</span>
 
-    <span class="c1"># New estimated coefficients for ZAF after adjustment by income (J) and by age (S)</span>
+    <span class="c1"># New estimated coefficients for ZAF after adjustment by income (J)</span>
+    <span class="c1"># and by age (S)</span>
     <span class="n">const</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
         <span class="p">[</span>
             <span class="mf">1.10766851280735</span><span class="p">,</span>
