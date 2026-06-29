@@ -16,3 +16,9 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    # Defer jupyter-book 2.x (a mystmd rewrite that breaks the current docs build)
+    # until the docs are migrated. The <2.0 ceiling in pyproject already blocks it;
+    # this stops Dependabot from re-opening the major-bump PR each week.
+    ignore:
+      - dependency-name: "jupyter-book"
+        update-types: ["version-update:semver-major"]
