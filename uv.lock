@@ -1659,7 +1659,7 @@ wheels = [
 
 [[package]]
 name = "ogcore"
-version = "0.16.2"
+version = "0.16.3"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "dask" },
@@ -1674,9 +1674,9 @@ dependencies = [
     { name = "requests" },
     { name = "scipy" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/d7/de/fc8a1ae4525f638068ba0d7566ee05be9ae7df6e73df12fda5c7e029069c/ogcore-0.16.2.tar.gz", hash = "sha256:a8ca96241ed3263d8f077a0d9e206041d2be209847824aa2766a19d4ea7237a4", size = 504670, upload-time = "2026-06-15T15:44:54.272Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/da/ad/3eb6bfb4e84e2a081c29aa4050989eb8a53ce237d9b3448c62196ce1dea3/ogcore-0.16.3.tar.gz", hash = "sha256:a06363fea42a6994a88e39046bcc9bfbaeb342ff23d67ca2409bc2cef575b7e8", size = 505280, upload-time = "2026-06-26T17:26:11.257Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/f8/4e/99e5e3f36e94fbbf192119c12dc4d34a39c23e762440f15deb9f0638a742/ogcore-0.16.2-py3-none-any.whl", hash = "sha256:a75457b74d5e2045e6ff77c1abddca1ecaf6be044f337aba712ca5b4d6807bd3", size = 441875, upload-time = "2026-06-15T15:44:51.074Z" },
+    { url = "https://files.pythonhosted.org/packages/56/a5/47b9755e0a541be15e96ce926f635f21e3f2a4ea627234cf989d723499f2/ogcore-0.16.3-py3-none-any.whl", hash = "sha256:fa96021b121b206e1a1036e5f8f7e35bf143555bb63590f5f5ee98e111b60148", size = 442221, upload-time = "2026-06-26T17:26:09.841Z" },
 ]
 
 [[package]]
