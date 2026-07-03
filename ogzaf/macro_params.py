@@ -6,7 +6,6 @@ parameters for the OG-ZAF model that rely on macro data for calibration.
 
 # imports
 import pandas as pd
-import numpy as np
 import requests
 import datetime
 from io import StringIO
@@ -230,15 +229,24 @@ def get_macro_params(
 
     Returns:
         macro_parameters (dict): dictionary of parameter values
+
+    Note:
+        Only parameters whose documented source is a live API are
+        refreshed here: g_y_annual (World Bank), gamma (ILOSTAT), and
+        alpha_T/alpha_G (IMF GFS). The debt block (initial_debt_ratio,
+        initial_foreign_debt_ratio, zeta_D) and the r_gov wedge
+        (r_gov_scale, r_gov_shift) are deliberately NOT updated here:
+        the debt values are documented National Treasury Budget Review
+        figures (the World Bank QPSD general-government series measures
+        a different perimeter than the national-government debt the
+        model tracks), and r_gov_shift is recentered so the
+        debt-elastic sovereign premium is zero at the debt target,
+        which a recompute would silently undo. Those values live in
+        ogzaf_default_parameters.json and are documented in
+        docs/book/content/calibration/macro.md.
     """
     # initialize a dictionary of parameters
     macro_parameters = {}
-    # baseline date formatted for World Bank data
-    baseline_YYYYQ = (
-        str(data_end_date.year)
-        + "Q"
-        + str(pd.Timestamp(data_end_date).quarter)
-    )
 
     """
     Retrieve data from the World Bank World Development Indicators.
@@ -251,12 +259,14 @@ def get_macro_params(
         "Nominal GDP (current US$)": "NY.GDP.MKTP.CD",
         "General government final consumption expenditure (current US$)": "NE.CON.GOVT.CD",  # noqa: E501
     }
-    # Quarterly data
-    wb_q_variable_dict = {
-        "Gross PSD USD - domestic creditors": "DP.DOD.DECD.CR.PS.CD",
-        "Gross PSD USD - external creditors": "DP.DOD.DECX.CR.PS.CD",
-        "Gross PSD Gen Gov - percentage of GDP": "DP.DOD.DECT.CR.GG.Z1",
-    }
+    # NOTE: the debt block (initial_debt_ratio,
+    # initial_foreign_debt_ratio, zeta_D) is intentionally not pulled
+    # from the World Bank QPSD anymore. Those series measure the
+    # general-government perimeter, which diverges from the national
+    # government gross loan debt the model tracks. The packaged values
+    # come from the National Treasury Budget Review (see
+    # docs/book/content/calibration/macro.md) and would be silently
+    # clobbered by an API refresh.
     if update_from_api:
         try:
             wb_data_a = _fetch_wb_data(
@@ -265,88 +275,6 @@ def get_macro_params(
                 data_start_date.year,
                 data_end_date.year,
                 source=2,
-            )
-            wb_data_q = _fetch_wb_data(
-                wb_q_variable_dict,
-                country_iso,
-                data_start_date.year,
-                data_end_date.year,
-                source=20,
-            )
-
-            # Function to get the latest valid data if baseline_YYYYQ
-            # is missing or NaN
-            def get_valid_data(series, baseline_YYYYQ):
-                value = series.get(baseline_YYYYQ, None)
-
-                if pd.isna(value):
-                    latest_non_nan = series.dropna().last_valid_index()
-
-                    if latest_non_nan is not None:
-                        print(
-                            f"Warning: No data for {baseline_YYYYQ}. "
-                            f"Using last available quarter: {latest_non_nan}"
-                        )
-                        value = series.get(latest_non_nan, None)
-                    else:
-                        print(
-                            "Warning: No historical data available. "
-                            "Skipping update."
-                        )
-                        value = None
-
-                return value
-
-            # Compute macro parameters from WB data
-            macro_parameters["initial_debt_ratio"] = get_valid_data(
-                pd.Series(wb_data_q["Gross PSD Gen Gov - percentage of GDP"])
-                / 100,
-                baseline_YYYYQ,
-            )
-            print(
-                "initial_debt_ratio updated from World Bank API: "
-                f"{macro_parameters['initial_debt_ratio']}"
-            )
-
-            # Compute initial_foreign_debt_ratio safely
-            if (
-                "Gross PSD USD - external creditors" in wb_data_q.columns
-                and "Gross PSD USD - domestic creditors" in wb_data_q.columns
-            ):
-                total_debt = (
-                    wb_data_q["Gross PSD USD - domestic creditors"]
-                    + wb_data_q["Gross PSD USD - external creditors"]
-                )
-
-                # Avoid division by zero
-                wb_data_q["foreign_debt_ratio"] = wb_data_q[
-                    "Gross PSD USD - external creditors"
-                ] / total_debt.replace(0, np.nan)
-
-                macro_parameters["initial_foreign_debt_ratio"] = (
-                    get_valid_data(
-                        wb_data_q["foreign_debt_ratio"], baseline_YYYYQ
-                    )
-                )
-            else:
-                print(
-                    "Warning: Missing debt variables in World Bank data."
-                    " Skipping update for initial_foreign_debt_ratio."
-                )
-
-            print(
-                "initial_foreign_debt_ratio updated from World Bank "
-                f"API: {macro_parameters['initial_foreign_debt_ratio']}"
-            )
-
-            # Compute zeta_D safely
-            macro_parameters["zeta_D"] = [
-                macro_parameters["initial_foreign_debt_ratio"]
-            ]  # Since it's the same formula, we use the same calculated value
-
-            print(
-                "zeta_D updated from World Bank API: "
-                f"{macro_parameters['zeta_D']}"
             )
 
             # Compute annual GDP growth safely
@@ -371,10 +299,7 @@ def get_macro_params(
             )
         except Exception:
             print("Failed to retrieve data from World Bank")
-            print("Will not update the following parameters:")
-            print(
-                "[initial_debt_ratio, initial_foreign_debt_ratio, zeta_D, g_y]"
-            )
+            print("Will not update g_y_annual")
     else:
         print("Not updating from World Bank API")
 
@@ -463,46 +388,18 @@ def get_macro_params(
             print("Failed to retrieve data from IMF")
             print("Will not update alpha_T, alpha_G")
 
-        """"
-        Estimate the discount on sovereign yields relative to private debt
-        Follow the methodology in Li, Magud, Werner, Witte (2021)
-        available at:
-        https://www.imf.org/en/Publications/WP/Issues/2021/06/04/The-Long-Run-Impact-of-Sovereign-Yields-on-Corporate-Yields-in-Emerging-Markets-50224
-        discussion is here: https://github.com/EAPD-DRB/OG-ZAF/issues/22
-        Steps:
-        1) Generate modelled corporate yields (corp_yhat) for a range of
-        sovereign yields (sov_y)  using the estimated equation in col 2 of
-        table 8 (and figure 3). 2) Estimate the OLS using sovereign yields
-        as the dependent variable
-        """
-        try:
-            import statsmodels.api as sm
-
-            # # estimate r_gov_shift and r_gov_scale
-            sov_y = np.arange(20, 120) / 10
-            corp_yhat = 8.199 - (2.975 * sov_y) + (0.478 * sov_y**2)
-            corp_yhat = sm.add_constant(corp_yhat)
-            mod = sm.OLS(
-                sov_y,
-                corp_yhat,
-            )
-            res = mod.fit()
-            # First term is the constant and needs to be divided by 100 to have
-            # the correct unit. Second term is the coefficient
-            macro_parameters["r_gov_shift"] = [-res.params[0] / 100]
-            macro_parameters["r_gov_scale"] = [res.params[1]]
-            print(
-                "r_gov_shift updated from IMF data: "
-                f"{macro_parameters['r_gov_shift']}"
-            )
-            print(
-                "r_gov_scale updated from IMF data: "
-                f"{macro_parameters['r_gov_scale']}"
-            )
-        except Exception:
-            print("Failed to compute r_gov_shift, r_gov_scale")
-            print("Will not update r_gov_shift, r_gov_scale")
+        # NOTE: the r_gov wedge (r_gov_scale, r_gov_shift) is
+        # intentionally no longer recomputed here. The Li, Magud,
+        # Werner, Witte (2021) inversion (see
+        # https://github.com/EAPD-DRB/OG-ZAF/issues/22 and the macro
+        # calibration chapter) is deterministic — it contains no live
+        # South African data — and the packaged r_gov_shift is now
+        # recentered so the debt-elastic sovereign premium
+        # (r_gov_DY, r_gov_DY2) is exactly zero at the steady-state
+        # debt target. Recomputing the LMWW values here would silently
+        # undo that recentering. The packaged values live in
+        # ogzaf_default_parameters.json.
     else:
-        print("Not updating alpha_T, alpha_G, r_gov_shift, r_gov_scale")
+        print("Not updating alpha_T, alpha_G")
 
     return macro_parameters

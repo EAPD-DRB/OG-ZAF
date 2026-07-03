@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- Enabled a debt-elastic sovereign premium in `ogzaf_default_parameters.json`, the crowding-out-via-risk channel that OG-Core's defaults leave off (`r_gov_DY = r_gov_DY2 = 0`). It is a *centered* convex form, `r_gov_DY2 * (D/Y - 0.765)^2`, flat at the 0.765 debt target and steepening only as debt moves away — `r_gov_DY2 = 0.04`, `r_gov_DY = -0.0612`, with `r_gov_shift` recentered from -0.0338 to -0.0572 so the premium is exactly zero at the target and the steady state is unchanged. This matches South African experience (stable spreads through the 60s percent-of-GDP debt range, a blowout in 2020, compression again in 2025 as consolidation took hold) and mirrors the same channel in OG-PHL. See the macro calibration chapter for lineage and sources.
+
+### Changed
+
+- Recalibrated the open-economy and debt block to South African official data, in `ogzaf_default_parameters.json`. World interest rate `world_int_rate_annual` 0.04 -> 0.063: a 4% global risk-free rate plus the National Treasury's own 2.26-percentage-point sovereign risk premium (2026 Budget Review, Chapter 7). Capital openness `zeta_K` 0.2 -> 0.16, pinned to the normalized Chinn-Ito index for South Africa (0.1626, 2022 update). Initial debt `initial_debt_ratio` 0.842 -> 0.789 and steady-state debt target `debt_ratio_ss` 0.84 -> 0.765, from the same Budget Review (gross loan debt stabilizes at 78.9% of GDP in 2025/26 and declines to 76.5% by 2028/29) — the National Treasury's national-government gross loan debt replaces the World Bank QPSD general-government series, which measures a wider perimeter. `initial_foreign_debt_ratio` and `zeta_D` stay at 0.25, now cited to the Budget Review's 25% foreign participation in the domestic bond market (2025).
+- Macro parameters with documented point-in-time sources are no longer clobbered by API pulls: `get_macro_params` no longer refreshes the debt block (`initial_debt_ratio`, `initial_foreign_debt_ratio`, `zeta_D`) from the World Bank QPSD, nor recomputes the `r_gov` wedge (`r_gov_scale`, `r_gov_shift`) — the Li-Magud-Werner-Witte inversion is deterministic, and a recompute would silently undo the sovereign-premium recentering. Live pulls remain for `g_y_annual` (World Bank), `gamma` (ILOSTAT), and `alpha_T`/`alpha_G` (IMF GFS), whose documented sources are those APIs.
+- Retuned the packaged steady-state initial guesses to the recalibrated economy (`initial_guess_r_SS` 0.04 -> 0.048506, `initial_guess_TR_SS` 0.042 -> 0.051713, `initial_guess_factor_SS` 6766 -> 114805.11). The old factor seed pointed at a steady state 17x away; from the retuned guesses the steady state solves in seconds and the full example (baseline + CIT-reform transition paths) completes in about 8 minutes. The recalibrated baseline it encodes: r = 0.0485, r_gov = 0.0456, debt-to-GDP exactly at the 0.765 target, foreign share of government debt 0.25, and a mildly negative foreign capital share (-4.4%), consistent with South Africa's positive net international investment position.
+
 ## [0.2.0] - 2026-06-03 12:00:00
 
 ### Changed
