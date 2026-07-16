@@ -44,4 +44,5 @@ docs/book/_build/*
 */OG-ZAF_example_plots/*
 *ogzaf_example_output.csv
 */OG-ZAF-Example/*
+*/OG-ZAF-MultipleIndustry-example/*
 *un_api_token.txt*

@@ -42,10 +42,13 @@ def main():
         baseline_dir=base_dir,
         output_base=base_dir,
     )
-    # Update parameters for baseline from default json file
+    # Update parameters for baseline from the self-sufficient multi-industry
+    # (M=8, I=5) default file. It is the single-industry calibration with the
+    # multi-industry parameters merged in, so it loads standalone exactly like
+    # the single-industry default.
     with (
         files("ogzaf")
-        .joinpath("ogzaf_default_parameters.json")
+        .joinpath("ogzaf_default_parameters_multisector.json")
         .open("r") as file
     ):
         defaults = json.load(file)
@@ -67,16 +70,12 @@ def main():
     p2.baseline = False
     p2.output_base = reform_dir
 
-    # Example reform is a corp tax rate cut (phased in) for all
-    # industries EXCEPT for secondary ex energy, which has a one point
-    # increae in the CIT rate
+    # Reform: raise the corporate income tax from 27% to 30% across all
+    # industries (a single value broadcasts over M). This is the same reform
+    # the single-industry example runs, so the two representations can be
+    # compared per the single/multi calibration guide.
     updated_params_ref = {
-        "cit_rate": [
-            [0.27, 0.27, 0.27, 0.28],
-            [0.26, 0.26, 0.26, 0.28],
-            [0.25, 0.25, 0.25, 0.28],
-        ],
-        "baseline_spending": True,
+        "cit_rate": [[0.30]],
     }
     p2.update_specifications(updated_params_ref)
 
