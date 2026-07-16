@@ -3,7 +3,9 @@
 
 ## Economic Assumptions
 
-As the default rate of labor augmenting technological change, $g_y$, we use the average annual growth rate of real GDP per capita in South Africa (World Bank, constant 2015 US$), about 0.6% per year. This is the one macro parameter `ogzaf.macro_params.get_macro_params` still refreshes from a live API (`ogzaf.update_baseline` re-pulls it), because the World Bank series is its documented source.
+As the default rate of labour-augmenting technological change, $g_y$, we use 1.4% per year (`g_y_annual = 0.014`). On the model's balanced growth path aggregate GDP grows at approximately $g_y + g_n$; with the model's steady-state population growth $g_n \approx 0.42\%$ this reproduces the **~1.8% medium-term real GDP growth** that both the IMF (2025 Article IV, "reaching 1.8 percent in the medium term") and the National Treasury (2026 Budget Review, averaging 1.8% over 2026–2028, rising to 2.0% by 2028) assume — the *same* growth path that underpins the debt-stabilisation plan we anchor `debt_ratio_ss` to below.
+
+We deliberately do **not** use South Africa's *realized* productivity growth, which has been dismal — near zero, even negative, over the 2010s state-capture/load-shedding decade, when potential growth collapsed from ~4% to near zero and TFP subtracted about 1.3 percentage points from growth. The steady state is a long-run object, and pairing that stagnation with a *stabilising* debt target would be internally inconsistent: it is precisely the IMF's more pessimistic scenario, in which debt does **not** stabilise but drifts toward 84% of GDP. The ~1.8% recovery is reform-contingent (Operation Vulindlela — energy and logistics), and we adopt it as the sustainable long-run assumption that is consistent with the debt anchor. Because $g_y$ is now a curated forward-looking assumption rather than a realized-data series, it is held in the packaged parameters and no longer refreshed from the live World Bank pull.
 
 ## Open Economy Parameters
 
@@ -41,7 +43,7 @@ We assume a wedge between the real rate of return on private capital and the rea
     r_{gov,t} = (1-\tau_{d,t}) r_t + \mu_d
 ```
 
-where $(1-\tau_d)$ is the pass-through coefficient and $\mu_d$ is the level shift. For South Africa we use $1-\tau_d = 0.24485$ (so $\tau_d = 0.75515$) and $\mu_d = 0.03377$.
+where $(1-\tau_d)$ is the pass-through coefficient and $\mu_d$ is the level shift. For South Africa we take the *slope* $1-\tau_d = 0.24485$ from the Li-Magud-Werner (LMW) emerging-market estimate below, but we **re-anchor the level $\mu_d$ to South African data** — the raw LMW cross-country intercept ($0.03377$) over-predicts South Africa's actual borrowing cost, as explained after the derivation.
 
 These values come from {cite}`LMW2023`, who estimate the long-run pass-through of sovereign yields to corporate yields across 46 emerging economies using corporate yields from IHS Markit and sovereign yields from Bloomberg, predominantly U.S.-dollar secondary-market yields. They are therefore a cross-country emerging-market relationship rather than South Africa-specific bond data. Their preferred specification (Table 8, Column 2) fits a quadratic of the corporate yield on the sovereign yield of the same country:
 
@@ -54,9 +56,11 @@ with both yields in percentage points. The quadratic captures the empirical fact
 
 OG-Core models the wedge in the opposite direction: it takes $r_t$ as an input and produces $r_{gov,t}$. We therefore invert the LMW relationship. We evaluate their quadratic on a grid of sovereign yields from 2% to 12%, compute the implied corporate yields, and then regress sovereign yields linearly on those corporate yields. Calling the resulting slope $b$ and intercept $a$ (both in percentage points), we identify $1-\tau_d = b$ and $\mu_d = a/100$.
 
-OG-Core's operational formula is $r_{gov,t} = \max\!\big(\texttt{r\_gov\_scale}\cdot r_t - \texttt{r\_gov\_shift} + \texttt{r\_gov\_DY}\cdot\tfrac{D_t}{Y_t} + \texttt{r\_gov\_DY2}\cdot\big(\tfrac{D_t}{Y_t}\big)^2,\; 0\big)$, so the JSON stores `r_gov_scale` $= 1-\tau_d = 0.24485$. The LMW level shift is $\mu_d = 0.03377$; the stored `r_gov_shift` additionally absorbs the constant term of the centered debt-elastic premium described below, so `r_gov_shift = -0.05718` rather than $-\mu_d$ alone. The negative sign on `r_gov_shift` reflects the subtraction in the OG-Core rule, not a negative level shift in the theoretical equation.
+**Re-anchoring the level to South Africa's data.** The LMW inversion delivers two numbers: a *slope* (the pass-through elasticity $1-\tau_d = 0.24485$) and an *intercept* ($\mu_d = 0.03377$). The slope is a genuine estimated co-movement, and we keep it. The intercept, however, is a cross-country average that maps a *nominal, US-dollar* sovereign-yield level onto the model's *real* return on capital, and it over-predicts South Africa's actual borrowing cost — it implies a steady-state $r_{gov}$ of about 4.3% real, whereas South Africa's effective real rate on the debt stock is about 3.7%. Since $r_{gov}$ multiplies the *entire* debt stock in the government budget ($\texttt{debt\_service} = r_{gov}\cdot D$), the right target is the effective/average rate: the National Treasury's effective interest rate on the debt portfolio, **7.1% nominal** (total debt-service cost ÷ gross loan debt, [2026 Budget Review, Chapter 7](https://www.treasury.gov.za/documents/National%20Budget/2026/review/Chapter%207.pdf)), deflated by the ~3.4% GDP deflator to **~3.7% real**. We therefore re-anchor $\mu_d$ so the steady-state $r_{gov}$ equals this effective rate, giving $\mu_d \approx 0.0254$. (This is *not* the ~5% real *marginal* new-issue yield on 10-year bonds, which is the cost of new borrowing, not the average cost of the stock that $r_{gov}$ multiplies.)
 
-Because the inputs to this inversion are deterministic and contain no South Africa-specific bond data, the resulting values do not change across calibration runs. The packaged values in `ogzaf/ogzaf_default_parameters.json` and `ogzaf/ogzaf_default_parameters_multisector.json` are the authoritative source. The snippet below reproduces them for transparency:
+OG-Core's operational formula is $r_{gov,t} = \max\!\big(\texttt{r\_gov\_scale}\cdot r_t - \texttt{r\_gov\_shift} + \texttt{r\_gov\_DY}\cdot\tfrac{D_t}{Y_t} + \texttt{r\_gov\_DY2}\cdot\big(\tfrac{D_t}{Y_t}\big)^2,\; 0\big)$, so the JSON stores `r_gov_scale` $= 1-\tau_d = 0.24485$ and folds the re-anchored level $\mu_d = 0.0254$ together with the centred-premium constant below into `r_gov_shift` $= -0.0488$. The negative sign reflects the subtraction in the OG-Core rule, not a negative level shift in the theoretical equation.
+
+The slope's inputs are deterministic and contain no South Africa-specific data; the *level* is re-anchored to South Africa's effective rate as above. The packaged values in the JSON are authoritative; `ogzaf.macro_params.get_macro_params` does not recompute them on a live update (a recompute would restore the raw LMW intercept and de-centre the premium). The snippet below reproduces the LMW *slope* derivation for transparency:
 
 ```python
 import numpy as np
@@ -89,7 +93,7 @@ with $\bar{d} = 0.765$ (the `debt_ratio_ss` target) and $r_{gov,DY2} = 0.04$. Ex
 
 - `r_gov_DY2` $= 0.04$
 - `r_gov_DY` $= -2 \times 0.04 \times 0.765 = -0.0612$
-- `r_gov_shift` $= -0.03377 - 0.04 \times 0.765^2 = -0.05718$ (the recentering constant $r_{gov,DY2}\,\bar{d}^2$ is absorbed into the shift)
+- `r_gov_shift` $= -\mu_d - r_{gov,DY2}\,\bar{d}^2 = -0.0254 - 0.04 \times 0.765^2 = -0.0488$ (the re-anchored level $\mu_d = 0.0254$ and the recentering constant $r_{gov,DY2}\,\bar{d}^2$, both absorbed into the shift)
 
 The premium is exactly zero at the debt target, so the steady state is unchanged; along the transition path, debt above (or below) the target raises the sovereign rate convexly — about 7 basis points at $D/Y = 0.9$ and 22 basis points at $D/Y = 1.0$. This is the [Schmitt-Grohé and Uribe (2003)](https://www.nber.org/system/files/working_papers/w9270/w9270.pdf) debt-elastic premium in convex form, following the fiscal-limits literature ([Bi 2012](https://www.sciencedirect.com/science/article/abs/pii/S0014292111001085); [Ghosh et al. 2013](https://www.nber.org/system/files/working_papers/w16782/w16782.pdf)) and emerging-market spread-to-debt empirics of roughly 4–8 basis points per percentage point of debt ([Jaramillo and Weber 2012](https://www.imf.org/external/pubs/ft/wp/2012/wp12198.pdf)). It also matches South Africa's own experience: spreads were broadly stable while gross debt climbed through the 60s percent-of-GDP range, then blew out in 2020 when debt jumped toward 70% amid the downgrade to sub-investment grade — and compressed again (2.93 to 2.26 percentage points during 2025) as consolidation took hold. The value of $r_{gov,DY2} = 0.04$ matches OG-PHL's calibration of the same channel.
 
@@ -101,4 +105,31 @@ Aggregate (non-Social Security) transfers to households are set as a share of GD
 
 Government spending on goods and services is also set as a share of GDP with the parameter $\alpha_G$. We define government spending as:
     <center>Government Spending = Total Outlays - Transfers - Net Interest on Debt - Social Security</center>
-With this definition, the share of government expenditure to GDP is 0.233, computed from the IMF Government Finance Statistics (latest available year) by `ogzaf.macro_params.get_macro_params`, which refreshes this parameter from the [IMF GFS API](https://data.imf.org/) on a live update.
+The IMF Government Finance Statistics put this share near 0.23–0.27. We instead set $\alpha_G = 0.19$ — the level at which the government budget is *consistent with the steady-state debt target* (see **Fiscal consistency** below). This sits just below South Africa's actual general-government consumption (~0.21 of GDP) because a steady state that holds debt at 0.765 must run the debt-stabilising primary surplus, which South Africa's current, deficit-running fiscal stance does not yet deliver: the model's steady state is the *sustainable, post-consolidation* state the Budget Review is steering toward, not today's stance. Because $\alpha_G$ is pinned to this consistency requirement rather than the raw GFS figure, it is held in the packaged parameters and not refreshed live.
+
+## Fiscal consistency
+
+The spending shares ($\alpha_G$, $\alpha_T$), the revenue the tax system raises, and the debt target `debt_ratio_ss` are not free of one another: for debt to hold at $\bar{d} = 0.765$ in the steady state, the government must run a primary surplus $pb^\* = \tfrac{r_{gov}-g}{1+g}\,\bar{d}$, so **primary spending must equal revenue minus $pb^\*$**. With the calibration above ($r_{gov} \approx 3.7\%$, $g \approx 1.8\%$, so $pb^\* \approx 1.4\%$ of GDP) and total tax revenue of ~24% of GDP, consistent primary spending is ~22.5% of GDP, i.e. $\alpha_G + \alpha_T \approx 0.227$ — hence $\alpha_G = 0.19$.
+
+This identity is why the calibration is internally reconciled rather than a collection of independent point estimates. Two earlier settings had *masked* the fact that the block did not balance: a flat 22% personal income tax that over-collected (~16% of GDP versus South Africa's actual ~10%), and a stray 20% bequest tax (`tau_bq = 0.2`) that collected ~3.9% of GDP with no basis in South African law. Both inflated revenue enough to paper over a spending-above-revenue gap; with the correct progressive PIT and the bequest tax removed, the gap surfaced, and — because OG-Core's steady-state closure silently defers it to the transition while the debt-elastic premium prices the resulting overshoot — it made the baseline transition diverge until the spending side was reconciled to the identity. The debt-dynamics arithmetic is also the honest reason $g_y$ and $r_{gov}$ are calibrated as above: a model with a hotter interest-growth differential than South Africa's ($r_{gov}-g$) would demand a larger primary surplus and force $\alpha_G$ implausibly low.
+
+South Africa's debt is not a solvency or default question for this purpose — it is ~90% rand-denominated, long-maturity and domestically financed, rated sub-investment-grade-but-*stabilising* (BB/Ba2, all three agencies on positive outlook in 2025–26), and the IMF assesses debt-distress risk as moderate with no restructuring risk. The stable-debt steady state is therefore a modelling device for the sustainable long run, consistent with the National Treasury's own stabilisation-at-~76.5% plan, not a claim that default is off the table or that current policy already stabilises debt (the IMF's more cautious baseline has debt still rising absent a sustained ~3% primary surplus).
+
+### Steady-state validation
+
+The calibrated steady state, solved offline from the packaged parameters, lands close to South African data instrument by instrument and moment by moment:
+
+| Moment | Model SS | South Africa (data) | Source |
+|---|---|---|---|
+| Personal income tax / GDP | 10.1% | 10.1% | Budget Review 2026 / SARS |
+| Corporate income tax / GDP | 4.5% | 4.5% | Budget Review 2026 |
+| Consumption (indirect) tax / GDP | 9.5% | ~10% | SARS (VAT + fuel + excise + customs) |
+| Government debt $D/Y$ | 0.765 | 0.765 (2028/29 target) | Budget Review 2026 |
+| Foreign-held debt share $D_f/D$ | 0.25 | 0.25 | Budget Review 2026 |
+| Sovereign real rate $r_{gov}$ | 3.7% | ~3.7% effective | Budget Review 2026 (deflated) |
+| Real GDP growth $g$ | 1.8% | 1.8% (medium-term) | IMF / Budget Review 2026 |
+| Primary surplus | 1.5% | 1.4% stabilising; 2.3% targeted by 2028/29 | Budget Review 2026 |
+| `factor` (mean income) | R124,684 | R123,809 (data anchor) | model diagnostic |
+| Capital-output $K/Y$ | 4.35 | — (OG-Core family ~4–5) | — |
+
+The `factor` diagnostic — the model's solved mean income against the R123,809 data anchor — matches to within 0.7%, confirming the income level is well aligned.

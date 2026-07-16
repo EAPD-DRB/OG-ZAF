@@ -1,6 +1,6 @@
 {
     "frisch": 0.4,
-    "g_y_annual": 0.005947065224549464,
+    "g_y_annual": 0.014,
     "S": 80,
     "J": 7,
     "T": 320,
@@ -794,7 +794,7 @@
         0.03737345469877388
     ],
     "alpha_G": [
-        0.23254039752375177
+        0.19
     ],
     "alpha_I": [
         0.0003
@@ -825,7 +825,7 @@
         0.24484763593657788
     ],
     "r_gov_shift": [
-        -0.05717525043803518
+        -0.0488
     ],
     "r_gov_DY": -0.061200000000000004,
     "r_gov_DY2": 0.04,
@@ -836,7 +836,7 @@
     ],
     "c_corp_share_of_assets": 0.7,
     "adjustment_factor_for_cit_receipts": [
-        0.3
+        0.8
     ],
     "inv_tax_credit": [
         [
@@ -845,7 +845,7 @@
     ],
     "tau_c": [
         [
-            0.15
+            0.18
         ]
     ],
     "delta_tau_annual": [
@@ -2060,7 +2060,7 @@
         0.0
     ],
     "tau_bq": [
-        0.2
+        0.0
     ],
     "tau_payroll": [
         0.0
@@ -4360,7 +4360,7 @@
     "baseline_theta": false,
     "use_sparse_FOC_jac": true,
     "start_year": 2025,
-    "tax_func_type": "linear",
+    "tax_func_type": "GS",
     "labor_income_tax_noncompliance_rate": [
         [
             0.0,
@@ -4414,9 +4414,9 @@
     "RC_SS": 1e-09,
     "RC_TPI": 0.001,
     "reform_use_baseline_solution": true,
-    "initial_guess_r_SS": 0.048506,
-    "initial_guess_TR_SS": 0.051713,
-    "initial_guess_factor_SS": 114805.11,
+    "initial_guess_r_SS": 0.048169,
+    "initial_guess_TR_SS": 0.048905,
+    "initial_guess_factor_SS": 124684.31,
     "omega": [
         [
             0.02373845174763506,
@@ -103558,21 +103558,27 @@
     "etr_params": [
         [
             [
-                0.22
+                0.464,
+                1.39288,
+                1.434077e-08
             ]
         ]
     ],
     "mtrx_params": [
         [
             [
-                0.31
+                0.464,
+                1.39288,
+                1.434077e-08
             ]
         ]
     ],
     "mtry_params": [
         [
             [
-                0.25
+                0.464,
+                1.39288,
+                1.434077e-08
             ]
         ]
     ],

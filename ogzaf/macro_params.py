@@ -231,77 +231,36 @@ def get_macro_params(
         macro_parameters (dict): dictionary of parameter values
 
     Note:
-        Only parameters whose documented source is a live API are
-        refreshed here: g_y_annual (World Bank), gamma (ILOSTAT), and
-        alpha_T/alpha_G (IMF GFS). The debt block (initial_debt_ratio,
-        initial_foreign_debt_ratio, zeta_D) and the r_gov wedge
-        (r_gov_scale, r_gov_shift) are deliberately NOT updated here:
-        the debt values are documented National Treasury Budget Review
-        figures (the World Bank QPSD general-government series measures
-        a different perimeter than the national-government debt the
-        model tracks), and r_gov_shift is recentered so the
-        debt-elastic sovereign premium is zero at the debt target,
-        which a recompute would silently undo. Those values live in
-        ogzaf_default_parameters.json and are documented in
-        docs/book/content/calibration/macro.md.
+        Only parameters whose documented source is a live API AND which
+        are not curated for internal consistency are refreshed here:
+        gamma (ILOSTAT labour share) and alpha_T (IMF GFS non-interest
+        transfers). Everything else is a curated packaged value and is
+        deliberately NOT updated here, because a refresh would clobber a
+        deliberately-chosen value: g_y_annual (a forward-looking long-run
+        productivity growth, not the stagnant realized series), alpha_G
+        (pinned to fiscal-consistency with the debt target, not the raw
+        GFS figure), the debt block (initial_debt_ratio,
+        initial_foreign_debt_ratio, zeta_D — National Treasury figures,
+        not the wider-perimeter World Bank QPSD), and the r_gov wedge
+        (r_gov_scale from LMWW, r_gov_shift re-anchored to SA's effective
+        rate and holding the debt-elastic premium's recentering). Those
+        values live in ogzaf_default_parameters.json and are documented
+        in docs/book/content/calibration/macro.md.
     """
     # initialize a dictionary of parameters
     macro_parameters = {}
 
-    """
-    Retrieve data from the World Bank World Development Indicators.
-    """
-    # Dictionaries of variables and their corresponding World Bank codes
-    # Annual data
-    wb_a_variable_dict = {
-        "GDP per capita (constant 2015 US$)": "NY.GDP.PCAP.KD",
-        "Real GDP (constant 2015 US$)": "NY.GDP.MKTP.KD",
-        "Nominal GDP (current US$)": "NY.GDP.MKTP.CD",
-        "General government final consumption expenditure (current US$)": "NE.CON.GOVT.CD",  # noqa: E501
-    }
-    # NOTE: the debt block (initial_debt_ratio,
-    # initial_foreign_debt_ratio, zeta_D) is intentionally not pulled
-    # from the World Bank QPSD anymore. Those series measure the
-    # general-government perimeter, which diverges from the national
-    # government gross loan debt the model tracks. The packaged values
-    # come from the National Treasury Budget Review (see
-    # docs/book/content/calibration/macro.md) and would be silently
-    # clobbered by an API refresh.
-    if update_from_api:
-        try:
-            wb_data_a = _fetch_wb_data(
-                wb_a_variable_dict,
-                country_iso,
-                data_start_date.year,
-                data_end_date.year,
-                source=2,
-            )
-
-            # Compute annual GDP growth safely
-            if "GDP per capita (constant 2015 US$)" in wb_data_a.columns:
-                g_y_series = wb_data_a[
-                    "GDP per capita (constant 2015 US$)"
-                ].pct_change(-1)
-
-                # If all values are NaN, return None
-                macro_parameters["g_y_annual"] = (
-                    g_y_series.mean() if not g_y_series.isna().all() else None
-                )
-            else:
-                print(
-                    "Warning: Missing GDP per capita data in World Bank "
-                    "data. Skipping update for g_y_annual."
-                )
-
-            print(
-                "g_y_annual updated from World Bank API: "
-                f"{macro_parameters['g_y_annual']}"
-            )
-        except Exception:
-            print("Failed to retrieve data from World Bank")
-            print("Will not update g_y_annual")
-    else:
-        print("Not updating from World Bank API")
+    # NOTE: g_y_annual is no longer pulled from the World Bank. It is now a
+    # curated, forward-looking long-run productivity growth (0.014), chosen so
+    # the model's balanced-growth GDP growth (g_y + g_n) matches South Africa's
+    # ~1.8% medium-term assumption, which is consistent with the
+    # debt-stabilisation target — NOT the stagnant realized per-capita series
+    # the WB pull returns. Likewise the debt block (initial_debt_ratio,
+    # initial_foreign_debt_ratio, zeta_D) is not pulled: the World Bank QPSD
+    # measures a wider (general-government) perimeter than the National
+    # Treasury national-government figure the model tracks. Both live in the
+    # packaged ogzaf_default_parameters.json; see
+    # docs/book/content/calibration/macro.md.
 
     """
     Retrieve labour share data from the United Nations ILOSTAT Data API
@@ -371,22 +330,25 @@ def get_macro_params(
             imf_year = (
                 data_end_date.year if imf_data_year is None else imf_data_year
             )
-            macro_parameters.update(
-                _get_imf_macro_params(
-                    country_iso,
-                    imf_year,
-                    data_path=imf_data_path,
-                )
+            imf_params = _get_imf_macro_params(
+                country_iso,
+                imf_year,
+                data_path=imf_data_path,
             )
+            # alpha_T (non-interest transfers) keeps its documented GFS value.
+            # alpha_G is NOT taken from GFS: it is curated (~0.19), pinned to
+            # the level that makes the government budget consistent with the
+            # steady-state debt target (see the fiscal-consistency section of
+            # docs/book/content/calibration/macro.md). Refreshing it from GFS
+            # would restore the raw ~0.23-0.27 figure and break that
+            # consistency, so we drop it here.
+            macro_parameters["alpha_T"] = imf_params["alpha_T"]
             print(
                 f"alpha_T updated from IMF data: {macro_parameters['alpha_T']}"
             )
-            print(
-                f"alpha_G updated from IMF data: {macro_parameters['alpha_G']}"
-            )
         except Exception:
             print("Failed to retrieve data from IMF")
-            print("Will not update alpha_T, alpha_G")
+            print("Will not update alpha_T")
 
         # NOTE: the r_gov wedge (r_gov_scale, r_gov_shift) is
         # intentionally no longer recomputed here. The Li, Magud,
@@ -400,6 +362,6 @@ def get_macro_params(
         # undo that recentering. The packaged values live in
         # ogzaf_default_parameters.json.
     else:
-        print("Not updating alpha_T, alpha_G")
+        print("Not updating alpha_T")
 
     return macro_parameters

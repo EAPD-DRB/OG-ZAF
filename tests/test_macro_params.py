@@ -219,70 +219,39 @@ def test_get_macro_params_update_from_api_false_returns_empty_dict():
 
 
 def test_get_macro_params_update_from_api_true(monkeypatch):
+    # Only gamma (ILOSTAT) and alpha_T (IMF GFS) are live-refreshed; no World
+    # Bank call is made (g_y and the debt block are curated/frozen).
     _mock_requests_get(
         monkeypatch,
-        {
-            "NY.GDP.PCAP.KD": _wb_payload(
-                [("2022", 64.0), ("2024", 100.0), ("2023", 80.0)]
-            ),
-            "NY.GDP.MKTP.KD": _wb_payload(
-                [("2022", 640.0), ("2024", 1000.0), ("2023", 800.0)]
-            ),
-            "NY.GDP.MKTP.CD": _wb_payload(
-                [("2022", 700.0), ("2024", 1100.0), ("2023", 900.0)]
-            ),
-            "NE.CON.GOVT.CD": _wb_payload(
-                [("2022", 200.0), ("2024", 250.0), ("2023", 225.0)]
-            ),
-        },
+        {},
         ilo_text="time,obs_value\n2024,40\n2023,39\n",
     )
 
     test_dict = macro_params.get_macro_params(update_from_api=True)
 
     assert isinstance(test_dict, dict)
-    assert sorted(test_dict.keys()) == sorted(
-        [
-            "alpha_T",
-            "alpha_G",
-            "g_y_annual",
-            "gamma",
-        ]
-    )
-    assert test_dict["g_y_annual"] == pytest.approx(0.25)
+    assert sorted(test_dict.keys()) == sorted(["alpha_T", "gamma"])
     assert test_dict["gamma"] == [0.6]
     assert test_dict["alpha_T"] == [pytest.approx(0.036)]
-    assert test_dict["alpha_G"] == [pytest.approx(0.241)]
 
 
 def test_get_macro_params_does_not_clobber_documented_values(monkeypatch):
     """
-    The debt block and the r_gov wedge are documented National
-    Treasury / recentered values packaged in the JSON. A live update
-    must never return them (it would clobber the packaged values).
+    The debt block, the r_gov wedge, the forward-looking g_y, and the
+    consistency-pinned alpha_G are curated packaged values. A live update
+    must never return them (it would clobber the packaged calibration).
     """
     _mock_requests_get(
         monkeypatch,
-        {
-            "NY.GDP.PCAP.KD": _wb_payload(
-                [("2022", 64.0), ("2024", 100.0), ("2023", 80.0)]
-            ),
-            "NY.GDP.MKTP.KD": _wb_payload(
-                [("2022", 640.0), ("2024", 1000.0), ("2023", 800.0)]
-            ),
-            "NY.GDP.MKTP.CD": _wb_payload(
-                [("2022", 700.0), ("2024", 1100.0), ("2023", 900.0)]
-            ),
-            "NE.CON.GOVT.CD": _wb_payload(
-                [("2022", 200.0), ("2024", 250.0), ("2023", 225.0)]
-            ),
-        },
+        {},
         ilo_text="time,obs_value\n2024,40\n2023,39\n",
     )
 
     test_dict = macro_params.get_macro_params(update_from_api=True)
 
     for frozen in [
+        "g_y_annual",
+        "alpha_G",
         "initial_debt_ratio",
         "initial_foreign_debt_ratio",
         "zeta_D",
