@@ -11,15 +11,7 @@ OG-ZAF is an overlapping-generations (OG) model that allows for dynamic general 
 
 ## Using and contributing to OG-ZAF
 
-There are two primary methods for installing and running OG-ZAF on your computer locally. The first and simplest method is to download the most recent `ogzaf` Python package from the Python Package Index ([PyPI.org](https://pypi.org/project/ogzaf/)). The second option is to fork and clone the most recent version of OG-ZAF from its GitHub repository and install the `ogzaf` package with its development dependencies using `uv`. Both methods are detailed below.
-
-### Installing and Running OG-ZAF from PyPI
-
-* On macOS, first install Xcode Command Line Tools (in Terminal: `xcode-select --install`).
-* Open your terminal and install the [`ogzaf`](https://pypi.org/project/ogzaf/) package from the Python Package Index by typing `pip install ogzaf`.
-* Navigate to a folder `./YourFolderName/` where you want to save scripts to run OG-ZAF and output from the simulations in those scripts.
-* Copy the python script [`run_og_zaf.py`](https://github.com/EAPD-DRB/OG-ZAF/blob/main/examples/run_og_zaf.py) from the OG-ZAF GitHub repository into your folder as `./YourFolderName/run_og_zaf.py`.
-* Run the model with an example reform from terminal/command prompt by typing `python run_og_zaf.py`.
+Install and run OG-ZAF by cloning the GitHub repository and installing the `ogzaf` package with its dependencies using [`uv`](https://docs.astral.sh/uv/), as detailed below. (Installing the `ogzaf` package from [PyPI](https://pypi.org/project/ogzaf/) with `pip` is no longer the recommended path: on older Python versions `pip` silently resolves a years-old release of the model, and the PyPI route does not pin the `ogcore` version the repository is tested against. The `uv` workflow installs the exact tested versions of every dependency, including a compatible Python interpreter.)
 
 ### Installing and Running OG-ZAF from the GitHub repository
 

@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+
+- Fixed the installation instructions. Removed the stale PyPI install path from the `README.md` (on older Python versions `pip install ogzaf` silently resolves a years-old release; the supported path is clone + `uv sync --extra dev`). Updated the contributor guide from the conda-era workflow (Anaconda install, `conda env create` against the `environment.yml` removed in 0.2.0) to the `uv` workflow, corrected the test command to this repository's markers (`pytest -m "not local"`), and fixed stale `master`-branch and OG-USA references.
+
 ## [0.2.0] - 2026-06-03 12:00:00
 
 ### Changed
