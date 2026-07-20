@@ -129,7 +129,7 @@ The calibrated steady state, solved offline from the packaged parameters, lands 
 | Sovereign real rate $r_{gov}$ | 3.7% | ~3.7% effective | Budget Review 2026 (deflated) |
 | Real GDP growth $g$ | 1.8% | 1.8% (medium-term) | IMF / Budget Review 2026 |
 | Primary surplus | 1.5% | 1.4% stabilising; 2.3% targeted by 2028/29 | Budget Review 2026 |
-| `factor` (mean income) | R124,684 | R123,809 (data anchor) | model diagnostic |
+| `factor` (mean income) | R124,371 | R123,809 (data anchor) | model diagnostic |
 | Capital-output $K/Y$ | 4.35 | — (OG-Core family ~4–5) | — |
 
-The `factor` diagnostic — the model's solved mean income against the R123,809 data anchor — matches to within 0.7%, confirming the income level is well aligned.
+The `factor` diagnostic — the model's solved mean income against the R123,809 data anchor — matches to within 0.5%, confirming the income level is well aligned.
