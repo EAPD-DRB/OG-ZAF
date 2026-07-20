@@ -42,12 +42,20 @@ def main():
         baseline_dir=base_dir,
         output_base=base_dir,
     )
-    # Update parameters for baseline from default json file
+    # Update parameters for baseline in two steps: the single-industry base
+    # calibration first, then the multi-industry overlay (which carries only
+    # the parameters the multi-industry calibration changes and is NOT
+    # standalone).
     with importlib.resources.open_text(
-        "ogzaf", "ogzaf_default_parameters_multisector.json"
+        "ogzaf", "ogzaf_default_parameters.json"
     ) as file:
         defaults = json.load(file)
     p.update_specifications(defaults)
+    with importlib.resources.open_text(
+        "ogzaf", "ogzaf_default_parameters_multisector.json"
+    ) as file:
+        multi_overlay = json.load(file)
+    p.update_specifications(multi_overlay)
 
     # Run model
     start_time = time.time()

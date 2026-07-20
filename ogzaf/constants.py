@@ -6,6 +6,30 @@ BASELINE_DIR = "OUTPUT_BASELINE"
 # Default year for model runs
 DEFAULT_START_YEAR = 2022
 
+# Economy-wide capital share of value added (private + public), the
+# single-industry OG-ZAF gamma (= 1 - labor share, PR #135). The SASAM has one
+# capital row (gross operating surplus), so its raw per-industry shares are
+# *total* capital shares; the multi-industry calibration keeps their
+# cross-industry dispersion but rescales the value-added-weighted mean to this
+# de-biased total, so the two representations share one capital-share level.
+# Defined here -- not in a caller -- so the calibration builder
+# (create_multisector_calibration) and the live Calibration class (calibrate)
+# read one source and cannot drift.
+TOTAL_CAPITAL_SHARE = 0.47164
+
+# Public (infrastructure) capital's output share, gamma_g. South Africa's
+# single-industry calibration carries no public capital in the production
+# function (gamma_g = 0), so the private capital share equals the total; kept
+# explicit so a future gamma_g > 0 is carved out of capital, not labor.
+PUBLIC_CAPITAL_SHARE = 0.0
+
+# National capital-output ratio (Penn World Table 10.01, South Africa, net
+# capital stock over GDP, ~2.9). Anchors the level of the capital stock that
+# get_Z allocates across industries by capital-income share; with the
+# Manufacturing = 1 normalization it enters industry TFP only through the
+# cross-industry gamma dispersion.
+CAPITAL_OUTPUT_RATIO = 2.9
+
 
 VAR_LABELS = {
     "Y": "GDP ($Y_t$)",
@@ -325,7 +349,7 @@ CONS_DICT = {
     ],
     "Energy and extraction": [
         "ccoal",
-        "colig",
+        "coilg",
         "cmore",
         "cquar",
         "comin",
@@ -413,26 +437,42 @@ CONS_DICT = {
         "cpuba",
         "ceduc",
         "cheal",
-        "ccmemb",
+        "cmemb",
         "centa",
         "cpers",
         "cdoms",
     ],
 }
+# M = 8 production industries. Energy (electricity) stands alone by design, as
+# does Water and Waste; Mining is separated from Agriculture. Order matters:
+# OG-Core's LAST industry is the numeraire and the sole producer of all
+# non-consumption final demand (investment, government), so its nominal output
+# share is mechanically inflated -- Manufacturing (the capital-goods-like
+# industry) is kept last. Every code below is a SASAM activity account; the
+# eight lists together cover all 61 activities exactly once.
 PROD_DICT = {
-    "Primary": [
+    "Agriculture": [
         "aagri",
         "afore",
         "afish",
+    ],
+    "Mining": [
         "acoal",
         "agold",
         "amore",
         "aomin",
     ],
-    "Energy": [
+    "Electricity": [
         "aelcg",
     ],
-    "Tertiary": [
+    "Water and Waste": [
+        "awatd",
+        "awast",
+    ],
+    "Construction": [
+        "acnst",
+    ],
+    "Trade Transport and Accommodation": [
         "awtrd",
         "artrd",
         "amtvs",
@@ -442,9 +482,11 @@ PROD_DICT = {
         "aatrp",
         "atrps",
         "apost",
+    ],
+    "Services": [
         "afins",
-        "ainsp",
         "aofin",
+        "ainsp",
         "areal",
         "arent",
         "acomp",
@@ -453,13 +495,12 @@ PROD_DICT = {
         "apuba",
         "aeduc",
         "aheal",
-        "awast",
         "amorg",
         "arecr",
         "aoact",
         "anobs",
     ],
-    "Secondary Ex Energy": [
+    "Manufacturing": [
         "afood",
         "abevt",
         "aweav",
@@ -486,7 +527,5 @@ PROD_DICT = {
         "aotrp",
         "afurn",
         "aomnf",
-        "awatd",
-        "acnst",
     ],
 }
