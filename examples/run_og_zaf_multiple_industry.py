@@ -42,17 +42,25 @@ def main():
         baseline_dir=base_dir,
         output_base=base_dir,
     )
-    # Update parameters for baseline from the self-sufficient multi-industry
-    # (M=8, I=5) default file. It is the single-industry calibration with the
-    # multi-industry parameters merged in, so it loads standalone exactly like
-    # the single-industry default.
+    # Update parameters for baseline in two steps: first the single-industry
+    # base calibration, then the multi-industry (M=8, I=5) overlay, which
+    # carries only the parameters the multi-industry calibration changes.
+    # The overlay is NOT standalone -- always load the base first, in this
+    # order, or the omitted parameters fall back to OG-Core defaults.
+    with (
+        files("ogzaf")
+        .joinpath("ogzaf_default_parameters.json")
+        .open("r") as file
+    ):
+        defaults = json.load(file)
+    p.update_specifications(defaults)
     with (
         files("ogzaf")
         .joinpath("ogzaf_default_parameters_multisector.json")
         .open("r") as file
     ):
-        defaults = json.load(file)
-    p.update_specifications(defaults)
+        multi_overlay = json.load(file)
+    p.update_specifications(multi_overlay)
 
     # Run model
     start_time = time.time()

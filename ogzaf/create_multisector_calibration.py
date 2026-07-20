@@ -14,18 +14,23 @@ The construction tools live in ``ogzaf.input_output`` (``get_alpha_c``,
 this module assembles their output, with the documented production choices,
 merges it onto the single-industry base, and serializes the result.
 
-The written file is **self-sufficient**: it is the single-industry
-``ogzaf_default_parameters.json`` with the multi-industry parameters below
-merged in, so a user loads it standalone (one ``update_specifications`` call)
-exactly like the single-industry default -- it is not an overlay that must be
-layered on the base at run time. The trade-off is that the economy-wide South
-African values (demographics, preferences, the fiscal block, open-economy
-dials, ``g_y``, the progressive PIT, the debt targets, and the solver seeds)
-are *copied* from the base, so **regenerate this file (the command above)
-whenever the single-industry base is recalibrated** -- otherwise the two
-representations silently describe different economies.
+The written file is an **overlay**: it carries only the parameters the
+multi-industry calibration changes. Load the single-industry base first and
+then this file (two ``update_specifications`` calls, in that order -- see
+``examples/run_og_zaf_multiple_industry.py``). It is **not standalone**:
+loaded on its own, every omitted parameter silently falls back to OG-Core's
+defaults rather than the South African calibration. The payoff is that the
+economy-wide South African values (demographics, the fiscal block, the
+progressive PIT, the debt targets, the solver seeds) are *inherited from the
+base at load time*, so a base recalibration flows into the multi-industry
+model automatically -- no regeneration needed. Regenerate this file only when
+the underlying multi-industry data or choices change, or when a base
+recalibration touches the few base quantities the overlay's derived entries
+depend on: ``chi_b``/``chi_n`` (converted from the base values by the
+composite-consumption units factor) and the ``Z`` level (calibrated so the
+solved ``factor`` matches the single-industry model's).
 
-Multi-industry parameters merged over the base:
+Parameters in the overlay:
   * ``M``, ``I``   - 8 production industries, 5 consumption goods
   * ``alpha_c``    - household consumption shares (SASAM)
   * ``io_matrix``  - 5x8 domestic value-added content (SASAM, Leontief)
@@ -49,7 +54,7 @@ Multi-industry parameters merged over the base:
   * ``nu``         - 0.2 TPI dampening
 
 The multi-industry steady state solves cold from the base's shared solver seeds
-(``initial_guess_*``), which this file inherits unchanged from the base.
+(``initial_guess_*``), which it inherits automatically at load time.
 """
 
 import json
@@ -150,17 +155,13 @@ def build_multisector_params():
 
 
 def main():
-    """Merge the multi-industry parameters onto the single-industry base and
-    write the self-sufficient multisector default file."""
-    overrides = build_multisector_params()
-    with open(os.path.join(CUR_DIR, "ogzaf_default_parameters.json")) as f:
-        base = json.load(f)
-    params = {**base, **overrides}  # base first, multi-industry values win
+    """Write the multi-industry parameter overlay file."""
+    params = build_multisector_params()
     with open(MULTISECTOR_PARAMS_PATH, "w") as f:
         json.dump(params, f, indent=2)
         f.write("\n")
     print(f"Wrote {MULTISECTOR_PARAMS_PATH}")
-    print(f"  self-sufficient: {len(params)} keys (base + multi-industry)")
+    print(f"  overlay: {len(params)} keys (multi-industry changes only)")
     print(f"  M = {params['M']}, I = {params['I']}")
     print(f"  alpha_c = {np.round(params['alpha_c'], 4).tolist()}")
     print(f"  gamma   = {np.round(params['gamma'], 4).tolist()}")
