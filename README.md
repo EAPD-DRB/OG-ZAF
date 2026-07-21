@@ -13,18 +13,98 @@ OG-ZAF is an overlapping-generations (OG) model that allows for dynamic general 
 
 Install and run OG-ZAF by cloning the GitHub repository and installing the `ogzaf` package with its dependencies using [`uv`](https://docs.astral.sh/uv/), as detailed below. (Installing the `ogzaf` package from [PyPI](https://pypi.org/project/ogzaf/) with `pip` is no longer the recommended path: on older Python versions `pip` silently resolves a years-old release of the model, and the PyPI route does not pin the `ogcore` version the repository is tested against. The `uv` workflow installs the exact tested versions of every dependency, including a compatible Python interpreter.)
 
-### Installing and Running OG-ZAF from the GitHub repository
+### Installation
 
-* On macOS, first install Xcode Command Line Tools (in Terminal: `xcode-select --install`).
-* Install [`uv`](https://docs.astral.sh/uv/) by following the [installation instructions](https://docs.astral.sh/uv/getting-started/installation/) for your platform (or simply run `pip install uv`).
+There are two ways to install OG-ZAF: the easy way, using the OG model family's universal installer, and a manual install that runs the same steps one command at a time. Both start from a terminal, put the model in a new OG-ZAF folder inside your current directory (a freshly opened terminal starts in your home folder), and need git.
+
+#### Before you start: git
+
+On a Mac where you have never used git before, run this line first and accept the dialog that appears:
+
+```
+xcode-select --install
+```
+
+On Windows, install Git first (skip this if you already have it):
+
+```
+winget install --id Git.Git -e --source winget
+```
+
+#### The easy way: the universal installer
+
+The OG model family has a [universal installer](https://github.com/PSLmodels/OG-Core/blob/master/scripts/QUICK_INSTALL.md) that installs the uv tool, downloads the model, builds its environment, and verifies it — for OG-ZAF or any of its sibling country models.
+
+On macOS and Linux, paste:
+
+```
+curl -fsSL https://raw.githubusercontent.com/PSLmodels/OG-Core/master/scripts/install.sh -o og-install.sh
+bash og-install.sh --repo og-zaf --yes
+```
+
+On Windows (PowerShell), paste:
+
+```
+$f = "$env:TEMP\og-install.ps1"; irm https://raw.githubusercontent.com/PSLmodels/OG-Core/master/scripts/install.ps1 -OutFile $f; powershell -ExecutionPolicy Bypass -File $f -Repo og-zaf -Yes
+```
+
+When the installer finishes, run the example. On macOS and Linux, paste:
+
+```
+source $HOME/.local/bin/env
+cd OG-ZAF
+uv run python examples/run_og_zaf.py
+```
+
+On Windows, open a new PowerShell window (so the just-installed tools are found) and paste:
+
+```
+cd OG-ZAF
+uv run python examples/run_og_zaf.py
+```
+
+#### Manual install
+
+The same setup as individual commands. On macOS and Linux, paste:
+
+```
+curl -LsSf https://astral.sh/uv/install.sh | sh
+source $HOME/.local/bin/env
+git clone https://github.com/EAPD-DRB/OG-ZAF.git
+cd OG-ZAF
+uv run python examples/run_og_zaf.py
+```
+
+The second line makes the just-installed uv available in the current terminal; from your next terminal session it is available automatically.
+
+On Windows (PowerShell), install uv:
+
+```
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+```
+
+Then open a new PowerShell window (so the just-installed tools are found) and paste:
+
+```
+git clone https://github.com/EAPD-DRB/OG-ZAF.git
+cd OG-ZAF
+uv run python examples/run_og_zaf.py
+```
+
+#### What happens
+
+The first `uv run` creates the project environment if it does not exist yet — downloading a compatible Python interpreter if needed and installing the exact locked dependencies — and then runs the example. Early in the run you may be asked for a UN API token; just press return, and the model reads the same population data from a public mirror and continues. A full baseline-plus-reform run takes from 35 minutes to more than two hours (well under an hour on a recent machine); when it finishes, its plots and tables are saved under `./examples/OG-ZAF-Example/` (see the list of outputs below).
+
+### Installing for development or contributing
+
 * Fork this repository and clone your fork to a directory on your computer.
-* From the terminal, navigate to the cloned directory and run `uv sync --extra dev` to create a local `.venv` and install OG-ZAF with its development dependencies. `uv` will also download a compatible Python interpreter if you don't already have one.
+* From the terminal, navigate to the cloned directory and run `uv sync --extra dev` to create a local `.venv` and install OG-ZAF with its development dependencies (`uv` downloads a compatible Python if you don't already have one).
 * For docs/Jupyter Book work, also run `uv sync --extra dev --extra docs`.
+* Run commands in the environment with `uv run <command>`, or activate it first with `source .venv/bin/activate` (macOS/Linux) or `.\.venv\Scripts\Activate.ps1` (Windows).
 
 ### Run an example of the model
 
-* Navigate to `./examples`.
-* Run the model with an example reform: `uv run python run_og_zaf.py` (or activate the venv first with `source .venv/bin/activate` on macOS/Linux or `.\.venv\Scripts\Activate.ps1` on Windows, then `python run_og_zaf.py`).
+* From the repository root, run the model with an example reform: `uv run python examples/run_og_zaf.py`.
 * You can adjust the `./examples/run_og_zaf.py` by modifying model parameters specified in the dictionary passed to the `p.update_specifications()` calls.
 * Model outputs will be saved in the following files:
   * `./examples/OG-ZAF-Example/OG-ZAF_example_plots`
@@ -58,7 +138,7 @@ p.update_specifications(updated_params)
 ```
 
 ## Disclaimer
-The organization of this repository will be changing rapidly, but the `OG-ZAF/examples/run_og_zaf.py` script will be kept up to date to run with the master branch of this repo.
+The `OG-ZAF/examples/run_og_zaf.py` script is kept up to date to run with the `main` branch of this repo.
 
 ## Core Maintainers
 
