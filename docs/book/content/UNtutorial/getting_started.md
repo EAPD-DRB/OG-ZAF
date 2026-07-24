@@ -72,40 +72,38 @@ For the March 3-7, 2025 United Nations `OG-ZAF` training in Cape Town, we will b
   * [UN OG Online Training Materials](https://eapd-drb.github.io/UN-OG-Training/)
 
 (Sec_UNtutor_python)=
-## Install Python
-`OG-ZAF` is a large-scale overlapping generations macroeconomic model of Philippine fiscal policy. It is written in the [Python](https://www.python.org/) programming language. You will need to have some distribution of Python loaded on your computer to run the code. We recommend installing the [Anaconda](https://www.anaconda.com/download) distribution of Python. This is the most widely used Python distribution. And it has package management features, like conda environments, that we will make use of.
+## Install Python and uv
+`OG-ZAF` is a large-scale overlapping generations macroeconomic model of South African fiscal policy. It is written in the [Python](https://www.python.org/) programming language. The project uses [`uv`](https://docs.astral.sh/uv/) to manage Python and all package dependencies. You do not need to install Python separately: `uv` downloads a compatible Python interpreter automatically when you create the project environment (a later step below).
 
-### Verifying you have already installed Python and Conda
-If you have already installed the Anaconda distribution of Python, do the following steps to verify your installation.
+### Installing uv
 
-#### For Windows and Mac
-If you are using computer with a Windows operating system, open your Anaconda prompt. If you are using a Mac operating system, open your terminal.
-- To see if you have Python installed, type `python --version`. This command should result in output like `Python 3.12.7`.
+On macOS or Linux, open your terminal and paste:
+
 ```{code}
->>> python --version
-Python 3.12.7
-```
-- To see if you have Anaconda's conda package installed type `conda --version`. This command should results in output like `conda 24.9.2`.
-```{code}
->>> conda --version
-conda 24.9.2
+curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
 
-#### For Linux
-If you are using a computer with a Linux operating system, open your terminal.
-- To see if you have Python installed, type `python -version`. This command should result in output like `Python 3.12.7`.
+Then make the just-installed uv available in the current terminal (from your next terminal session it is available automatically):
+
 ```{code}
->>> python -version
-Python 3.12.7
-```
-- To see if you have Anaconda's conda package installed type `conda -version`. This command should results in output like `conda 24.9.2`.
-```{code}
->>> conda -version
-conda 24.9.2
+source $HOME/.local/bin/env
 ```
 
-### Installing Anaconda distribution of Python
-To install the Anaconda distribution of Python, go to https://www.anaconda.com/download and select "Skip registration" to avoid giving your email address.
+On Windows, open PowerShell and paste:
+
+```{code}
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+```
+
+then open a new PowerShell window so the just-installed tool is found.
+
+### Verifying your installation
+Open your terminal (macOS/Linux) or PowerShell (Windows) and type `uv --version`. This command should result in output like `uv 0.11.30`.
+
+```{code}
+>>> uv --version
+uv 0.11.30
+```
 
 
 ## Installing Git and GitHub
@@ -120,9 +118,9 @@ git version 2.37.2
 ```
 
 #### On Linux
-Open your terminal and type `git -version`. You should get output like `git version 2.37.2.
+Open your terminal and type `git --version`. You should get output like `git version 2.37.2`.
 ```{code}
->>> git -version
+>>> git --version
 git version 2.37.2
 ```
 
@@ -162,7 +160,7 @@ Most likely, the free organization account will be the right place to start for 
     - In the upper-right area of the browser page, click the "Fork" button and select "Create fork". This will create an exact copy of the OG-ZAF repository on your account. When you do this, you should see that the URL to the page has changed to `https://github.com/[YourGitHubHandle]/OG-ZAF`.
 
 2. The next step is to clone the repository from its current place in the cloud to your local computer's hard drive.
-    - Open your terminal or Anaconda prompt
+    - Open your terminal (macOS/Linux) or PowerShell (Windows)
     - Navigate to the folder where you want this repository to reside. Make sure this is not a location on your hard drive that is mapped from the cloud. This file should live on your local computer. You already have the repository in the cloud on your GitHub account.
     - Copy the contents of your repository in the cloud to your hard drive by typing: `git clone https://github.com/[YourGitHubHandle]/OG-ZAF.git`
     - Change directory to this new directory by typing: `cd OG-ZAF`
@@ -177,26 +175,23 @@ name: GitFlowDiag
 Flow diagram of Git and GitHub workflow
 ```
 
-## Create the ogzaf-dev conda environment
-[Conda environments](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html) are a functionality that comes with the Anaconda distribution of Python. Conda environments allow the users across operating system platforms and different hardware configurations to run Python code in an environment that has the same packages, functionality, and results. A Conda environment is similar to a Docker image.
+## Create the project environment with uv
+The project environment is a local `.venv` folder at the root of the repository, containing Python and the exact package versions pinned in `uv.lock`. It lets users across operating system platforms and different hardware configurations run the model with the same packages, functionality, and results.
 
-If you have installed the Anaconda distribution of Python and you have cloned your OG-ZAF fork of the repository to your local machine, you can create the `ogzaf-dev` conda environment by doing the following steps:
-- Open your terminal or command prompt and navigate to the OG-ZAF repository folder on your hard drive.
-- Type the following command: `conda env create -f environment.yml`
-- Once the environment has been created, you must activate it: `conda activate ogzaf-dev`
-- In the activated `ogzaf-dev` conda environment, install the `ogzaf` Python package directly from your repository by typing: `pip install -e .`
+If you have installed `uv` and you have cloned your OG-ZAF fork of the repository to your local machine, you can create the environment by doing the following steps:
+- Open your terminal (macOS/Linux) or PowerShell (Windows) and navigate to the OG-ZAF repository folder on your hard drive.
+- Type the following command: `uv sync --extra dev`
 
-Now you have the `ogzaf` Python package installed in your `ogzaf-dev` conda environment. Now you will be able to run the modules of the OG-ZAF model from scripts and from Jupyter notebooks.
+That single command creates the environment, downloads a compatible Python if needed, and installs the `ogzaf` Python package with all its dependencies. You will now be able to run the modules of the OG-ZAF model from scripts and from Jupyter notebooks. Run any command inside the environment with `uv run` (for example, `uv run python examples/run_og_zaf.py`), or activate the environment first with `source .venv/bin/activate` (macOS/Linux) or `.\.venv\Scripts\Activate.ps1` (Windows).
 
 ## Using Jupyter notebooks
-A nice way to execute lines of code on your local computer is to use Jupyter notebooks. The `jupyter` package is installed as part of the `ogzaf-dev` conda environment from the previous step. You can open a Jupyter notebook directly in VS Code, or you can open one from your terminal or command prompt.
+A nice way to execute lines of code on your local computer is to use Jupyter notebooks. The `jupyter` package is installed as part of the development dependencies from the previous step. You can open a Jupyter notebook directly in VS Code, or you can open one from your terminal or PowerShell.
 
-### Open Jupyter notebook from terminal or command prompt
-- If you are using Mac or Linux, open your terminal. If you are using Windows, open your command prompt.
+### Open Jupyter notebook from terminal or PowerShell
+- If you are using Mac or Linux, open your terminal. If you are using Windows, open PowerShell.
 - Navigate to the folder of the OG-ZAF repository on your local machine.
-- Activate the `ogzaf-dev` conda environment by typing `conda activate ogzaf-dev`.
-- Open a Jupyter notebook session by typing `jupyter notebook`. This will open a local server page that opens in your browser. This page will show the directory where you are currently working.
-- Either click the "New" button in the upper-right portion of the screen, or select "File" then "New" then "Notebook" from the menu at the upper-right. Make sure to select the `ogzaf-dev` kernel.
+- Open a Jupyter notebook session by typing `uv run jupyter notebook`. This will open a local server page that opens in your browser. This page will show the directory where you are currently working.
+- Either click the "New" button in the upper-right portion of the screen, or select "File" then "New" then "Notebook" from the menu at the upper-right. Make sure to select the kernel from the project's `.venv`.
 
 Once you have completed these steps, you can interactively write code and execute it in steps using the Python code cells in the Jupyter notebook. You can also write text descriptions in the markdown cells.
 
