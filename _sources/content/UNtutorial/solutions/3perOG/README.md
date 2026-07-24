@@ -5,10 +5,9 @@ This folder contains the python scripts that compute the solutions to [Exercise 
 - [`TPI.py`](https://github.com/EAPD-DRB/OG-ZAF/blob/main/docs/book/content/UNtutorial/solutions/3perOG/TPI.py). Python module that has the functions for solving the transition path equilibrium questions of [Exercise 3](https://eapd-drb.github.io/OG-ZAF/content/UNtutorial/3perOG.html#ExerUNtut_3perOGTPI).
 
 You can run these computations that solve for the solutions to the three exercises by doing the following steps.
-1. Open your terminal windown (Mac or Linux) or Anaconda prompt (Windows).
-2. Activate your `ogzaf-dev` conda environment: `conda activate ogzaf-dev`
-3. Navigate to your `OG-ZAF` repository directory.
-4. Navigate to the `/docs/book/content/UNtutorial/solutions/3perOG/` subfolder of this repository.
-5. Run the `execute.py` script: `python execute.py`.
+1. Open your terminal window (Mac or Linux) or PowerShell (Windows).
+2. Navigate to your `OG-ZAF` repository directory (where the project environment lives; create it first with `uv sync --extra dev` if you have not yet — see the [Getting Started](https://eapd-drb.github.io/OG-ZAF/content/UNtutorial/getting_started.html) chapter).
+3. Navigate to the `/docs/book/content/UNtutorial/solutions/3perOG/` subfolder of this repository.
+4. Run the `execute.py` script: `uv run python execute.py`.
 
 Running the `execute.py` script will print all the answers to the exercises in the output of the terminal. It will also create an `images` folder in this directory that has some of the images from the steady state and transition path equilibrium solutions.
