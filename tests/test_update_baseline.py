@@ -48,3 +48,19 @@ def test_main_json_updates_specifications(monkeypatch, tmp_path):
     assert not p.errors
     assert p.frisch == saved_params["frisch"]
     assert p.g_y_annual == saved_params["g_y_annual"]
+
+
+def test_packaged_demographics_include_income_dimension():
+    """Packaged demographic paths use OG-Core's (T, S, J) convention."""
+    package_dir = Path(update_baseline.__file__).parent
+    for filename in (
+        "ogzaf_default_parameters.json",
+        "ogzaf_default_parameters_multisector.json",
+    ):
+        params = json.loads(
+            (package_dir / filename).read_text(encoding="utf-8")
+        )
+        J = params["J"]
+        for key in ("omega", "rho", "imm_rates"):
+            assert len(params[key][0][0]) == J
+        assert len(params["omega_SS"][0]) == J
