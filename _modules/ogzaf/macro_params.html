@@ -418,6 +418,8 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 
 
+<div class="viewcode-block" id="_fetch_wb_data">
+<a class="viewcode-back" href="../../content/api/macro_params.html#ogzaf.macro_params._fetch_wb_data">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_wb_data</span><span class="p">(</span><span class="n">indicators</span><span class="p">,</span> <span class="n">country_iso</span><span class="p">,</span> <span class="n">start_year</span><span class="p">,</span> <span class="n">end_year</span><span class="p">,</span> <span class="n">source</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Fetch a set of World Bank indicators and return a single DataFrame.</span>
@@ -492,9 +494,12 @@
     <span class="n">data</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">"year"</span>
     <span class="c1"># Preserve descending time order used by the existing pct_change(-1) logic.</span>
     <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">sort_index</span><span class="p">(</span><span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">data</span>
+    <span class="k">return</span> <span class="n">data</span></div>
 
 
+
+<div class="viewcode-block" id="_get_imf_macro_params">
+<a class="viewcode-back" href="../../content/api/macro_params.html#ogzaf.macro_params._get_imf_macro_params">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">_get_imf_macro_params</span><span class="p">(</span>
     <span class="n">country_iso</span><span class="p">,</span>
     <span class="n">target_year</span><span class="p">,</span>
@@ -611,7 +616,8 @@
         <span class="s2">"alpha_G"</span><span class="p">:</span> <span class="p">[</span>
             <span class="p">(</span><span class="n">values</span><span class="p">[</span><span class="s2">"G2_T"</span><span class="p">]</span> <span class="o">-</span> <span class="n">values</span><span class="p">[</span><span class="s2">"G24_T"</span><span class="p">]</span> <span class="o">-</span> <span class="n">values</span><span class="p">[</span><span class="s2">"G27_T"</span><span class="p">])</span> <span class="o">/</span> <span class="mi">100</span>
         <span class="p">],</span>
-    <span class="p">}</span>
+    <span class="p">}</span></div>
+
 
 
 <div class="viewcode-block" id="get_macro_params">

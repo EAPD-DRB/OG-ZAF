@@ -419,6 +419,8 @@
 <span class="n">SAM_path</span> <span class="o">=</span> <span class="s2">"https://raw.githubusercontent.com/EAPD-DRB/SAM-files/main/Data/ZAF/tn2023-1-2019-SASAM-for-distribution.xlsx"</span>
 
 
+<div class="viewcode-block" id="read_SAM">
+<a class="viewcode-back" href="../../content/api/input_output.html#ogzaf.input_output.read_SAM">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">read_SAM</span><span class="p">():</span>
     <span class="k">if</span> <span class="n">is_connected</span><span class="p">():</span>
         <span class="k">try</span><span class="p">:</span>
@@ -440,7 +442,8 @@
     <span class="k">else</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
         <span class="n">SAM</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">"No internet connection. SAM cannot be read."</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">SAM</span>
+    <span class="k">return</span> <span class="n">SAM</span></div>
+
 
 
 <div class="viewcode-block" id="get_alpha_c">
