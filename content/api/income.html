@@ -27,8 +27,8 @@
   </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
-<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+  <link href="../../_static/styles/theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
@@ -41,10 +41,10 @@
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
   
   <!-- So that users can add custom icons -->
-  <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <script defer src="../../_static/scripts/fontawesome.js?digest=55c26ed414f5f8a31ebb"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
-<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb" />
 
     <script src="../../_static/documentation_options.js?v=9eb32ce0"></script>
     <script src="../../_static/doctools.js?v=9a2dae69"></script>
@@ -65,6 +65,7 @@
     <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'content/api/income';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -73,20 +74,26 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../../_static/searchtools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../searchindex.js"></script>
+  
   </head>
-  
-  
-  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
-
+  <body data-default-mode="">
   
   
   <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
   
   <div id="pst-scroll-pixel-helper"></div>
   
   <button type="button" class="btn rounded-pill" id="pst-back-to-top">
     <i class="fa-solid fa-arrow-up"></i>Back to top</button>
-
+  
+  
+  
   
   <dialog id="pst-search-dialog">
     
@@ -112,7 +119,51 @@
 </div>
 
   
-    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
     </header>
   
 
@@ -403,7 +454,7 @@
                 <h2> Contents </h2>
             </div>
             <nav aria-label="Page">
-                <ul class="visible nav section-nav flex-column">
+                <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-ogzaf.income">ogzaf.income</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#percentiles-as-it-uses-fitted-polynomials-to-those-percentiles">percentiles, as it uses fitted polynomials to those percentiles.</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ogzaf.income.arc_error"><code class="docutils literal notranslate"><span class="pre">arc_error()</span></code></a></li>
@@ -614,7 +665,7 @@ and parameters a, b, and c, from the following arctan function:</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="ogzaf.income.get_e_interp">
-<span class="sig-prename descclassname"><span class="pre">ogzaf.income.</span></span><span class="sig-name descname"><span class="pre">get_e_interp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">S</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">age_wgts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">age_wgts_80</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">abil_wgts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/ogzaf/income.html#get_e_interp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ogzaf.income.get_e_interp" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">ogzaf.income.</span></span><span class="sig-name descname"><span class="pre">get_e_interp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">E</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">S</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">age_wgts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">age_wgts_80</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">abil_wgts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/ogzaf/income.html#get_e_interp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ogzaf.income.get_e_interp" title="Link to this definition">#</a></dt>
 <dd><p>This function takes a source matrix of lifetime earnings profiles
 (abilities, emat) of size (80, 7), where 80 is the number of ages
 and 7 is the number of ability types in the source matrix, and
@@ -627,13 +678,12 @@ Piketty and Saez (2003).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>S</strong> (<em>int</em>) – number of ages to interpolate. This method assumes that
-ages are evenly spaced between the beginning of the 21st
-year and the end of the 100th year, &gt;= 3</p></li>
-<li><p><strong>age_wgts</strong> (<em>Numpy array</em>) – distribution of population in each age
-for the interpolated ages, length S</p></li>
-<li><p><strong>age_wgts_80</strong> (<em>Numpy array</em>) – percent of population in each
-one-year age from 21 to 100, length 80</p></li>
+<li><p><strong>E</strong> (<em>int</em>) – age at which agents become economically active</p></li>
+<li><p><strong>S</strong> (<em>int</em>) – number of ages to interpolate</p></li>
+<li><p><strong>age_wgts</strong> (<em>Numpy array</em>) – joint distribution of population by age
+and lifetime income group, shape (S, J)</p></li>
+<li><p><strong>age_wgts_80</strong> (<em>Numpy array</em>) – joint distribution of population by
+one-year age and lifetime income group, shape (80, J)</p></li>
 <li><p><strong>abil_wgts</strong> (<em>Numpy array</em>) – distribution of population in each
 ability group, length J</p></li>
 <li><p><strong>plot_path</strong> (<em>str</em><em>)</em>) – if True, creates plots of emat_orig and the new
@@ -770,7 +820,7 @@ earnings group, length J</p></li>
     <i class="fa-solid fa-list"></i> Contents
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
-    <ul class="visible nav section-nav flex-column">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-ogzaf.income">ogzaf.income</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#percentiles-as-it-uses-fitted-polynomials-to-those-percentiles">percentiles, as it uses fitted polynomials to those percentiles.</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ogzaf.income.arc_error"><code class="docutils literal notranslate"><span class="pre">arc_error()</span></code></a></li>
@@ -829,8 +879,8 @@ By Marcelo LaFleur, Richard W. Evans, and Jason DeBacker
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
-<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+  <script defer src="../../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb"></script>
 
   <footer class="bd-footer">
   </footer>
