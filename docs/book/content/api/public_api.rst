@@ -14,5 +14,8 @@ There is also a link to the source code for each documented member.
    calibrate
    income
    input_output
+   labor
    macro_params
+   estimate_chi_n
+   update_baseline
    utils
