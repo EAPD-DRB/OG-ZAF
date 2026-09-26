@@ -153,7 +153,7 @@ def arctan_fit(first_point, coef1, coef2, coef3, abil_deprec, init_guesses):
     return abil_last
 
 
-def get_e_interp(E, S, age_wgts, age_wgts_80, abil_wgts, plot_path=None):
+def get_e_interp(S, age_wgts, age_wgts_80, abil_wgts, plot_path=None):
     """
     This function takes a source matrix of lifetime earnings profiles
     (abilities, emat) of size (80, 7), where 80 is the number of ages
@@ -168,12 +168,13 @@ def get_e_interp(E, S, age_wgts, age_wgts_80, abil_wgts, plot_path=None):
 
 
     Args:
-        E (int): age at which agents become economically active
-        S (int): number of ages to interpolate
-        age_wgts (Numpy array): joint distribution of population by age
-            and lifetime income group, shape (S, J)
-        age_wgts_80 (Numpy array): joint distribution of population by
-            one-year age and lifetime income group, shape (80, J)
+        S (int): number of ages to interpolate. This method assumes that
+            ages are evenly spaced between the beginning of the 21st
+            year and the end of the 100th year, >= 3
+        age_wgts (Numpy array): distribution of population in each age
+            for the interpolated ages, length S
+        age_wgts_80 (Numpy array): percent of population in each
+            one-year age from 21 to 100, length 80
         abil_wgts (Numpy array): distribution of population in each
             ability group, length J
         plot_path (str)): if True, creates plots of emat_orig and the new
@@ -184,16 +185,9 @@ def get_e_interp(E, S, age_wgts, age_wgts_80, abil_wgts, plot_path=None):
             so that population-weighted average is 1, size SxJ
 
     """
-    if age_wgts.shape != (S, abil_wgts.shape[0]):
-        raise ValueError("age_wgts must have shape (S, J).")
-    if age_wgts_80.shape != (80, abil_wgts.shape[0]):
-        raise ValueError("age_wgts_80 must have shape (80, J).")
-
-    # Get original 80 x 7 ability matrix.  The source profiles use a
-    # fixed seven-group distribution, so reduce the joint distribution to
-    # age weights only for this intermediate normalization.
+    # Get original 80 x 7 ability matrix
     abil_wgts_orig = np.array([0.25, 0.25, 0.2, 0.1, 0.1, 0.09, 0.01])
-    emat_orig = get_e_orig(age_wgts_80.sum(axis=-1), abil_wgts_orig, plot_path)
+    emat_orig = get_e_orig(age_wgts_80, abil_wgts_orig, plot_path)
     if (
         S == 80
         and np.array_equal(
@@ -202,7 +196,7 @@ def get_e_interp(E, S, age_wgts, age_wgts_80, abil_wgts, plot_path=None):
         )
         is True
     ):
-        emat_new_scaled = emat_orig / (emat_orig * age_wgts).sum()
+        emat_new_scaled = emat_orig
     elif (
         S == 80
         and np.array_equal(
@@ -227,7 +221,12 @@ def get_e_interp(E, S, age_wgts, age_wgts_80, abil_wgts, plot_path=None):
         emat_new[:, 7] = emat_orig[:, -1] * 0.847252448 * 3.5
         emat_new[:, 8] = emat_orig[:, -1] * 2.713698465 * 3.5
         emat_new[:, 9] = emat_orig[:, -1] * 18.74863983 * 4.0
-        emat_new_scaled = emat_new / (emat_new * age_wgts).sum()
+        emat_new_scaled = (
+            emat_new
+            / (
+                emat_new * age_wgts.reshape(80, 1) * abil_wgts.reshape(1, 10)
+            ).sum()
+        )
     elif (
         S == 80
         and np.array_equal(
@@ -248,7 +247,12 @@ def get_e_interp(E, S, age_wgts, age_wgts_80, abil_wgts, plot_path=None):
         emat_new[:, 6] = emat_orig[:, -1] * 0.458759521
         emat_new[:, 7] = emat_orig[:, -1] * 0.847252448
         emat_new[:, 8] = emat_orig[:, -1] * 4.317192601
-        emat_new_scaled = emat_new / (emat_new * age_wgts).sum()
+        emat_new_scaled = (
+            emat_new
+            / (
+                emat_new * age_wgts.reshape(80, 1) * abil_wgts.reshape(1, 9)
+            ).sum()
+        )
     else:
         # generate abil_midp vector
         J = abil_wgts.shape[0]
@@ -273,7 +277,7 @@ def get_e_interp(E, S, age_wgts, age_wgts_80, abil_wgts, plot_path=None):
         emat_s_midp = np.linspace(20.5, 99.5, 80)
         emat_j_mesh, emat_s_mesh = np.meshgrid(emat_j_midp, emat_s_midp)
         newstep = 80 / S
-        new_s_midp = np.linspace(E + 0.5 * newstep, E + S - 0.5 * newstep, S)
+        new_s_midp = np.linspace(20 + 0.5 * newstep, 100 - 0.5 * newstep, S)
         new_j_mesh, new_s_mesh = np.meshgrid(abil_midp, new_s_midp)
         newcoords = np.hstack(
             (
@@ -287,7 +291,12 @@ def get_e_interp(E, S, age_wgts, age_wgts_80, abil_wgts, plot_path=None):
             (new_s_mesh, new_j_mesh),
             method="linear",
         )
-        emat_new_scaled = emat_new / (emat_new * age_wgts).sum()
+        emat_new_scaled = (
+            emat_new
+            / (
+                emat_new * age_wgts.reshape(S, 1) * abil_wgts.reshape(1, J)
+            ).sum()
+        )
 
         if plot_path is not None:
             kwargs = {"path": plot_path, "filesuffix": "_intrp_scaled"}

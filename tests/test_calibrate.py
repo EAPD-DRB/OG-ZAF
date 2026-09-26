@@ -16,7 +16,6 @@ def _make_mock_p(I=1, M=1):  # noqa: E741
     p.E = 20
     p.S = 80
     p.T = 160
-    p.J = 7
     p.start_year = 2025
     p.lambdas = np.array([0.25, 0.25, 0.0625, 0.0625, 0.0625, 0.0625, 0.25])
     return p
@@ -161,48 +160,3 @@ class TestOnlinePartialFailure:
         assert d["g_y_annual"] == 0.01
         assert "alpha_c" in d
         assert "io_matrix" in d
-
-
-class TestDemographicIncomeGroups:
-    """Tests for demographic output with lifetime-income groups."""
-
-    @patch("ogzaf.calibrate.macro_params")
-    def test_demographics_request_and_retain_income_dimension(
-        self, mock_macro
-    ):
-        mock_macro.get_macro_params.return_value = {}
-        p = _make_mock_p()
-        omega_ss = np.full((p.S, p.J), 1 / (p.S * p.J))
-        omega_ss_80 = np.full((80, p.J), 1 / (80 * p.J))
-        demographic_params = {
-            "omega": np.zeros((p.T + p.S, p.S, p.J)),
-            "rho": np.zeros((p.T + p.S, p.S, p.J)),
-            "imm_rates": np.zeros((p.T + p.S, p.S, p.J)),
-            "omega_SS": omega_ss,
-        }
-
-        with patch("ogcore.demographics.get_pop_objs") as mock_demog:
-            mock_demog.side_effect = [
-                demographic_params,
-                {"omega_SS": omega_ss_80},
-            ]
-            with patch("ogzaf.calibrate.income.get_e_interp") as mock_income:
-                mock_income.return_value = np.ones((p.S, p.J))
-                c = Calibration(p, update_from_api=True)
-
-        for call in mock_demog.call_args_list:
-            np.testing.assert_array_equal(
-                call.kwargs["income_percentiles"], p.lambdas
-            )
-        mock_income.assert_called_once()
-        args, kwargs = mock_income.call_args
-        assert args[:2] == (p.E, p.S)
-        np.testing.assert_array_equal(args[2], omega_ss)
-        np.testing.assert_array_equal(args[3], omega_ss_80)
-        np.testing.assert_array_equal(args[4], p.lambdas)
-        assert kwargs == {"plot_path": None}
-        d = c.get_dict()
-        assert d["omega"].shape == (p.T + p.S, p.S, p.J)
-        assert d["rho"].shape == (p.T + p.S, p.S, p.J)
-        assert d["imm_rates"].shape == (p.T + p.S, p.S, p.J)
-        assert d["omega_SS"].shape == (p.S, p.J)

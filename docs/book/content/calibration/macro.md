@@ -64,12 +64,8 @@ corp_yhat = 8.199 - (2.975 * sov_y) + (0.478 * sov_y**2)
 X = sm.add_constant(corp_yhat)
 res = sm.OLS(sov_y, X).fit()
 
-r_gov_shift = (
-    -res.params[0] / 100
-)  # -0.03377  (= -\mu_d in the theoretical equation)
-r_gov_scale = res.params[
-    1
-]  #  0.24485  (= 1-\tau_d in the theoretical equation)
+r_gov_shift = -res.params[0] / 100  # -0.03377  (= -\mu_d in the theoretical equation)
+r_gov_scale = res.params[1]         #  0.24485  (= 1-\tau_d in the theoretical equation)
 ```
 
 If the LMW estimates are superseded, re-run the inversion above with the new coefficients and update the JSON values.

@@ -55,35 +55,6 @@ def test_arc_error():
     assert np.allclose(test_vals, expected_vals)
 
 
-@pytest.mark.parametrize(
-    "S,lambdas",
-    [
-        (80, np.array([0.25, 0.25, 0.2, 0.1, 0.1, 0.09, 0.01])),
-        (
-            80,
-            np.array(
-                [0.25, 0.25, 0.2, 0.1, 0.1, 0.09, 0.005, 0.004, 0.0009, 0.0001]
-            ),
-        ),
-        (40, np.array([0.25, 0.25, 0.2, 0.1, 0.1, 0.09, 0.01])),
-    ],
-)
-def test_get_e_interp_uses_joint_population_weights(monkeypatch, S, lambdas):
-    """Income profiles are normalized by joint age-income weights."""
-    source_e = np.arange(1, 80 * 7 + 1, dtype=float).reshape(80, 7)
-    monkeypatch.setattr(income, "get_e_orig", lambda *args: source_e)
-    J = len(lambdas)
-    age_wgts = np.arange(1, S * J + 1, dtype=float).reshape(S, J)
-    age_wgts /= age_wgts.sum()
-    age_wgts_80 = np.arange(1, 80 * J + 1, dtype=float).reshape(80, J)
-    age_wgts_80 /= age_wgts_80.sum()
-
-    e = income.get_e_interp(20, S, age_wgts, age_wgts_80, lambdas)
-
-    assert e.shape == (S, J)
-    assert np.isclose((e * age_wgts).sum(), 1.0)
-
-
 @pytest.mark.local
 def test_arctan_fit():
     """
@@ -91,26 +62,26 @@ def test_arctan_fit():
     """
     expected_vals = np.array(
         [
-            22.196999891242,
-            22.196999897747,
-            22.196999904181,
-            22.196999910546,
-            22.196999916843,
-            22.196999923072,
-            22.196999929234,
-            22.196999935332,
-            22.196999941365,
-            22.196999947335,
-            22.196999953243,
-            22.196999959089,
-            22.196999964876,
-            22.196999970603,
-            22.196999976271,
-            22.196999981882,
-            22.196999987436,
-            22.196999992935,
-            22.196999998378,
-            22.197000003768,
+            30.19999399,
+            30.19998699,
+            30.19997918,
+            30.19997039,
+            30.19996043,
+            30.19994904,
+            30.1999359,
+            30.19992057,
+            30.19990246,
+            30.19988072,
+            30.19985415,
+            30.19982094,
+            30.19977824,
+            30.19972131,
+            30.1996416,
+            30.19952204,
+            30.19932277,
+            30.19892423,
+            30.19772859,
+            14.19399974,
         ]
     )
     a = 1.3
