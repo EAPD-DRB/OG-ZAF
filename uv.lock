@@ -3,10 +3,10 @@ revision = 3
 requires-python = ">=3.12, <3.14"
 resolution-markers = [
     "python_full_version >= '3.13' and sys_platform == 'win32'",
-    "python_full_version < '3.13' and sys_platform == 'win32'",
     "python_full_version >= '3.13' and sys_platform == 'emscripten'",
-    "python_full_version < '3.13' and sys_platform == 'emscripten'",
     "python_full_version >= '3.13' and sys_platform != 'emscripten' and sys_platform != 'win32'",
+    "python_full_version < '3.13' and sys_platform == 'win32'",
+    "python_full_version < '3.13' and sys_platform == 'emscripten'",
     "python_full_version < '3.13' and sys_platform != 'emscripten' and sys_platform != 'win32'",
 ]
 
@@ -1655,7 +1655,7 @@ wheels = [
 
 [[package]]
 name = "ogcore"
-version = "0.20.0"
+version = "0.20.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "dask" },
@@ -1670,9 +1670,9 @@ dependencies = [
     { name = "requests" },
     { name = "scipy" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/ca/a7/cfb46571d24330effc1e44fbf7141c7a2759ee19c7bf6b105192bdb5c321/ogcore-0.20.0.tar.gz", hash = "sha256:bcac551584635fac332c1b0f5166d53ab9a60faeed6f01a534eec274334dcbc8", size = 1065083, upload-time = "2026-08-24T15:00:28.811Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/6b/f3/f792523556e6a06fa94f9236b94eb7f4f82b0bf20df4d9ab9e2f2bb0317e/ogcore-0.20.1.tar.gz", hash = "sha256:142318be718c58b00aa8724eb5ff4ea568f15a2aae5dc98b1fc12be985172f75", size = 1071344, upload-time = "2026-09-17T20:20:21.746Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/17/4f/fa2979ba9eededb6345e728ae2737ece297beb4b99a6a8aa9db7d10c0fb2/ogcore-0.20.0-py3-none-any.whl", hash = "sha256:8379299e2c6f93ff4d696cc181c2369ccc06ea6b1a732ce3a2dcd6a44eccdbf6", size = 1126646, upload-time = "2026-08-24T15:00:27.219Z" },
+    { url = "https://files.pythonhosted.org/packages/28/2c/c80f1cc2e5cdf9186cab431406f12337ee7d24411f91b462536627c21ff9/ogcore-0.20.1-py3-none-any.whl", hash = "sha256:021cc8dea2a876a3ae647ca25497b51d261114ced3d960e6df41059410d74ec6", size = 1128965, upload-time = "2026-09-17T20:20:20.242Z" },
 ]
 
 [[package]]
@@ -1878,7 +1878,7 @@ name = "pexpect"
 version = "4.9.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "ptyprocess", marker = "sys_platform != 'emscripten' and sys_platform != 'win32'" },
+    { name = "ptyprocess" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/42/92/cc564bf6381ff43ce1f4d06852fc19a2f11d180f23dc32d9588bee2f149d/pexpect-4.9.0.tar.gz", hash = "sha256:ee7d41123f3c9911050ea2c2dac107568dc43b2d3b0c7557a33212c398ead30f", size = 166450, upload-time = "2023-11-25T09:07:26.339Z" }
 wheels = [
@@ -2068,10 +2068,10 @@ resolution-markers = [
     "python_full_version < '3.13' and sys_platform != 'emscripten' and sys_platform != 'win32'",
 ]
 dependencies = [
-    { name = "future", marker = "python_full_version < '3.13'" },
-    { name = "numpy", marker = "python_full_version < '3.13'" },
-    { name = "progressbar2", marker = "python_full_version < '3.13'" },
-    { name = "scipy", marker = "python_full_version < '3.13'" },
+    { name = "future" },
+    { name = "numpy" },
+    { name = "progressbar2" },
+    { name = "scipy" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/fa/a4/c170504af2f7c71860a0c21d0921d99d2c41a5251877c0daea0ec1d3adc8/pygam-0.8.0.tar.gz", hash = "sha256:5cae01aea8b2fede72a6da0aba1490213af54b3476745666af26bbe700479166", size = 5513536, upload-time = "2018-10-31T17:17:33.128Z" }
 wheels = [
@@ -2088,7 +2088,7 @@ resolution-markers = [
     "python_full_version >= '3.13' and sys_platform != 'emscripten' and sys_platform != 'win32'",
 ]
 dependencies = [
-    { name = "progressbar2", marker = "python_full_version >= '3.13'" },
+    { name = "progressbar2" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/e3/6f/19690723b3c68b81ddbe8badc2c68743c2827a019e87118d576e9b149635/pygam-0.9.1.tar.gz", hash = "sha256:a321a017bf485ed93fc6233e02621f8e7eab3d4f8971371c9ae9e079c55be01d", size = 513848, upload-time = "2024-02-13T11:26:09.451Z" }
 wheels = [
