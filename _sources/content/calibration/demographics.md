@@ -58,9 +58,13 @@ We discuss the approach to estimating fertility rates $f_{s,t}$, mortality rates
   {numref}`Figure %s <FigFertRatesZAF>` was created using the [`ogcore.demographics.get_fert()`](https://github.com/PSLmodels/OG-Core/blob/master/ogcore/demographics.py#L146) function, which downloaded the data from the United National Data Portal API and plotted it in Python.[^un_data_portal]
 
   ```{code-cell} ipython3
-  :tags: ["hide-input", "remove-output"]
+  :tags: ["hide-input", "remove-output", "skip-execution"]
+  # Not run when the docs are built: run by hand to regenerate the figure.
+  # Downloads UN data (falls back to EAPD-DRB/Population-Data).
   import os
+  import matplotlib.pyplot as plt
   import ogcore.demographics as demog
+  YEAR_TO_PLOT = 2023
   plot_path = os.path.join(os.path.abspath(''), 'images')
 
   fert_rates, fig = demog.get_fert(
@@ -97,12 +101,13 @@ We discuss the approach to estimating fertility rates $f_{s,t}$, mortality rates
   The mortality rates are a population-weighted average of the male and female mortality rates by one-year age increments reported by United Nations. The maximum age in years in our model is truncated to 100-years old. In addition, we constrain the mortality rate to be 1.0 or 100 percent at the maximum age of 100.
 
   ```{code-cell} ipython3
-  :tags: ["hide-input", "remove-output"]
-
+  :tags: ["hide-input", "remove-output", "skip-execution"]
+  # Not run when the docs are built: run by hand to regenerate the figure.
+  # Downloads UN data (falls back to EAPD-DRB/Population-Data).
   import matplotlib.pyplot as plt
   import os
   import ogcore.demographics as demog
-
+  YEAR_TO_PLOT = 2023
   plot_path = os.path.join(os.path.abspath(''), 'images')
   mort_rates, _, fig = demog.get_mort(
       totpers=100,
@@ -142,10 +147,13 @@ We discuss the approach to estimating fertility rates $f_{s,t}$, mortality rates
   ```
 
   ```{code-cell} ipython3
-  :tags: ["hide-input", "remove-output"]
+  :tags: ["hide-input", "remove-output", "skip-execution"]
+  # Not run when the docs are built: run by hand to regenerate the figure.
+  # Downloads UN data (falls back to EAPD-DRB/Population-Data).
   import os
   import matplotlib.pyplot as plt
   import ogcore.demographics as demog
+  YEAR_TO_PLOT = 2023
   plot_path = os.path.join(os.path.abspath(''), 'images')
 
   imm_rates, fig = demog.get_imm_rates(
@@ -314,11 +322,19 @@ We discuss the approach to estimating fertility rates $f_{s,t}$, mortality rates
   ```
 
   ```{code-cell} ipython3
-  :tags: ["hide-input", "remove-output"]
+  :tags: ["hide-input", "remove-output", "skip-execution"]
+  # Not run when the docs are built: run by hand to regenerate the figure.
+  import json
   import os
-  import ogcore.demographics as demog
+  from importlib.resources import files
   import matplotlib.pyplot as plt
-  YEAR_TO_PLOT = 2023
+  import numpy as np
+  import ogcore.parameter_plots as pp
+  from ogcore.parameters import Specifications
+  p = Specifications()
+  with open(files("ogzaf") / "ogzaf_default_parameters.json") as f:
+      p.update_specifications(json.load(f))
+  YEAR_TO_PLOT = int(p.start_year)
   plot_path = os.path.join(os.path.abspath(''), 'images')
   fig = pp.plot_pop_growth(
       p,
