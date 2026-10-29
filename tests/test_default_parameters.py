@@ -21,13 +21,28 @@ def load_defaults():
 
 def test_pit_gs_params():
     # SARS 2025/26 statutory schedule: phi0 anchored to the 45% top
-    # marginal rate; phi2 tuned so PIT collects 10.15% of GDP from the
-    # filing half of earners (MTBPS 2026, Table 3.1)
+    # marginal rate; phi2 tuned so PIT collects 10.15% of GDP in 2025 from
+    # the filing half of earners (MTBPS 2026, Table 3.1)
     defaults = load_defaults()
     assert defaults["tax_func_type"] == "GS"
-    expected = [0.464, 1.39288, 1.65594e-08]
+    expected = [0.464, 1.39288, 1.2558e-08]
     for key in ["etr_params", "mtrx_params", "mtry_params"]:
-        assert defaults[key] == [[expected]]
+        assert defaults[key][0] == [expected]
+
+
+def test_pit_brackets_follow_average_income():
+    # The schedule moves with model average income, not with the trend:
+    # phi2_t = phi2_0 * lambda_t ** -phi1, where lambda_t (average income
+    # relative to 2025) falls to 0.80 as productivity stays below trend.
+    # phi0 and phi1 never change, and all three schedules are the same.
+    defaults = load_defaults()
+    path = defaults["etr_params"]
+    assert defaults["mtrx_params"] == path == defaults["mtry_params"]
+    assert all(row[0][:2] == [0.464, 1.39288] for row in path)
+    phi2 = [row[0][2] for row in path]
+    assert all(b >= a * (1 - 1e-4) for a, b in zip(phi2, phi2[1:]))
+    lam_end = (phi2[-1] / phi2[0]) ** (-1 / 1.39288)
+    assert 0.78 < lam_end < 0.82
 
 
 def test_income_tax_filer():
@@ -67,9 +82,38 @@ def test_public_investment_and_depreciation_sourced():
 
 
 def test_payroll_tax_is_explicit():
-    # SDL + UIF = 0.67% of GDP over the model's labour share 0.528
+    # SDL + UIF = 0.67% of GDP in 2025 over the model's labour income
     defaults = load_defaults()
-    assert defaults["tau_payroll"] == [[0.0127]]
+    assert defaults["tau_payroll"] == [[0.012681]]
+
+
+def test_tfp_path_is_the_productivity_baseline():
+    # Z comes from ogzaf.productivity: below trend now (output per hour
+    # follows the average of our rule and the OECD baseline) and 1 in the
+    # steady state, so the long run does not depend on the path
+    from ogzaf.productivity import z_path
+
+    defaults = load_defaults()
+    assert defaults["Z"] == z_path()
+    assert defaults["Z"][-1] == [1.0]
+    assert 1.05 < defaults["Z"][0][0] < 1.12
+
+
+def test_initial_wealth_matches_capital_stock():
+    # Household wealth in 2025 is set so private capital is 2.80 times GDP
+    # (PWT 11.0 less general government). The SARB household balance sheet
+    # (2.97) also counts foreign assets the model has no place for
+    defaults = load_defaults()
+    assert 2.7 < defaults["initial_wealth_ratio"] < 2.9
+
+
+def test_budget_rule_starts_after_treasury_window():
+    # alpha_G follows the Treasury's primary balance for 2025/26 and
+    # 2026/27, then holds at the debt-stabilising level; the budget rule
+    # takes over in 2030, after the MTBPS 2026 window ends in 2029/30
+    defaults = load_defaults()
+    assert defaults["alpha_G"] == [0.1896, 0.1866, 0.19]
+    assert defaults["tG1"] == 5
 
 
 def test_long_run_population_growth():
