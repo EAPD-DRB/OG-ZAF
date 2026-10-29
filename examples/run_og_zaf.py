@@ -14,6 +14,7 @@ from ogcore import output_plots as op
 from ogcore.execute import runner
 from ogcore.utils import safe_read_pickle
 from ogzaf.utils import is_connected
+from ogzaf import warm_start
 
 # Use a custom matplotlib style file for plots
 plt.style.use("ogcore.OGcorePlots")
@@ -58,6 +59,13 @@ def main():
         )  # =True will update data from online sources
         updated_params = c.get_dict()
         p.update_specifications(updated_params)
+
+    # Seed the steady state from the shipped solved state
+    # (ogzaf/warm_start.py); without a seed it cold-starts.
+    if warm_start.enable():
+        print("Warm start enabled (ogzaf/data/ss_warm_start.pkl).")
+    else:
+        print("No warm-start seed found; cold-starting the steady state.")
 
     # Run model
     start_time = time.time()
