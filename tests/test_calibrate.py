@@ -5,7 +5,7 @@ Tests of calibrate.py module — offline and partial-failure behavior
 import warnings
 import numpy as np
 from unittest.mock import MagicMock, patch
-from ogzaf.calibrate import Calibration
+from ogzaf.calibrate import Calibration, DEMOG_FINAL_DATA_YEAR, UN_COUNTRY_CODE
 
 
 def _make_mock_p(I=1, M=1):  # noqa: E741
@@ -194,6 +194,13 @@ class TestDemographicIncomeGroups:
             np.testing.assert_array_equal(
                 call.kwargs["income_percentiles"], p.lambdas
             )
+            # South Africa's own UN code, and the full projection window
+            assert call.kwargs["country_id"] == "710"
+            assert call.kwargs["final_data_year"] == DEMOG_FINAL_DATA_YEAR
+            # Measured South African income gradients (Demographic-Gradients)
+            assert call.kwargs["fert_gradient"] < 0
+            assert call.kwargs["infmort_gradient"] < 0
+            assert len(call.kwargs["mort_gradient"]) == 100
         mock_income.assert_called_once()
         args, kwargs = mock_income.call_args
         assert args[:2] == (p.E, p.S)
@@ -206,3 +213,23 @@ class TestDemographicIncomeGroups:
         assert d["rho"].shape == (p.T + p.S, p.S, p.J)
         assert d["imm_rates"].shape == (p.T + p.S, p.S, p.J)
         assert d["omega_SS"].shape == (p.S, p.J)
+
+
+def test_country_code_and_window_constants():
+    # Guard against a sibling's code surviving a file copy, and against the
+    # short window that froze 2026 demographic rates forever
+    assert UN_COUNTRY_CODE == "710"
+    assert DEMOG_FINAL_DATA_YEAR >= 2090
+
+
+def test_mortality_gradient_units_and_shape():
+    # Library tilts are per unit wealth rank; ogcore wants per centered
+    # percentile point, so every value must be about 100x smaller than the
+    # published tilt (a 100x error here is silent otherwise)
+    from ogzaf.calibrate import mortality_gradient
+
+    g = mortality_gradient()
+    assert g.shape == (100,)
+    assert np.all(g <= 0)
+    assert np.max(np.abs(g)) < 0.02
+    assert g[-1] == 0

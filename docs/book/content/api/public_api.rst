@@ -16,6 +16,9 @@ There is also a link to the source code for each documented member.
    input_output
    labor
    macro_params
+   productivity
+   targets
    estimate_chi_n
    update_baseline
    utils
+   warm_start

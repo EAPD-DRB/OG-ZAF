@@ -41,6 +41,12 @@ Exogenous life cycle income ability paths $\log(e_{j,s})$ with $S=80$ and $J=7$
 
 {numref}`Figure %s <FigLogAbil>` shows a calibration for $J=7$ deterministic lifetime ability paths $e_{j,s}$ corresponding to labor income percentiles $\boldsymbol{\lambda}=[0.25, 0.25, 0.20, 0.10, 0.10, 0.09, 0.01]$. Because there are few individuals above age 80 in the data, {cite}`DeBackerEtAl:2017` extrapolate these estimates for model ages 80-100 using an arctan function.
 
+## Unemployment
+
+OG-Core has no unemployment: every household works some hours. South Africa's unemployment rate is 32% (60% at ages 15–24; ILO, 2024), so how the model carries it matters. It is already in the earnings matrix. The NTA age profile is labour income per person, the jobless included, and the WID shares count people with no income. So $e_{j,s}$ is expected earnings, with employment rates by age and income group built in, and joblessness is not a choice households make in the model. Scaling $e$ again by employment rates would count unemployment twice. Raising the disutility of work $\chi^n$ instead would treat joblessness as chosen and make labour supply respond to taxes as if it were.
+
+The rates the matrix carries are close to today's. The NTA profile is for 2005, and the share of each age group in work then was close to 2024's: 47% against 44% at ages 25–34, 55% against 57% at 35–44, 51% against 59% at 45–54 and 33% against 39% at 55–64 (ILO, `EMP_DWAP_SEX_AGE_RT`, from the QLFS). The baseline assumes those rates hold. Labour input then grows with the working-age population, and the productivity path in the firms chapter carries the rest of South Africa's weak growth.
+
 ## Footnotes
 
 [^PS_note]: These data are available from the website of Emmanuel Saez: [https://eml.berkeley.edu/~saez/](https://eml.berkeley.edu/~saez/).  We use numbers from Table0, Panel B, "Income excluding realized capital gains."

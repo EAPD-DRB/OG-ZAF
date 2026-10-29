@@ -4,7 +4,31 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.3.0] - 2026-10-29 12:00:00
+
+### Changed
+
+- Requires ogcore >= 0.22.0. `tau_payroll` and `alpha_db` are T x J arrays; the transition uses Anderson acceleration with `nu = 0.2`.
+- Recalibrated the single-industry baseline to South African data. Each value is an effective rate or a measured ratio; sources are in the calibration chapters and `ogzaf/targets.py`.
+  - Taxes: progressive Gouveia-Strauss income tax (`tax_func_type` linear -> GS, `etr_params` 0.22 -> [0.464, 1.39288, 1.2558e-8] in 2025) collecting 10.15% of GDP in 2025, with `phi2` indexed to model average income so brackets move with incomes (rising to 1.716e-8); bottom two income groups outside the income tax net (`income_tax_filer`). `tau_c` 0.15 -> 0.1586 (all consumption taxes net of SACU payments, 8.92% of GDP). `adjustment_factor_for_cit_receipts` 0.3 -> 0.7385 (CIT plus dividends tax, 5.02%). `tau_payroll` 0 -> 0.012681 (SDL + UIF, 0.67%). Property taxes `p_wealth` 0 -> 0.0073 with `h_wealth` 0.1 -> 1 (municipal rates, transfer duty and securities transfer tax, 1.61%). `tau_bq` 0.2 -> 0.00995 (estate duty and donations tax, 0.08%). Every tax rate is tuned to 2025 collections.
+  - Production and households: `delta_annual` 0.05 -> 0.0405 (private consumption of fixed capital over private capital). `beta_annual` 0.96 -> 0.8706, set so private K/Y = 2.80 (PWT 11.0 less government capital); the implied real return of 11.0% is close to PWT's 12.0%.
+  - Growth: `g_y_annual` 0.0059 -> 0.014, PWT output per worker growth 1994-2019 and 2000-2019. `Z` 1 -> a path from 1.083 in 2025 to 1 in the steady state (`ogzaf/productivity.py`): output per hour grows 0.4% a year in 2026 and about 1.1% in the 2030s, the average of a rule built on South Africa's recent growth and cross-country persistence (Pritchett and Summers 2014) and the OECD long-term baseline capped at 1.44%.
+  - Open economy: `world_int_rate_annual` 0.04 -> 0.063 (4% plus the Treasury's 2.26-point sovereign premium). `zeta_K` 0.9 -> 0.16 (Chinn-Ito); the steady state's foreign-owned capital share, 21%, matches the gross IIP measure. `zeta_D` and `initial_foreign_debt_ratio` 0.162 -> 0.25 (non-resident share of domestic bonds).
+  - Debt: `initial_debt_ratio` 0.842 -> 0.770 (gross loan debt at the end of 2024/25, MTBPS 2026). `debt_ratio_ss` 1.2 -> 0.765 (Treasury path, 2029/30). `r_gov_shift` -0.0338 -> -0.0334 so the real rate on debt is the Treasury's effective 3.7%, with a debt-elastic premium centred on the target (`r_gov_DY` 0 -> -0.0612, `r_gov_DY2` 0 -> 0.04).
+  - Spending: `alpha_I` 0.0003 -> 0.0242 (general government investment). `alpha_G` 0.233 -> [0.1896, 0.1866, 0.1900]: the first two years on the Treasury's primary balance path, then the debt-stabilising level. `tG1` 20 -> 5: the budget rule takes over in 2030, after the MTBPS window.
+  - Initial wealth: `initial_wealth_ratio` unset -> 2.7907, so private capital is 2.80 times GDP in 2025.
+- Demographics use UN data through 2098 (`DEMOG_FINAL_DATA_YEAR`), so long-run population growth `g_n_ss` is 0.42% -> -0.03%, and fertility and mortality differ by lifetime income group with South Africa's measured gradients.
+- `get_macro_params` refreshes only `gamma` and `alpha_T` on a live update; the curated values above are not overwritten.
+
+### Added
+
+- `ogzaf/targets.py`, `examples/tune_ss.py`: the steady-state dashboard and tuning script.
+- `examples/validate_fiscal_path.py`: scores the baseline transition against the Treasury's debt, primary balance, revenue and public investment, the 2025 revenue targets, and the productivity path.
+- `ogzaf/productivity.py`: the baseline productivity path, its sources and the function that builds `Z`.
+- A calibration scorecard chapter in the documentation (`docs/book/content/calibration/scorecard.md`): every table and figure on how the baseline fits South African data, built from the example run by `examples/calibration_scorecard.py`, with the IMF forecast record it uses in `docs/book/content/calibration/data/`.
+- API pages for `ogzaf.productivity`, `ogzaf.targets` and `ogzaf.warm_start`.
+- `ogzaf/warm_start.py`, `examples/save_warm_start.py` and a packaged seed: the steady state starts from the last calibrated solution.
+- `python -m ogzaf.update_demographics`: regenerates only the demographic parameters.
 
 ### Fixed
 
@@ -136,6 +160,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - This version is a pre-release alpha. The example run script OG-ZAF/examples/run_og_zaf.py runs, but the model is not currently calibrated to represent the South African economy and population.
 
 
+[0.3.0]: https://github.com/EAPD-DRB/OG-ZAF/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/EAPD-DRB/OG-ZAF/compare/v0.1.1...v0.2.0
 [0.1.1]: https://github.com/EAPD-DRB/OG-ZAF/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/EAPD-DRB/OG-ZAF/compare/v0.0.11...v0.1.0

@@ -13,4 +13,4 @@ The default value for the intertemporal elasticity of substitution, $\sigma$, is
 
 ### Rate of time preference
 
-We take our default value for the rate of time preference parameter, $\beta$ from {cite}`Carroll:2009`.  We set the value to $\beta=0.96$ (on an annual basis).
+The rate of time preference is calibrated, not borrowed. With the capital share, depreciation and tax rates set from data, $\beta$ moves the return on capital and so the capital-output ratio. We set $\beta = 0.8706$ (annual, the same for every lifetime-income group), the value at which the steady-state private capital-output ratio equals 2.80 (see the firms chapter). This is lower than the 0.96 common in models of high-saving economies, and it matches South Africa's low domestic saving: gross national saving in 2025 was about 13.4% of GDP (gross capital formation of 13.9% less a current account deficit of 0.5%, SARB Quarterly Bulletin Tables S-116 and S-159). The implied real return on capital is 11.0%, against PWT's measured 12.0%.

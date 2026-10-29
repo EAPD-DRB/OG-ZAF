@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ogzaf"
-version = "0.2.0"
+version = "0.3.0"
 authors = [
     {name = "Marcelo LaFleur, Richard W. Evans, and Jason DeBacker"},
 ]
@@ -47,7 +47,7 @@ dependencies = [
     "statsmodels",
     "linearmodels",
     "linecheck",
-    "ogcore>=0.18.1",
+    "ogcore>=0.22.0",
 ]
 
 [project.urls]
@@ -82,6 +82,7 @@ include = ["ogzaf*"]
 ogzaf = [
     "ogzaf_default_parameters.json",
     "ogzaf_default_parameters_multisector.json",
+    "data/ss_warm_start.pkl",
 ]
 
 [tool.ruff]
