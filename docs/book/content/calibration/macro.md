@@ -3,7 +3,9 @@
 
 ## Economic Assumptions
 
-As the default rate of labour-augmenting technological change, $g_y$, we use 1.4% per year (`g_y_annual = 0.014`). On the model's balanced growth path aggregate GDP grows at approximately $g_y + g_n$; with the model's steady-state population growth $g_n \approx 0.42\%$ this reproduces the **~1.8% medium-term real GDP growth** that both the IMF (2025 Article IV, "reaching 1.8 percent in the medium term") and the National Treasury (2026 Budget Review, averaging 1.8% over 2026–2028, rising to 2.0% by 2028) assume — the *same* growth path that underpins the debt-stabilisation plan we anchor `debt_ratio_ss` to below.
+As the default rate of labour-augmenting technological change, $g_y$, we use 1.4% per year (`g_y_annual = 0.014`), South Africa's measured long-run productivity growth. In PWT 11.0, real GDP per person engaged (`rgdpna`/`emp`) grew 1.44% a year over 1994–2019 and over 2000–2019, both windows ending before the Covid shock. Hours per worker are available only from 2008; they fell about 0.3% a year over 2008–2019, so growth per hour, the measure the model needs, is if anything a little higher. The interest-growth differential is consistent with the Treasury's: with the steady-state real rate on debt of 3.7% and steady-state growth of $g_y + g_n \approx 1.4\%$ (long-run population growth is about zero, see the demographics chapter), $r_{gov} - g \approx 2.3$ percentage points, against about 2.1 points in the Treasury's medium-term numbers (a 7.1% nominal effective rate, a 3% inflation target and 2.0% real growth; [MTBPS 2026](https://www.treasury.gov.za/MediumTermBudget/Medium%20Term%20Budget%20Policy%20Statement%20Full%20document.pdf), Tables 1.1 and 3.5).
+
+Near-term growth in the model is higher than the forecasts, for a reason $g_y$ cannot fix. The model's adult population grows about 1.4% a year in the first decade (UN WPP 2024) and every adult supplies labour, so effective labour grows about 2.2% a year and GDP about 3.3%. South Africa's employment grew 1.2% a year over 1994–2019 (PWT) and unemployment is a third of the labour force; the Treasury forecasts 1.2–2.0% growth for 2026–2029. OG-Core has no unemployment, so the model turns the youth bulge into output that South Africa does not produce. See the fiscal path below for what this does to debt.
 
 We deliberately do **not** use South Africa's *realized* productivity growth, which has been dismal — near zero, even negative, over the 2010s state-capture/load-shedding decade, when potential growth collapsed from ~4% to near zero and TFP subtracted about 1.3 percentage points from growth. The steady state is a long-run object, and pairing that stagnation with a *stabilising* debt target would be internally inconsistent: it is precisely the IMF's more pessimistic scenario, in which debt does **not** stabilise but drifts toward 84% of GDP. The ~1.8% recovery is reform-contingent (Operation Vulindlela — energy and logistics), and we adopt it as the sustainable long-run assumption that is consistent with the debt anchor. Because $g_y$ is now a curated forward-looking assumption rather than a realized-data series, it is held in the packaged parameters and no longer refreshed from the live World Bank pull.
 
@@ -11,7 +13,7 @@ We deliberately do **not** use South Africa's *realized* productivity growth, wh
 
 ### World interest rate
 
-We set the annual world interest rate, `world_int_rate_annual`, to 6.3%: a 4% global risk-free rate plus a South African sovereign risk premium of roughly 2.3 percentage points. The premium is anchored by the National Treasury's own estimate — "the sovereign risk premium – the extra yield investors demand to hold government debt over 'risk-free' alternatives – has narrowed from 2.93 percentage points a year ago to 2.26 percentage points" ([2026 Budget Review, Chapter 7](https://www.treasury.gov.za/documents/National%20Budget/2026/review/Chapter%207.pdf)). The chapter does not define the benchmark instrument, so we corroborate the level with hard-currency evidence, which lands in the same band: South Africa's US-dollar bond spreads traded around 2.2–2.6 percentage points over Treasuries in 2025/26 (multi-year lows, after the December 2025 US$3.5 billion oversubscribed Eurobond), and the Damodaran country-default-spread table puts a Ba2/BB sovereign at roughly 2.7–3.2 percentage points. This is the rate at which foreign capital is supplied to the domestic economy; the previous value of 4% omitted the country premium entirely. South Africa remains sub-investment-grade (BB/Ba2 at all three agencies, upgraded during 2025–26 with positive outlooks), so its premium is materially larger than that of investment-grade emerging markets.
+We set the annual world interest rate, `world_int_rate_annual`, to 6.3%: a 4% global risk-free rate plus a South African sovereign risk premium of roughly 2.3 percentage points. The premium is anchored by the National Treasury's own estimate — "the sovereign risk premium – the extra yield investors demand to hold government debt over 'risk-free' alternatives – has narrowed from 2.93 percentage points a year ago to 2.26 percentage points" ([2026 Budget Review, Chapter 7](https://www.treasury.gov.za/documents/National%20Budget/2026/review/Chapter%207.pdf)). The chapter does not define the benchmark instrument, so we corroborate the level with hard-currency evidence, which lands in the same band: South Africa's US-dollar bond spreads traded around 2.2–2.6 percentage points over Treasuries in 2025/26 (multi-year lows, after the December 2025 US$3.5 billion oversubscribed Eurobond), and the Damodaran country-default-spread table puts a Ba2/BB sovereign at roughly 2.7–3.2 percentage points. This is the rate at which foreign capital is supplied to the domestic economy. South Africa remains sub-investment-grade (BB/Ba2 at all three agencies, upgraded during 2025–26 with positive outlooks), so its premium is materially larger than that of investment-grade emerging markets.
 
 ### Foreign holding of government debt in the initial period
 
@@ -23,16 +25,15 @@ We set $\zeta_D = 0.25$, matching the foreign share of the domestic government b
 
 ### Foreign holdings of excess capital
 
-We set $\zeta_K = 0.16$, the normalized Chinn-Ito capital-account openness index (`ka_open`) for South Africa, which is 0.1626 in the [2022 update](https://web.pdx.edu/~ito/Chinn-Ito_website.htm) (unchanged since 2008). This parameter is hard to pin down directly since foreign purchases of "excess" capital demand are not measured; the Chinn-Ito index anchors it to South Africa's de jure openness, which is low because exchange controls still apply to residents. De facto participation by non-residents in South African capital markets is considerably higher, so 0.16 is a conservative anchor. (The previous value of 0.9 implied near-total foreign absorption of excess capital demand, which has no empirical basis for South Africa.)
+We set $\zeta_K = 0.16$, the normalized Chinn-Ito capital-account openness index (`ka_open`) for South Africa, which is 0.1626 in the [2022 update](https://web.pdx.edu/~ito/Chinn-Ito_website.htm) (unchanged since 2008). This parameter is hard to pin down directly since foreign purchases of "excess" capital demand are not measured; the Chinn-Ito index anchors it to South Africa's de jure openness, which is low because exchange controls still apply to residents. De facto participation by non-residents in South African capital markets is considerably higher, so 0.16 is a conservative anchor. We check the level the steady state produces against the balance of payments. Read gross, as the model's capital identity requires, foreign-owned capital is inward direct-investment equity (about 22.7% of GDP) plus portfolio equity (about 34.8%) at the end of 2025 ([SARB IIP](https://www.resbank.co.za/), equity splits from QB S-98), divided by private capital of 2.80 times GDP: 20.5% of the private capital stock. This is an upper bound, because the portfolio-equity figure includes dual-listed companies whose capital sits abroad; direct-investment equity alone gives 8%. At $\zeta_K = 0.16$ the steady state lands at 21.1%, on the gross measure, so the prior needs no adjustment. The sign is right because the domestic return on capital (11.0%) sits above the 6.3% world rate, so foreign capital flows in.
 
 ## Government Debt, Spending and Transfers
 
 ### Government Debt
 
-The path of government debt is endogenous. But the initial value is exogenous. To avoid converting between model units and rand, we calibrate the initial debt-to-GDP ratio rather than the rand value of the debt. This is the model parameter $\alpha_D$ (`initial_debt_ratio`), which we set to 0.789: national government gross loan debt is 78.9% of GDP in 2025/26 ([2026 Budget Review, Chapter 7](https://www.treasury.gov.za/documents/National%20Budget/2026/review/Chapter%207.pdf), Table 7.7). We use the National Treasury's national-government gross loan debt rather than the World Bank QPSD general-government series, which measures a wider perimeter (for 2025 the QPSD figure is roughly 84% of GDP); the Treasury figure is the one the fiscal framework targets and reports against.
+The path of government debt is endogenous. But the initial value is exogenous. To avoid converting between model units and rand, we calibrate the initial debt-to-GDP ratio rather than the rand value of the debt. This is the model parameter $\alpha_D$ (`initial_debt_ratio`), which we set to 0.770: national government gross loan debt at the end of fiscal year 2024/25, the stock the model's first year (2025) starts from ([MTBPS 2026](https://www.treasury.gov.za/MediumTermBudget/Medium%20Term%20Budget%20Policy%20Statement%20Full%20document.pdf), Table 3.8). We use the National Treasury's national-government gross loan debt rather than the World Bank QPSD general-government series, which measures a wider perimeter; the Treasury figure is the one the fiscal framework targets and reports against.
 
-The long-run debt target `debt_ratio_ss` is set to 0.765. The 2026 Budget Review projects gross loan debt to stabilize at 78.9% of GDP in 2025/26 — the first stabilization in 17 years — and to decline to 76.5% by 2028/29; we take the end of the medium-term expenditure framework as the steady-state anchor.
-
+The long-run debt target `debt_ratio_ss` is set to 0.765. The MTBPS 2026 has gross loan debt peaking at 78.4% of GDP in 2025/26 and falling to 76.6% by 2029/30, the end of its projection; we take that end point as the steady-state anchor.
 
 #### Interest rates on government debt
 
@@ -103,37 +104,67 @@ The premium is exactly zero at the debt target, so the steady state is unchanged
 
 ### Aggregate transfers
 
-Aggregate (non-Social Security) transfers to households are set as a share of GDP with the parameter $\alpha_T$. We exclude Social Security from transfers since it is modeled specifically. With this definition, the share of transfers to GDP is 0.037, computed from the IMF Government Finance Statistics (non-interest transfers, latest available year) by `ogzaf.macro_params.get_macro_params`, which refreshes this parameter from the [IMF GFS API](https://data.imf.org/) on a live update.
+Aggregate transfers to households are set as a share of GDP with the parameter $\alpha_T = 0.037$. They are cash transfers only: South Africa's social grants, including the Social Relief of Distress grant, cost 3.6% of GDP in 2025/26 ([Budget Review 2026](https://www.treasury.gov.za/documents/National%20Budget/2026/review/FullBR.pdf), Table 5.7). The old-age grant (1.5% of GDP) is part of this total; South Africa has no contributory state pension, so the model's pension system is switched off (all PIA rates zero) and the grant is a transfer.
+
+### Public investment
+
+Government investment is set with $\alpha_I = 0.0242$, general government gross fixed capital formation in 2025 (2.42% of GDP, [SARB Quarterly Bulletin](https://www.resbank.co.za/), Table S-127). Public corporations (Eskom, Transnet and others, another 1.56% of GDP) are market producers in the national accounts and their capital is part of the private stock $K$ below. Public capital does not enter production in this calibration ($\gamma_g = 0$).
 
 ### Government expenditures
 
-Government spending on goods and services is also set as a share of GDP with the parameter $\alpha_G$. We define government spending as:
-    <center>Government Spending = Total Outlays - Transfers - Net Interest on Debt - Social Security</center>
-The IMF Government Finance Statistics put this share near 0.23–0.27. We instead set $\alpha_G = 0.19$ — the level at which the government budget is *consistent with the steady-state debt target* (see **Fiscal consistency** below). This sits just below South Africa's actual general-government consumption (~0.21 of GDP) because a steady state that holds debt at 0.765 must run the debt-stabilising primary surplus, which South Africa's current, deficit-running fiscal stance does not yet deliver: the model's steady state is the *sustainable, post-consolidation* state the Budget Review is steering toward, not today's stance. Because $\alpha_G$ is pinned to this consistency requirement rather than the raw GFS figure, it is held in the packaged parameters and not refreshed live.
+Government consumption is set with $\alpha_G$. In the steady state OG-Core solves for it from the budget identity below, and it lands at 18.5% of GDP, against general government final consumption of 18.9% in 2025 (SARB QB S-116). Along the transition $\alpha_G$ is a short path, `[0.1896, 0.1866, 0.1851]`, so the primary balance follows the Treasury's consolidated plan in the first two years (+1.3% of GDP in 2025/26, +1.6% in 2026/27) and then holds at the debt-stabilising level. From 2027/28 the Treasury plans surpluses (2.0–3.0%) above the stabilising one, to bring debt down; the model does not chase them, because the steady state holds debt at the target rather than below it.
 
 ## Fiscal consistency
 
-The spending shares ($\alpha_G$, $\alpha_T$), the revenue the tax system raises, and the debt target `debt_ratio_ss` are not free of one another: for debt to hold at $\bar{d} = 0.765$ in the steady state, the government must run a primary surplus $pb^\* = \tfrac{r_{gov}-g}{1+g}\,\bar{d}$, so **primary spending must equal revenue minus $pb^\*$**. With the calibration above ($r_{gov} \approx 3.7\%$, $g \approx 1.8\%$, so $pb^\* \approx 1.4\%$ of GDP) and total tax revenue of ~24% of GDP, consistent primary spending is ~22.5% of GDP, i.e. $\alpha_G + \alpha_T \approx 0.227$ — hence $\alpha_G = 0.19$.
+The spending shares, the revenue the tax system raises and the debt target `debt_ratio_ss` are not free of one another. For debt to hold at $\bar{d} = 0.765$ in the steady state, the government must run a primary surplus $pb^\* = \tfrac{r_{gov}-g}{1+g}\,\bar{d}$, so primary spending, including public investment and transfers, must equal revenue minus $pb^\*$:
 
-This identity is why the calibration is internally reconciled rather than a collection of independent point estimates. Two earlier settings had *masked* the fact that the block did not balance: a flat 22% personal income tax that over-collected (~16% of GDP versus South Africa's actual ~10%), and a stray 20% bequest tax (`tau_bq = 0.2`) that collected ~3.9% of GDP with no basis in South African law. Both inflated revenue enough to paper over a spending-above-revenue gap; with the correct progressive PIT and the bequest tax removed, the gap surfaced, and — because OG-Core's steady-state closure silently defers it to the transition while the debt-elastic premium prices the resulting overshoot — it made the baseline transition diverge until the spending side was reconciled to the identity. The debt-dynamics arithmetic is also the honest reason $g_y$ and $r_{gov}$ are calibrated as above: a model with a hotter interest-growth differential than South Africa's ($r_{gov}-g$) would demand a larger primary surplus and force $\alpha_G$ implausibly low.
+```{math}
+\alpha_G + \alpha_T + \alpha_I = \text{revenue}/Y - pb^\*
+```
 
-South Africa's debt is not a solvency or default question for this purpose — it is ~90% rand-denominated, long-maturity and domestically financed, rated sub-investment-grade-but-*stabilising* (BB/Ba2, all three agencies on positive outlook in 2025–26), and the IMF assesses debt-distress risk as moderate with no restructuring risk. The stable-debt steady state is therefore a modelling device for the sustainable long run, consistent with the National Treasury's own stabilisation-at-~76.5% plan, not a claim that default is off the table or that current policy already stabilises debt (the IMF's more cautious baseline has debt still rising absent a sustained ~3% primary surplus).
+With $r_{gov} = 3.7\%$ and $g = 1.38\%$, $pb^\* = 1.75\%$ of GDP. Revenue is 26.4% of GDP, so primary spending is 24.7%: 18.5% government consumption, 3.7% transfers and 2.4% public investment. The Treasury's consolidated primary surplus is 1.3% in 2025/26 and is planned to rise above 1.75% from 2027/28, so the steady state's fiscal stance is one the Treasury plans to pass within three years.
+
+South Africa's debt is not a solvency or default question for this purpose — it is ~90% rand-denominated, long-maturity and domestically financed, rated sub-investment-grade-but-*stabilising* (BB/Ba2, all three agencies on positive outlook in 2025–26), and the IMF assesses debt-distress risk as moderate with no restructuring risk. The stable-debt steady state is therefore a modelling device for the sustainable long run, consistent with the National Treasury's own plan, which has debt at 76.6% of GDP in 2029/30, not a claim that default is off the table or that current policy already stabilises debt (the IMF's more cautious baseline has debt still rising absent a sustained ~3% primary surplus).
 
 ### Steady-state validation
 
-The calibrated steady state, solved offline from the packaged parameters, lands close to South African data instrument by instrument and moment by moment:
+The steady state of the packaged parameters, solved by `examples/run_og_zaf.py` (ogcore 0.22.0, offline), against South African data. Targets and sources are in `ogzaf/targets.py`; `examples/tune_ss.py` prints the same table.
 
-| Moment | Model SS | South Africa (data) | Source |
+| Moment | Model | Data | Source |
 |---|---|---|---|
-| Personal income tax / GDP | 10.1% | 10.1% | Budget Review 2026 / SARS |
-| Corporate income tax / GDP | 4.5% | 4.5% | Budget Review 2026 |
-| Consumption (indirect) tax / GDP | 9.5% | ~10% | SARS (VAT + fuel + excise + customs) |
-| Government debt $D/Y$ | 0.765 | 0.765 (2028/29 target) | Budget Review 2026 |
-| Foreign-held debt share $D_f/D$ | 0.25 | 0.25 | Budget Review 2026 |
-| Sovereign real rate $r_{gov}$ | 3.7% | ~3.7% effective | Budget Review 2026 (deflated) |
-| Real GDP growth $g$ | 1.8% | 1.8% (medium-term) | IMF / Budget Review 2026 |
-| Primary surplus | 1.5% | 1.4% stabilising; 2.3% targeted by 2028/29 | Budget Review 2026 |
-| `factor` (mean income) | R124,371 | R123,809 (data anchor) | model diagnostic |
-| Capital-output $K/Y$ | 4.35 | — (OG-Core family ~4–5) | — |
+| Personal income tax / GDP | 10.13% | 10.15% | MTBPS 2026, 2025/26 |
+| Company tax + dividends tax / GDP | 5.02% | 5.02% | MTBPS 2026 |
+| Consumption taxes, net of SACU / GDP | 8.91% | 8.92% | MTBPS 2026, BR 2026 |
+| Payroll levies (SDL + UIF) / GDP | 0.67% | 0.67% | MTBPS 2026, UIF |
+| Property taxes / GDP | 1.60% | 1.61% | Stats SA P9114, BR 2026 |
+| Estate duty + donations tax / GDP | 0.08% | 0.08% | BR 2026 |
+| Real rate on government debt | 3.71% | 3.7% | MTBPS 2026, deflated |
+| Debt / GDP | 0.765 | 0.765 (2029/30 path) | MTBPS 2026 |
+| Foreign share of debt | 0.25 | 0.25 | BR 2026 |
+| Government consumption / GDP | 18.5% | 18.9% | SARB QB 2025 |
+| Transfers / GDP | 3.7% | 3.6% | BR 2026 |
+| Public investment / GDP | 2.42% | 2.42% | SARB QB 2025 |
+| Private capital / GDP | 2.79 | 2.80 | PWT 11.0, SARB |
+| Real return on capital | 11.0% | 12.0% | PWT 11.0 `irr` |
+| Foreign-owned share of capital | 21.2% | 8–20.5% (gross) | SARB IIP |
+| Household wealth / GDP | 2.77 | 2.97 | SARB QB S-142 |
+| Private consumption / GDP (purchaser prices) | 67.2% | 65.8% | SARB QB 2025 |
+| Total investment / GDP | 17.6% | 13.9% (2025); 18% (2010–2019) | SARB QB; PWT 11.0 `csh_i` |
 
-The `factor` diagnostic — the model's solved mean income against the R123,809 data anchor — matches to within 0.5%, confirming the income level is well aligned.
+Three rows are not targeted. Investment is above 2025's depressed level and close to the 2010s average. The trade surplus is 5.7% of GDP against 1.9% in 2025: in the model it pays the return on foreign-owned capital, while South Africa also earns income on foreign assets of 135% of GDP, which OG-Core's single foreign-capital stock cannot hold. Household wealth is 0.2 times GDP below the SARB balance sheet.
+
+### Fiscal path validation
+
+`examples/validate_fiscal_path.py` scores the first years of the baseline transition against the Treasury's numbers.
+
+```{figure} ./images/fiscal_path.png
+---
+height: 300px
+name: FigFiscalPath
+---
+Baseline transition against gross loan debt (MTBPS 2026 Tables 1.3 and 3.8), the consolidated primary balance (MTBPS 2026 Tables 1.2, 3.6 and 4.1), tax revenue (MTBPS 2026 Table 3.1, bridged to the model's concept) and public investment (SARB QB S-127).
+```
+
+The model starts from the measured debt ratio, 77.0% of GDP, and its primary surplus follows the Treasury's in the first two years (1.05% and 1.33% against 1.3% and 1.6%). Debt then falls, to 73.7% in 2029 against the Treasury's 77.5%, and to a low of 61% around 2045 before it returns to the 76.5% target. The cause is growth: model GDP grows 3.3% a year in 2026–2029 against the Treasury's 1.2–2.0%, because the model employs the whole growing adult population (see Economic Assumptions above). With growth 1.5 points too high, the debt ratio falls about 1.1 points a year faster. Revenue (26.2% of GDP against 26.6% in 2025/26) and public investment match. Consumption is smooth from the first year; there is no start-up jump.
+
+The model's first-year household wealth is 2.61 times GDP, set by the steady-state wealth profile and the 2025 population. The data are 2.93 (capital side: private capital net of foreign ownership plus domestically held debt) and 2.97 (SARB household balance sheet). ogcore 0.22.0 can target this level (`initial_wealth_ratio`); it is not set in this calibration.
