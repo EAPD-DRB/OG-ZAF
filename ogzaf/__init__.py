@@ -8,4 +8,4 @@ from ogzaf.input_output import *  # noqa: F403
 from ogzaf.macro_params import *  # noqa: F403
 from ogzaf.utils import *  # noqa: F403
 
-__version__ = "0.2.0"
+__version__ = "0.3.0"
