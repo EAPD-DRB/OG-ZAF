@@ -4,7 +4,8 @@ The baseline path of total factor productivity (Z) and where it comes from.
 South Africa's productivity has fallen since 2008: in PWT 11.0, TFP
 (``rtfpna``) fell 1.0% a year over 2008-2019 and real GDP per person engaged
 grew 0.25% a year, against 2.4% over 1994-2008. The model's long-run growth
-rate of labour productivity, g_y = 1.44%, is the 1994-2019 average. Z is the
+rate of labour productivity, g_y = 1.4% (g_y_annual = 0.014), is set from the
+1994-2019 average of 1.44%. Z is the
 bridge: it lies below that trend now and closes the gap over the transition.
 
 The path of output per hour the model is fitted to is the average of two
@@ -20,8 +21,9 @@ baseline estimates, year by year:
 2. The OECD long-term baseline (Economic Outlook 117, June 2025,
    DF_EO_LTB): potential output per potential worker grows 0.7% a year in
    2025-2030 and 1.9% in 2030-2040. We interpolate between the period
-   midpoints and cap it at our long-run 1.44%; the OECD's higher later rates
-   rest on convergence toward the frontier, which we do not assume.
+   midpoints and cap it at the 1994-2019 average, 1.44%; the OECD's higher
+   later rates rest on convergence toward the frontier, which we do not
+   assume.
 
 Forecasts by the IMF, the SARB and the National Treasury are not used: they
 assume reforms (energy, logistics) take hold, and the IMF's five-year-ahead
@@ -39,6 +41,8 @@ unchanged. ``z_path`` turns the drags into the packaged ``Z`` parameter.
 
 import numpy as np
 
+# growth of real GDP per person engaged, 1994-2019 (PWT 11.0); g_y_annual
+# rounds it to 0.014
 LONG_RUN_GROWTH = 0.0144
 RULE_PERSISTENCE = 0.8865
 N_YEARS = 60
