@@ -254,10 +254,10 @@ def get_macro_params(
     # curated long-run productivity growth (0.014, PWT GDP per person engaged
     # 1994-2019); the stagnant recent years enter through the Z path in
     # ogzaf/productivity.py, not through g_y. Likewise the debt block
-    # (initial_debt_ratio, initial_foreign_debt_ratio, zeta_D) is not pulled: the World Bank QPSD
-    # measures a wider (general-government) perimeter than the National
-    # Treasury national-government figure the model tracks. Both live in the
-    # packaged ogzaf_default_parameters.json; see
+    # (initial_debt_ratio, initial_foreign_debt_ratio, zeta_D) is not pulled:
+    # the World Bank QPSD measures a wider (general-government) perimeter
+    # than the National Treasury national-government figure the model
+    # tracks. Both live in the packaged ogzaf_default_parameters.json; see
     # docs/book/content/calibration/macro.md.
 
     """
