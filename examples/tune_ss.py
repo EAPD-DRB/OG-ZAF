@@ -70,7 +70,7 @@ def main():
     client.close()
 
     ss = safe_read_pickle(os.path.join(out, "SS", "SS_vars.pkl"))
-    model = ss_moments(ss, p)
+    model = ss_moments(ss)
     rc = float(np.max(np.abs(ss["resource_constraint_error"])))
     print(
         f"\nSS solved in {secs:.0f} s; max |RC error| {rc:.2e}; "

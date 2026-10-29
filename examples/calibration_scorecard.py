@@ -575,7 +575,7 @@ def write_tables(tables):
 def main():
     tpi, ss, p = load("OUTPUT_BASELINE")
     m = paths(tpi, p)
-    mom = ss_moments(ss, p)
+    mom = ss_moments(ss)
     imf = pd.read_csv(IMF_FILE)
 
     fig_fiscal(m)

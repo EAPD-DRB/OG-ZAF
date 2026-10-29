@@ -62,13 +62,12 @@ TARGETS = {
 }
 
 
-def ss_moments(ss, p):
+def ss_moments(ss):
     """
     Model side of every dashboard row from a solved steady state.
 
     Args:
         ss (dict): a solved ``SS_vars.pkl``
-        p (OG-Core Specifications object): model parameters
 
     Returns:
         m (dict): model moments, keyed like ``TARGETS``, plus untargeted
