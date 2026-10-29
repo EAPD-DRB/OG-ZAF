@@ -25,6 +25,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - `ogzaf/targets.py`, `examples/tune_ss.py`: the steady-state dashboard and tuning script.
 - `examples/validate_fiscal_path.py`: scores the baseline transition against the Treasury's debt, primary balance, revenue and public investment, the 2025 revenue targets, and the productivity path.
 - `ogzaf/productivity.py`: the baseline productivity path, its sources and the function that builds `Z`.
+- A calibration scorecard chapter in the documentation (`docs/book/content/calibration/scorecard.md`): every table and figure on how the baseline fits South African data, built from the example run by `examples/calibration_scorecard.py`, with the IMF forecast record it uses in `docs/book/content/calibration/data/`.
+- API pages for `ogzaf.productivity`, `ogzaf.targets` and `ogzaf.warm_start`.
 - `ogzaf/warm_start.py`, `examples/save_warm_start.py` and a packaged seed: the steady state starts from the last calibrated solution.
 - `python -m ogzaf.update_demographics`: regenerates only the demographic parameters.
 

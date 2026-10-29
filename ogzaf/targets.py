@@ -63,7 +63,17 @@ TARGETS = {
 
 
 def ss_moments(ss, p):
-    """Model side of every dashboard row from a solved SS_vars dict."""
+    """
+    Model side of every dashboard row from a solved steady state.
+
+    Args:
+        ss (dict): a solved ``SS_vars.pkl``
+        p (OG-Core Specifications object): model parameters
+
+    Returns:
+        m (dict): model moments, keyed like ``TARGETS``, plus untargeted
+            ratios
+    """
     Y = float(np.squeeze(ss["Y"]))
 
     def sc(key):
