@@ -4810,7 +4810,7 @@
             1.0
         ]
     ],
-    "nu": 0.4,
+    "nu": 0.2,
     "SS_root_method": "hybr",
     "FOC_root_method": "hybr",
     "maxiter": 250,
@@ -874562,6 +874562,6 @@
     ],
     "TPI_anderson_beta": 1.0,
     "TPI_anderson_m": 5,
-    "TPI_outer_method": "picard",
+    "TPI_outer_method": "anderson",
     "TPI_trust_radius": 1.0
 }
