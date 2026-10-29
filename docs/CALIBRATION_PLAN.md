@@ -1,0 +1,58 @@
+# OG-ZAF calibration plan: moments, levers and dashboards
+
+Step zero of the calibration (og-country-calibration skill), written from the
+equations ogcore 0.22.0 evaluates (`firm.get_r`, `aggregates.get_K_splits`,
+`fiscal.get_r_gov`, `fiscal.get_G_ss`) before the upgrade round on
+`feature/sa-calibration`. Status of each lever: **S** sourced from data,
+**T** tuned to the named moment, **D** deliberately defaulted with a reason,
+**U** unexamined (inherited from OG-USA or an earlier port; must end as S, T
+or D).
+
+## Two dashboards
+
+1. **Steady state** (`examples/tune_ss.py`, targets in `ogzaf/targets.py`).
+   Fiscal rows first, then external, production, households.
+2. **Near-term fiscal path** (baseline transition, first 10-15 years): debt,
+   primary balance, revenue and public investment against actuals for
+   2024/25-2025/26 and the National Treasury's medium-term path to 2028/29.
+   Needs a transition run.
+
+## Moment x lever table
+
+| Moment | Model closed form | Levers (status) | Shares levers with |
+|---|---|---|---|
+| `K/Y` (private) | `(1-tau_b)·gamma / (r + delta - tau_b·delta_tau - itc·delta)`; `r` from the household Euler through `r_p` | `gamma` S (ILOSTAT), `delta` **U** (OG-USA 0.05), `tau_b = cit_rate·c_corp_share·adj_factor` S/T, `delta_tau` U, `beta` **U** (0.96), `sigma` D, `g_y` S, `debt_ratio_ss` S, `r_gov_shift` T, `zeta_K` S (prior only), `world_int_rate` S | `I/Y`, `C/Y`, `K_f/K`, `r` |
+| `K_f/K` | `K_f = zeta_K·(K_open - B + D_d)`, `K_d = B - D_d` | `zeta_K` **should be T** (to gross IIP), `world_int_rate` S, everything that moves `B` | `K/Y`, `NX/Y`, `C/Y` |
+| `D_f/D` | `zeta_D` share of new issuance; SS `D_f = zeta_D·D` | `zeta_D` S = `initial_foreign_debt_ratio` S (stock = flow keeps the share stationary) | `NX/Y` |
+| `r_gov` | `max(scale·r - shift + DY·D/Y + DY2·(D/Y)^2, floor)` | `r_gov_shift` T to the effective real rate, `r_gov_scale` D (LMWW slope), `r_gov_DY`/`DY2` D (centered at `debt_ratio_ss`), `r_gov_floor` D (0, real rates positive) | `pb*`, `G/Y` |
+| `G/Y` (solved) | `G = rev + new_borrowing + aid - (pensions + TR + debt_service + UBI + I_g)` | every revenue line, `alpha_T` S, `alpha_I` **U** (0.0003), `debt_ratio_ss` S, `r_gov`, `g_y`, `g_n_ss`; `alpha_G` (input) only on the transition | everything fiscal |
+| PIT/Y | GS ETR on total income, scaled by `factor` | `phi0` S (45% top rate, lifted to 0.464), `phi1` S (SARS schedule), `phi2` T, `income_tax_filer` S, `mean_income_data` S | payroll |
+| payroll/Y | `tau_payroll·w·e·n` | `tau_payroll` **U** (0; UIF + SDL exist) | PIT |
+| CIT/Y | `tau_b·(Y - wL - delta_tau·K)`-type base | `cit_rate` S (27%), `adjustment_factor_for_cit_receipts` T, `c_corp_share_of_assets` U (0.7) | `K/Y` |
+| consumption tax/Y | `tau_c·C` | `tau_c` T (all indirect taxes) | `C/Y` |
+| property tax/Y | `p_wealth·B` (flat, `h = 1`, `m` small) | `p_wealth` **U** (0; municipal rates and transfer duty exist) | saving, `K/Y` |
+| bequest tax/Y | `tau_bq·BQ` | `tau_bq` **U** (0; estate duty exists, small) | `chi_b` |
+| pensions/Y | US-style formula with PIA rates | D: all PIA rates 0. South Africa has no contributory state pension; the old-age grant is a cash transfer in `alpha_T`; GEPF is a funded employer scheme (private saving) | `G/Y`, saving |
+| `TR/Y` | `alpha_T·Y` | `alpha_T` S (IMF GFS social benefits; check cash-only) | `G/Y`, `C/Y` |
+| `I_g/Y` | `alpha_I·Y` | `alpha_I` **U** | `G/Y`, `(I+I_g)/Y` |
+| `(I+I_g)/Y` | `(e^{g_y}(1+g_n)-1+delta)·K/Y + I_g/Y` | `delta` U, `g_y` S, `g_n_ss` (demographic window), `K/Y` levers | `C/Y` |
+| `C/Y` | residual: `Y - I - I_g - G - NX` | none of its own: decompose the gap | all |
+| `NX/Y` | residual of foreign flows | `zeta_K`, `zeta_D`, `world_int_rate`; in the SS compare only its sign with `K_f` | `C/Y` |
+| `wL/Y` | `1 - gamma - gamma_g` at `epsilon = 1` | not a free check at `epsilon = 1` | — |
+| `g_n_ss` | growth of frozen `final_data_year` rates | demographic window **U** (two years of data) | `pb*`, `I/Y` |
+| earnings `e` | hand-coded WID x NTA (`income.get_e_orig`) | U: documented, not re-derived here | PIT, wealth |
+| `chi_n` | OG-USA profile | D: borrowed, uncalibrated (document) | hours |
+
+## Tuning order
+
+1. Sourced structurals: `delta`, `alpha_I` (then re-solve `alpha_G`), `alpha_T`
+   cash check, demographic window, debt and `start_year` check.
+2. Tax dials against their own revenue lines: `phi2`, CIT adjustment, `tau_c`,
+   `tau_payroll`, `p_wealth`, `tau_bq`.
+3. `r_gov_shift` against the effective real rate on debt.
+4. `beta` against private `K/Y`.
+5. `zeta_K` against gross `K_f/K`, or a written reason if the world-rate sign
+   check fails.
+6. Re-tune 2 if 4 or 5 moved the bases.
+7. Transition: fiscal path panel, `alpha_G` glide to the Treasury path,
+   initial household wealth.
