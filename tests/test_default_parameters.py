@@ -54,3 +54,12 @@ def test_long_run_population_growth():
     # short two-year window has crept back in.
     defaults = load_defaults()
     assert abs(defaults["g_n_ss"]) < 0.001
+
+
+def test_mortality_varies_by_income_group():
+    # Income-differentiated demographics are switched on: at a working age
+    # the poorest group dies at a higher rate than the richest
+    import numpy as np
+
+    rho = np.asarray(load_defaults()["rho"])
+    assert rho[0, 20, 0] > 2 * rho[0, 20, -1]
