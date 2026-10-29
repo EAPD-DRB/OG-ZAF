@@ -1,4 +1,3 @@
-(Chap_Scorecard)=
 # Calibration Scorecard
 
 This chapter shows how closely the baseline matches South African data: tax collections and debt in 2025, the National Treasury's fiscal plan, the long-run ratios, and productivity growth. Every figure and generated table comes from the model's standard example run, `examples/run_og_zaf.py`, with the packaged default parameters. `examples/calibration_scorecard.py` rebuilds them from that run's output; the text around them is written by hand.
@@ -28,13 +27,9 @@ Tax collections, debt and capital in the model's first year, compared with publi
 
 The model's fiscal path against the National Treasury's 2026 Medium-Term Budget Policy Statement (MTBPS). Debt holds roughly flat, while the Treasury plans a small decline by 2030: the model keeps today's primary surplus, and the Treasury plans to raise it every year to 2029. The baseline does not assume that consolidation. Government consumption steps up in 2030, when spending starts to follow the long-run budget rule. The rate on government debt stays at the Treasury's effective real rate.
 
-```{figure} ./images/scorecard_fiscal_path.png
----
-height: 500px
-name: FigScorecardFiscal
----
-Fiscal path: model and Treasury plan, 2025–2036
-```
+![Fiscal path: model and Treasury plan, 2025–2036](./images/scorecard_fiscal_path.png)
+
+*Fiscal path: model and Treasury plan, 2025–2036*
 
 Model debt is the stock at the start of each year, compared with the Treasury's figure for the end of the previous fiscal year. Values are % of GDP; the real rate on debt is in %.
 
@@ -59,13 +54,9 @@ Model debt is the stock at the start of each year, compared with the Treasury's 
 
 Ratios in the steady state, which the economy reaches after the transition, compared with South African targets. Eleven of the fourteen targets are within 5%. Three are further away. The real return on private capital is 11.0% against 12.0% in the Penn World Table; a higher return would push private capital below its target of 2.80 times GDP. Property and transfer taxes are 1.51% of GDP against 1.61%, and estate and donations tax is 0.10% against 0.08%: both were set to match 2025 collections, and their bases change relative to GDP over the transition.
 
-```{figure} ./images/scorecard_steady_state.png
----
-height: 400px
-name: FigScorecardSS
----
-Steady state: model relative to target
-```
+![Steady state: model relative to target](./images/scorecard_steady_state.png)
+
+*Steady state: model relative to target*
 
 Ratios without a target are shown for reference.
 
@@ -96,25 +87,17 @@ Ratios without a target are shown for reference.
 
 ## Productivity and growth
 
-South Africa's productivity growth has been weak since 2008. In the baseline it recovers gradually: growth in output per hour follows the average of two estimates, a rule based on recent growth and the OECD's long-term baseline ({ref}`Chap_FirmCalib` sets out both). The long-run rate, 1.4% a year, is South Africa's growth in output per worker over 1994–2019 in the Penn World Table (see {ref}`Chap_MacroCalib`).
+South Africa's productivity growth has been weak since 2008. In the baseline it recovers gradually: growth in output per hour follows the average of two estimates, a rule based on recent growth and the OECD's long-term baseline (the [firms chapter](firms.md) sets out both). The long-run rate, 1.4% a year, is South Africa's growth in output per worker over 1994–2019 in the Penn World Table (see the [macro chapter](macro.md)).
 
-```{figure} ./images/scorecard_productivity.png
----
-height: 400px
-name: FigScorecardProductivity
----
-Growth in output per hour: model, baseline path and the two estimates
-```
+![Growth in output per hour: model, baseline path and the two estimates](./images/scorecard_productivity.png)
+
+*Growth in output per hour: model, baseline path and the two estimates*
 
 GDP grows faster than productivity because hours worked rise with the working-age population, at today's employment rates by age. Total factor productivity starts above its long-run trend and declines to it, which holds productivity growth below the long-run rate.
 
-```{figure} ./images/scorecard_growth_sources.png
----
-height: 330px
-name: FigScorecardGrowth
----
-GDP growth by source, and total factor productivity relative to trend
-```
+![GDP growth by source, and total factor productivity relative to trend](./images/scorecard_growth_sources.png)
+
+*GDP growth by source, and total factor productivity relative to trend*
 
 Average growth by period, % a year:
 
@@ -130,49 +113,33 @@ Average growth by period, % a year:
 
 Since the 2009 recession, the IMF's medium-term growth forecasts for South Africa have been too high every year. Leaving out the Covid years 2020 and 2021, every forecast made five years ahead for 2009–2024 was above the outturn; for 2013–2024 the gap averaged 2.1 percentage points a year. Before 2009 the errors went both ways. The IMF, SARB and Treasury paths assume that energy and logistics reforms succeed, so we treat them as reform scenarios rather than the baseline. The data are in `data/imf_weo_growth_forecasts.csv`, from the [WEO historical forecasts database](https://www.imf.org/en/Publications/WEO/weo-database) and the current WEO.
 
-```{figure} ./images/scorecard_imf.png
----
-height: 330px
-name: FigScorecardIMF
----
-IMF five-year-ahead growth forecasts for South Africa and actual growth
-```
+![IMF five-year-ahead growth forecasts for South Africa and actual growth](./images/scorecard_imf.png)
+
+*IMF five-year-ahead growth forecasts for South Africa and actual growth*
 
 ## The path to the long run
 
 The main ratios move smoothly from today's values to the steady state, with no instability.
 
-```{figure} ./images/scorecard_long_paths.png
----
-height: 500px
-name: FigScorecardLongPaths
----
-Main ratios on the baseline path, 2025–2084
-```
+![Main ratios on the baseline path, 2025–2084](./images/scorecard_long_paths.png)
+
+*Main ratios on the baseline path, 2025–2084*
 
 ## Accuracy of the solution
 
 How closely the solution satisfies the model's equations in each year. Output not accounted for by spending is below 0.0000006 of output in every year to 2100, and household decisions are accurate to about 0.00000000001. The one spike, 0.0001 of output in 2145, is listed under known gaps.
 
-```{figure} ./images/scorecard_solver.png
----
-height: 330px
-name: FigScorecardSolver
----
-Errors in the solution by year, log scale
-```
+![Errors in the solution by year, log scale](./images/scorecard_solver.png)
+
+*Errors in the solution by year, log scale*
 
 ## Example policy: a higher company tax rate
 
 The standard example raises the company tax rate to 30%. Capital, wages and GDP fall, as expected; hours worked rise slightly as households make up lost income. Changes are % from the baseline.
 
-```{figure} ./images/scorecard_reform.png
----
-height: 330px
-name: FigScorecardReform
----
-Higher company tax rate: change from the baseline
-```
+![Higher company tax rate: change from the baseline](./images/scorecard_reform.png)
+
+*Higher company tax rate: change from the baseline*
 
 <!-- scorecard:reform -->
 | Variable | 2025 | 2030 | Average 2025–2034 | Long run |
@@ -225,6 +192,6 @@ The parameter names and exact values are in `CHANGELOG.md`.
 | Long-run growth rate | Close | The model's long-run productivity growth is 1.4% a year (1.41% compounded). The OECD estimate is capped at the measured 1.44%. The difference moves the baseline path by at most 0.02 points a year. |
 | Error in 2145 | Open | The accounting error is 0.0001 of output in 2145 alone, and below 0.0000006 in every year to 2100. 2145 is the last year of the listed income tax schedule; listing it to the end of the horizon should remove the error. No reported year is affected. |
 | Growth above the IMF | By design | GDP grows about 2.1% a year in the 2030s, above the IMF's 1.8%, because hours worked rise with the working-age population. Productivity growth is below the IMF, SARB and Treasury scenarios. |
-| Unemployment | Covered | Built into earnings by age and income group: the earnings data are per person, the jobless included (see {ref}`Chap_LfEarn`). Labour supply settings are unchanged. |
-| Informal sector | Covered | 34% of jobs (ILO). Reflected in tax rates, which are set from actual collections rather than statutory rates (see {ref}`Chap_Tax`). |
+| Unemployment | Covered | Built into earnings by age and income group: the earnings data are per person, the jobless included (see the [earnings chapter](earnings.md)). Labour supply settings are unchanged. |
+| Informal sector | Covered | 34% of jobs (ILO). Reflected in tax rates, which are set from actual collections rather than statutory rates (see the [taxes chapter](taxes.md)). |
 | Earnings distribution | Not re-checked | This calibration does not change earnings by age and income group or the labour supply settings; their fit was not re-checked here. |

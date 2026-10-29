@@ -130,7 +130,7 @@ South Africa's debt is not a solvency or default question for this purpose — i
 
 ### First-year validation
 
-The tax settings and initial household wealth are tuned to 2025, the year South Africa's data measure, in the baseline transition solved by `examples/run_og_zaf.py` (ogcore 0.22.0, offline). `examples/validate_fiscal_path.py` prints this table; targets and sources are in `ogzaf/targets.py`. The {ref}`Chap_Scorecard` chapter collects every table and figure on how well the calibration fits.
+The tax settings and initial household wealth are tuned to 2025, the year South Africa's data measure, in the baseline transition solved by `examples/run_og_zaf.py` (ogcore 0.22.0, offline). `examples/validate_fiscal_path.py` prints this table; targets and sources are in `ogzaf/targets.py`. The [calibration scorecard](scorecard.md) collects every table and figure on how well the calibration fits.
 
 | Moment, 2025 | Model | Data | Source |
 |---|---|---|---|
