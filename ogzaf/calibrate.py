@@ -5,6 +5,61 @@ import warnings
 import numpy as np
 import datetime
 
+# UN M49 code for South Africa, used for every demographic download.
+UN_COUNTRY_CODE = "710"
+# Last year of UN data read by the demographics. ogcore freezes fertility,
+# mortality and immigration at this year forever, so it sets the long-run
+# population growth rate: a two-year window froze 2026 rates (g_n_ss about
+# +0.42%/yr), while the UN WPP 2024 projection levels South Africa's population
+# off this century (g_n_ss about -0.03%/yr with the full window). 2098 is one
+# year before the last year in the UN data (ogcore reads final_data_year + 1)
+# and within ogcore's start_year + 74 limit.
+DEMOG_FINAL_DATA_YEAR = 2098
+
+
+def get_demographics_and_e(p, demographic_data_path=None, output_path=None):
+    """
+    Download the demographic objects and build the earnings matrix from
+    them, so the two always come from the same population weights.
+
+    Args:
+        p (OG-Core Specifications object): model parameters
+        demographic_data_path (str): path to save demographic data
+        output_path (str): path to save the earnings-profile plots to
+
+    Returns:
+        tuple: (dict of demographic parameters, ``e`` array)
+    """
+    from ogcore import demographics
+
+    window = dict(
+        country_id=UN_COUNTRY_CODE,
+        initial_data_year=p.start_year - 1,
+        final_data_year=DEMOG_FINAL_DATA_YEAR,
+        income_percentiles=p.lambdas.flatten(),
+        GraphDiag=False,
+    )
+    demog = demographics.get_pop_objs(
+        p.E,
+        p.S,
+        p.T,
+        0,
+        99,
+        download_path=demographic_data_path,
+        **window,
+    )
+    # demographics for 80 period lives (needed for getting e below)
+    demog80 = demographics.get_pop_objs(20, 80, p.T, 0, 99, **window)
+    e = income.get_e_interp(
+        p.E,
+        p.S,
+        demog["omega_SS"],
+        demog80["omega_SS"],
+        p.lambdas,
+        plot_path=output_path,
+    )
+    return demog, e
+
 
 class Calibration:
     """OG-ZAF calibration class"""
@@ -78,44 +133,8 @@ class Calibration:
 
         # Demographics + income (atomic — e depends on demographic output)
         try:
-            from ogcore import demographics
-
-            self.demographic_params = demographics.get_pop_objs(
-                p.E,
-                p.S,
-                p.T,
-                0,
-                99,
-                country_id="710",
-                initial_data_year=p.start_year - 1,
-                final_data_year=p.start_year + 1,
-                income_percentiles=p.lambdas.flatten(),
-                GraphDiag=False,
-                download_path=demographic_data_path,
-            )
-
-            # demographics for 80 period lives (needed for getting e below)
-            demog80 = demographics.get_pop_objs(
-                20,
-                80,
-                p.T,
-                0,
-                99,
-                country_id="710",
-                initial_data_year=p.start_year - 1,
-                final_data_year=p.start_year + 1,
-                income_percentiles=p.lambdas.flatten(),
-                GraphDiag=False,
-            )
-
-            # earnings profiles
-            self.e = income.get_e_interp(
-                p.E,
-                p.S,
-                self.demographic_params["omega_SS"],
-                demog80["omega_SS"],
-                p.lambdas,
-                plot_path=output_path,
+            self.demographic_params, self.e = get_demographics_and_e(
+                p, demographic_data_path, output_path
             )
         except Exception as exc:
             warnings.warn(

@@ -5,7 +5,7 @@ Tests of calibrate.py module — offline and partial-failure behavior
 import warnings
 import numpy as np
 from unittest.mock import MagicMock, patch
-from ogzaf.calibrate import Calibration
+from ogzaf.calibrate import Calibration, DEMOG_FINAL_DATA_YEAR, UN_COUNTRY_CODE
 
 
 def _make_mock_p(I=1, M=1):  # noqa: E741
@@ -194,6 +194,9 @@ class TestDemographicIncomeGroups:
             np.testing.assert_array_equal(
                 call.kwargs["income_percentiles"], p.lambdas
             )
+            # South Africa's own UN code, and the full projection window
+            assert call.kwargs["country_id"] == "710"
+            assert call.kwargs["final_data_year"] == DEMOG_FINAL_DATA_YEAR
         mock_income.assert_called_once()
         args, kwargs = mock_income.call_args
         assert args[:2] == (p.E, p.S)
@@ -206,3 +209,10 @@ class TestDemographicIncomeGroups:
         assert d["rho"].shape == (p.T + p.S, p.S, p.J)
         assert d["imm_rates"].shape == (p.T + p.S, p.S, p.J)
         assert d["omega_SS"].shape == (p.S, p.J)
+
+
+def test_country_code_and_window_constants():
+    # Guard against a sibling's code surviving a file copy, and against the
+    # short window that froze 2026 demographic rates forever
+    assert UN_COUNTRY_CODE == "710"
+    assert DEMOG_FINAL_DATA_YEAR >= 2090

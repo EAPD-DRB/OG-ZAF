@@ -45,3 +45,12 @@ def test_no_bequest_tax():
     # state the model's bequest tax is zero
     defaults = load_defaults()
     assert defaults["tau_bq"] == [0.0]
+
+
+def test_long_run_population_growth():
+    # g_n_ss comes from UN WPP 2024 rates frozen at 2098, where South
+    # Africa's population has levelled off (ogzaf.calibrate.
+    # DEMOG_FINAL_DATA_YEAR). A value near +0.4%/yr would mean the
+    # short two-year window has crept back in.
+    defaults = load_defaults()
+    assert abs(defaults["g_n_ss"]) < 0.001
