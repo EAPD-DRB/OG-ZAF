@@ -233,7 +233,10 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../../api/income.html">Life-cycle productivity profiles</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../api/input_output.html">Output-Consumption Bridge</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../api/macro_params.html">Macro Parameter Estimation Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/productivity.html">Baseline Productivity Path</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/targets.html">Calibration Targets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../api/utils.html">Calibration Utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/warm_start.html">Steady-State Warm Start</a></li>
 </ul>
 </details></li>
 </ul>
@@ -247,6 +250,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../calibration/taxes.html">Taxes in OG-ZAF</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../calibration/matching_lwi.html">Matching Labor, Wealth, and Income Moments</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../calibration/exogenous_parameters.html">Exogenous Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../calibration/scorecard.html">Calibration Scorecard</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">UN Tutorial</span></p>
 <ul class="nav bd-sidenav">
@@ -564,16 +568,16 @@
 <span class="g g-Whitespace">      </span><span class="mi">4</span>         <span class="n">sim_dir</span><span class="p">,</span> <span class="s2">"OUTPUT_BASELINE"</span><span class="p">,</span> <span class="s2">"model_params.pkl"</span>
 <span class="g g-Whitespace">      </span><span class="mi">5</span>         <span class="p">)</span>
 
-<span class="nn">File ~/work/OG-ZAF/OG-ZAF/.venv/lib/python3.13/site-packages/ogcore/utils.py:372,</span> in <span class="ni">safe_read_pickle</span><span class="nt">(file_path)</span>
-<span class="g g-Whitespace">    </span><span class="mi">361</span> <span class="k">def</span><span class="w"> </span><span class="nf">safe_read_pickle</span><span class="p">(</span><span class="n">file_path</span><span class="p">):</span>
-<span class="g g-Whitespace">    </span><span class="mi">362</span><span class="w">     </span><span class="sd">"""</span>
-<span class="g g-Whitespace">    </span><span class="mi">363</span><span class="sd">     This function reads a pickle from Python 2 into Python 2 or Python 3</span>
-<span class="g g-Whitespace">    </span><span class="mi">364</span><span class="sd"> </span>
-<span class="sd">   (...)    370 </span>
-<span class="g g-Whitespace">    </span><span class="mi">371</span><span class="sd">     """</span>
-<span class="ne">--&gt; </span><span class="mi">372</span>     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s2">"rb"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">373</span>         <span class="k">try</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">374</span>             <span class="n">obj</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">"latin1"</span><span class="p">)</span>
+<span class="nn">File ~/work/OG-ZAF/OG-ZAF/.venv/lib/python3.13/site-packages/ogcore/utils.py:395,</span> in <span class="ni">safe_read_pickle</span><span class="nt">(file_path)</span>
+<span class="g g-Whitespace">    </span><span class="mi">384</span> <span class="k">def</span><span class="w"> </span><span class="nf">safe_read_pickle</span><span class="p">(</span><span class="n">file_path</span><span class="p">):</span>
+<span class="g g-Whitespace">    </span><span class="mi">385</span><span class="w">     </span><span class="sd">"""</span>
+<span class="g g-Whitespace">    </span><span class="mi">386</span><span class="sd">     This function reads a pickle from Python 2 into Python 2 or Python 3</span>
+<span class="g g-Whitespace">    </span><span class="mi">387</span><span class="sd"> </span>
+<span class="sd">   (...)    393 </span>
+<span class="g g-Whitespace">    </span><span class="mi">394</span><span class="sd">     """</span>
+<span class="ne">--&gt; </span><span class="mi">395</span>     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s2">"rb"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">396</span>         <span class="k">try</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">397</span>             <span class="n">obj</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">"latin1"</span><span class="p">)</span>
 
 <span class="ne">FileNotFoundError</span>: [Errno 2] No such file or directory: '/Users/richardevans/Docs/Economics/OSE/OG/OG-PHL/examples/OG-PHL-Example/OUTPUT_BASELINE/model_params.pkl'
 </pre></div>

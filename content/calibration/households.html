@@ -70,7 +70,7 @@
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Calibration of Firms Parameters" href="firms.html" />
-    <link rel="prev" title="Calibration Utilities" href="../api/utils.html" />
+    <link rel="prev" title="Steady-State Warm Start" href="../api/warm_start.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -235,7 +235,10 @@
 <li class="toctree-l2"><a class="reference internal" href="../api/income.html">Life-cycle productivity profiles</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/input_output.html">Output-Consumption Bridge</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/macro_params.html">Macro Parameter Estimation Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/productivity.html">Baseline Productivity Path</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/targets.html">Calibration Targets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/utils.html">Calibration Utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/warm_start.html">Steady-State Warm Start</a></li>
 </ul>
 </details></li>
 </ul>
@@ -249,6 +252,7 @@
 <li class="toctree-l1"><a class="reference internal" href="taxes.html">Taxes in OG-ZAF</a></li>
 <li class="toctree-l1"><a class="reference internal" href="matching_lwi.html">Matching Labor, Wealth, and Income Moments</a></li>
 <li class="toctree-l1"><a class="reference internal" href="exogenous_parameters.html">Exogenous Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scorecard.html">Calibration Scorecard</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">UN Tutorial</span></p>
 <ul class="nav bd-sidenav">
@@ -486,7 +490,7 @@
 </section>
 <section id="rate-of-time-preference">
 <h3>Rate of time preference<a class="headerlink" href="#rate-of-time-preference" title="Link to this heading">#</a></h3>
-<p>We take our default value for the rate of time preference parameter, <span class="math notranslate nohighlight">\(\beta\)</span> from <span class="bibtex-citation" id="id5">[<a class="reference internal" href="../OGZAF_references.html#id16" title="Christopher Carroll. Precautionary saving and the marginal propensity to consume out of permanent income. Journal of Monetary Economics, 56(6):780-790, 2009. URL: https://EconPapers.repec.org/RePEc:eee:moneco:v:56:y:2009:i:6:p:780-790.">Carroll, 2009</a>]</span>.  We set the value to <span class="math notranslate nohighlight">\(\beta=0.96\)</span> (on an annual basis).</p>
+<p>The rate of time preference is calibrated, not borrowed. With the capital share, depreciation and tax rates set from data, <span class="math notranslate nohighlight">\(\beta\)</span> moves the return on capital and so the capital-output ratio. We set <span class="math notranslate nohighlight">\(\beta = 0.8706\)</span> (annual, the same for every lifetime-income group), the value at which the steady-state private capital-output ratio equals 2.80 (see the firms chapter). This is lower than the 0.96 common in models of high-saving economies, and it matches South Africa’s low domestic saving: gross national saving in 2025 was about 13.4% of GDP (gross capital formation of 13.9% less a current account deficit of 0.5%, SARB Quarterly Bulletin Tables S-116 and S-159). The implied real return on capital is 11.0%, against PWT’s measured 12.0%.</p>
 </section>
 </section>
 </section>
@@ -522,12 +526,12 @@
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="../api/utils.html"
+       href="../api/warm_start.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Calibration Utilities</p>
+        <p class="prev-next-title">Steady-State Warm Start</p>
       </div>
     </a>
     <a class="right-next"

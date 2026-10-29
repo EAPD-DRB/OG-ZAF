@@ -235,7 +235,10 @@
 <li class="toctree-l2"><a class="reference internal" href="../api/income.html">Life-cycle productivity profiles</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/input_output.html">Output-Consumption Bridge</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/macro_params.html">Macro Parameter Estimation Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/productivity.html">Baseline Productivity Path</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/targets.html">Calibration Targets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/utils.html">Calibration Utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/warm_start.html">Steady-State Warm Start</a></li>
 </ul>
 </details></li>
 </ul>
@@ -249,6 +252,7 @@
 <li class="toctree-l1"><a class="reference internal" href="taxes.html">Taxes in OG-ZAF</a></li>
 <li class="toctree-l1"><a class="reference internal" href="matching_lwi.html">Matching Labor, Wealth, and Income Moments</a></li>
 <li class="toctree-l1"><a class="reference internal" href="exogenous_parameters.html">Exogenous Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scorecard.html">Calibration Scorecard</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">UN Tutorial</span></p>
 <ul class="nav bd-sidenav">
@@ -457,6 +461,7 @@
                 <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#economic-assumptions">Economic Assumptions</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#open-economy-parameters">Open Economy Parameters</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#world-interest-rate">World interest rate</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#foreign-holding-of-government-debt-in-the-initial-period">Foreign holding of government debt in the initial period</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#foreign-purchases-of-newly-issued-debt">Foreign purchases of newly issued debt</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#foreign-holdings-of-excess-capital">Foreign holdings of excess capital</a></li>
@@ -465,10 +470,18 @@
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#government-debt-spending-and-transfers">Government Debt, Spending and Transfers</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#government-debt">Government Debt</a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#interest-rates-on-government-debt">Interest rates on government debt</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#debt-elastic-sovereign-premium">Debt-elastic sovereign premium</a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#aggregate-transfers">Aggregate transfers</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#public-investment">Public investment</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#government-expenditures">Government expenditures</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fiscal-consistency">Fiscal consistency</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#first-year-validation">First-year validation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#steady-state-validation">Steady-state validation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fiscal-path-validation">Fiscal path validation</a></li>
 </ul>
 </li>
 </ul>
@@ -486,41 +499,49 @@
 <span id="chap-macrocalib"></span><h1>Calibration of Macroeconomic Parameters<a class="headerlink" href="#calibration-of-macroeconomic-parameters" title="Link to this heading">#</a></h1>
 <section id="economic-assumptions">
 <h2>Economic Assumptions<a class="headerlink" href="#economic-assumptions" title="Link to this heading">#</a></h2>
-<p>As the default rate of labor augmenting technological change, <span class="math notranslate nohighlight">\(g_y\)</span>, we use a value of 0%.  The average annual growth rate in GDP per capita in South Africa between 2007 and 2023 is 0.0% per year.</p>
+<p>As the default rate of labour-augmenting technological change, <span class="math notranslate nohighlight">\(g_y\)</span>, we use 1.4% per year (<code class="docutils literal notranslate"><span class="pre">g_y_annual</span> <span class="pre">=</span> <span class="pre">0.014</span></code>), South Africa’s measured long-run productivity growth. In PWT 11.0, real GDP per person engaged (<code class="docutils literal notranslate"><span class="pre">rgdpna</span></code>/<code class="docutils literal notranslate"><span class="pre">emp</span></code>) grew 1.44% a year over 1994–2019 and over 2000–2019, both windows ending before the Covid shock. Hours per worker are available only from 2008; they fell about 0.3% a year over 2008–2019, so growth per hour, the measure the model needs, is if anything a little higher. The interest-growth differential is consistent with the Treasury’s: with the steady-state real rate on debt of 3.7% and steady-state growth of <span class="math notranslate nohighlight">\(g_y + g_n \approx 1.4\%\)</span> (long-run population growth is about zero, see the demographics chapter), <span class="math notranslate nohighlight">\(r_{gov} - g \approx 2.3\)</span> percentage points, against about 2.1 points in the Treasury’s medium-term numbers (a 7.1% nominal effective rate, a 3% inflation target and 2.0% real growth; <a class="reference external" href="https://www.treasury.gov.za/MediumTermBudget/Medium%20Term%20Budget%20Policy%20Statement%20Full%20document.pdf">MTBPS 2026</a>, Tables 1.1 and 3.5).</p>
+<p>South Africa is well below that trend today: real GDP per person engaged grew 0.25% a year over 2008–2019 and TFP fell 1.0% a year (PWT 11.0). The baseline holds productivity below trend at first and lets the gap close over the transition through a path for total factor productivity. The path is the average of our own rule and the OECD’s long-term baseline, not a forecaster’s reform scenario; the firms chapter sets it out. Output per hour grows 0.4% a year in 2026, about 1.1% a year in the 2030s and 1.4% in the long run. Labour input grows with the working-age population at today’s employment rates by age (the earnings chapter explains how unemployment enters), so GDP grows 1.6% in 2026 and about 2.1% a year in the 2030s.</p>
+<p><span class="math notranslate nohighlight">\(g_y\)</span> itself is a long-run object and stays at 1.4%. Because it is curated, it is held in the packaged parameters and no longer refreshed from the live World Bank pull.</p>
 </section>
 <section id="open-economy-parameters">
 <h2>Open Economy Parameters<a class="headerlink" href="#open-economy-parameters" title="Link to this heading">#</a></h2>
+<section id="world-interest-rate">
+<h3>World interest rate<a class="headerlink" href="#world-interest-rate" title="Link to this heading">#</a></h3>
+<p>We set the annual world interest rate, <code class="docutils literal notranslate"><span class="pre">world_int_rate_annual</span></code>, to 6.3%: a 4% global risk-free rate plus a South African sovereign risk premium of roughly 2.3 percentage points. The premium is anchored by the National Treasury’s own estimate — “the sovereign risk premium – the extra yield investors demand to hold government debt over ‘risk-free’ alternatives – has narrowed from 2.93 percentage points a year ago to 2.26 percentage points” (<a class="reference external" href="https://www.treasury.gov.za/documents/National%20Budget/2026/review/Chapter%207.pdf">2026 Budget Review, Chapter 7</a>). The chapter does not define the benchmark instrument, so we corroborate the level with hard-currency evidence, which lands in the same band: South Africa’s US-dollar bond spreads traded around 2.2–2.6 percentage points over Treasuries in 2025/26 (multi-year lows, after the December 2025 US$3.5 billion oversubscribed Eurobond), and the Damodaran country-default-spread table puts a Ba2/BB sovereign at roughly 2.7–3.2 percentage points. This is the rate at which foreign capital is supplied to the domestic economy. South Africa remains sub-investment-grade (BB/Ba2 at all three agencies, upgraded during 2025–26 with positive outlooks), so its premium is materially larger than that of investment-grade emerging markets.</p>
+</section>
 <section id="foreign-holding-of-government-debt-in-the-initial-period">
 <h3>Foreign holding of government debt in the initial period<a class="headerlink" href="#foreign-holding-of-government-debt-in-the-initial-period" title="Link to this heading">#</a></h3>
-<p>The path of foreign holding of domestic debt is endogenous, but the initial period stock of debt held by foreign investors is exogenous.  We set this parameter, <code class="docutils literal notranslate"><span class="pre">initial_foreign_debt_ratio</span></code> to 0.26, consistent with data from the World Bank WDI.</p>
+<p>The path of foreign holding of domestic debt is endogenous, but the initial period stock of debt held by foreign investors is exogenous. We set this parameter, <code class="docutils literal notranslate"><span class="pre">initial_foreign_debt_ratio</span></code>, to 0.25: foreign investors held 25.0% of South Africa’s domestic government bonds in 2025, up from 24.6% in 2024 (<a class="reference external" href="https://www.treasury.gov.za/documents/National%20Budget/2026/review/Chapter%207.pdf">2026 Budget Review, Chapter 7</a>, Figure 7.4). Note this is the domestic-market headline measure; a residency-comprehensive measure that also counts the (roughly 10% of gross debt) foreign-currency loans held abroad would be closer to 0.33.</p>
 </section>
 <section id="foreign-purchases-of-newly-issued-debt">
 <h3>Foreign purchases of newly issued debt<a class="headerlink" href="#foreign-purchases-of-newly-issued-debt" title="Link to this heading">#</a></h3>
-<p>We set <span class="math notranslate nohighlight">\(\zeta_D = 0.23\)</span>.  This is the average share of foreign purchases of newly issued government debt found from the World Bank WDI.</p>
+<p>We set <span class="math notranslate nohighlight">\(\zeta_D = 0.25\)</span>, matching the foreign share of the domestic government bond market above, on the assumption that foreign investors absorb new issuance in proportion to their current holdings.</p>
 </section>
 <section id="foreign-holdings-of-excess-capital">
 <h3>Foreign holdings of excess capital<a class="headerlink" href="#foreign-holdings-of-excess-capital" title="Link to this heading">#</a></h3>
-<p>We set <span class="math notranslate nohighlight">\(\zeta_K = 0.9\)</span>. Note, this parameter is harder to pin down from the data as foreign purchases on “excess” capital demand is not typically directly measured or reported.  A value of 0.9 implies a high degree of openness to international capital flows.</p>
+<p>We set <span class="math notranslate nohighlight">\(\zeta_K = 0.16\)</span>, the normalized Chinn-Ito capital-account openness index (<code class="docutils literal notranslate"><span class="pre">ka_open</span></code>) for South Africa, which is 0.1626 in the <a class="reference external" href="https://web.pdx.edu/~ito/Chinn-Ito_website.htm">2022 update</a> (unchanged since 2008). This parameter is hard to pin down directly since foreign purchases of “excess” capital demand are not measured; the Chinn-Ito index anchors it to South Africa’s de jure openness, which is low because exchange controls still apply to residents. De facto participation by non-residents in South African capital markets is considerably higher, so 0.16 is a conservative anchor. We check the level the steady state produces against the balance of payments. Read gross, as the model’s capital identity requires, foreign-owned capital is inward direct-investment equity (about 22.7% of GDP) plus portfolio equity (about 34.8%) at the end of 2025 (<a class="reference external" href="https://www.resbank.co.za/">SARB IIP</a>, equity splits from QB S-98), divided by private capital of 2.80 times GDP: 20.5% of the private capital stock. This is an upper bound, because the portfolio-equity figure includes dual-listed companies whose capital sits abroad; direct-investment equity alone gives 8%. At <span class="math notranslate nohighlight">\(\zeta_K = 0.16\)</span> the steady state lands at 21.1%, on the gross measure, so the prior needs no adjustment. The sign is right because the domestic return on capital (11.0%) sits above the 6.3% world rate, so foreign capital flows in.</p>
 </section>
 </section>
 <section id="government-debt-spending-and-transfers">
 <h2>Government Debt, Spending and Transfers<a class="headerlink" href="#government-debt-spending-and-transfers" title="Link to this heading">#</a></h2>
 <section id="government-debt">
 <h3>Government Debt<a class="headerlink" href="#government-debt" title="Link to this heading">#</a></h3>
-<p>The path of government debt is endogenous.  But the initial value is exogenous.  To avoid converting between model units and dollars, we calibrate the initial debt to GDP ratio, rather than the dollar value of the debt.  This is the model parameter <span class="math notranslate nohighlight">\(\alpha_D\)</span>.  We compute this from the ratio of publicly held debt outstanding to GDP.  Based on 2023 values, this gives us a ratio of 0.59.</p>
+<p>The path of government debt is endogenous. But the initial value is exogenous. To avoid converting between model units and rand, we calibrate the initial debt-to-GDP ratio rather than the rand value of the debt. This is the model parameter <span class="math notranslate nohighlight">\(\alpha_D\)</span> (<code class="docutils literal notranslate"><span class="pre">initial_debt_ratio</span></code>), which we set to 0.770: national government gross loan debt at the end of fiscal year 2024/25, the stock the model’s first year (2025) starts from (<a class="reference external" href="https://www.treasury.gov.za/MediumTermBudget/Medium%20Term%20Budget%20Policy%20Statement%20Full%20document.pdf">MTBPS 2026</a>, Table 3.8). We use the National Treasury’s national-government gross loan debt rather than the World Bank QPSD general-government series, which measures a wider perimeter; the Treasury figure is the one the fiscal framework targets and reports against.</p>
+<p>The long-run debt target <code class="docutils literal notranslate"><span class="pre">debt_ratio_ss</span></code> is set to 0.765. The MTBPS 2026 has gross loan debt peaking at 78.4% of GDP in 2025/26 and falling to 76.6% by 2029/30, the end of its projection; we take that end point as the steady-state anchor.</p>
 <section id="interest-rates-on-government-debt">
 <h4>Interest rates on government debt<a class="headerlink" href="#interest-rates-on-government-debt" title="Link to this heading">#</a></h4>
 <p>We assume a wedge between the real rate of return on private capital and the real interest rate on government debt, modeled as a scale and level shift. The real interest rate on government debt, <span class="math notranslate nohighlight">\(r_{gov,t}\)</span>, relates to the real rate of return on private capital, <span class="math notranslate nohighlight">\(r_t\)</span>, by</p>
 <div class="math notranslate nohighlight" id="equation-eqn-r-gov">
 <span class="eqno">(2)<a class="headerlink" href="#equation-eqn-r-gov" title="Link to this equation">#</a></span>\[    r_{gov,t} = (1-\tau_{d,t}) r_t + \mu_d\]</div>
-<p>where <span class="math notranslate nohighlight">\((1-\tau_d)\)</span> is the pass-through coefficient and <span class="math notranslate nohighlight">\(\mu_d\)</span> is the level shift. For South Africa we use <span class="math notranslate nohighlight">\(1-\tau_d = 0.24485\)</span> (so <span class="math notranslate nohighlight">\(\tau_d = 0.75515\)</span>) and <span class="math notranslate nohighlight">\(\mu_d = 0.03377\)</span>.</p>
+<p>where <span class="math notranslate nohighlight">\((1-\tau_d)\)</span> is the pass-through coefficient and <span class="math notranslate nohighlight">\(\mu_d\)</span> is the level shift. For South Africa we take the <em>slope</em> <span class="math notranslate nohighlight">\(1-\tau_d = 0.24485\)</span> from the Li-Magud-Werner (LMW) emerging-market estimate below, but we <strong>re-anchor the level <span class="math notranslate nohighlight">\(\mu_d\)</span> to South African data</strong> — the raw LMW cross-country intercept (<span class="math notranslate nohighlight">\(0.03377\)</span>) over-predicts South Africa’s actual borrowing cost, as explained after the derivation.</p>
 <p>These values come from <span class="bibtex-citation" id="id1">[<a class="reference internal" href="../OGZAF_references.html#id75" title="Delong Li, Nicolas E. Magud, and Alejandro Werner. The long-run impact of sovereign yields on corporate yields in emerging markets. Journal of International Money and Finance, 130(C):, 2023. URL: https://ideas.repec.org/a/eee/jimfin/v130y2023ics0261560622001516.html, doi:10.1016/j.jimonfin.2022.1.">Li <em>et al.</em>, 2023</a>]</span>, who estimate the long-run pass-through of sovereign yields to corporate yields across 46 emerging economies using corporate yields from IHS Markit and sovereign yields from Bloomberg, predominantly U.S.-dollar secondary-market yields. They are therefore a cross-country emerging-market relationship rather than South Africa-specific bond data. Their preferred specification (Table 8, Column 2) fits a quadratic of the corporate yield on the sovereign yield of the same country:</p>
 <div class="math notranslate nohighlight" id="equation-eqn-lmw-quadratic">
 <span class="eqno">(3)<a class="headerlink" href="#equation-eqn-lmw-quadratic" title="Link to this equation">#</a></span>\[    y_{corp} = 8.199 - 2.975\, y_{sov} + 0.478\, y_{sov}^2\]</div>
 <p>with both yields in percentage points. The quadratic captures the empirical fact that pass-through rises with the level of sovereign risk, consistent with the credit-risk and liquidity-premium channels the paper identifies. The paper is available as an IMF Working Paper, <a class="reference external" href="https://www.imf.org/en/Publications/WP/Issues/2021/06/04/The-Long-Run-Impact-of-Sovereign-Yields-on-Corporate-Yields-in-Emerging-Markets-50224">Li, Magud, Werner, and Witte (2021)</a>, and was later published in the <em>Journal of International Money and Finance</em> <span class="bibtex-citation" id="id2">[<a class="reference internal" href="../OGZAF_references.html#id75" title="Delong Li, Nicolas E. Magud, and Alejandro Werner. The long-run impact of sovereign yields on corporate yields in emerging markets. Journal of International Money and Finance, 130(C):, 2023. URL: https://ideas.repec.org/a/eee/jimfin/v130y2023ics0261560622001516.html, doi:10.1016/j.jimonfin.2022.1.">Li <em>et al.</em>, 2023</a>]</span>.</p>
 <p>OG-Core models the wedge in the opposite direction: it takes <span class="math notranslate nohighlight">\(r_t\)</span> as an input and produces <span class="math notranslate nohighlight">\(r_{gov,t}\)</span>. We therefore invert the LMW relationship. We evaluate their quadratic on a grid of sovereign yields from 2% to 12%, compute the implied corporate yields, and then regress sovereign yields linearly on those corporate yields. Calling the resulting slope <span class="math notranslate nohighlight">\(b\)</span> and intercept <span class="math notranslate nohighlight">\(a\)</span> (both in percentage points), we identify <span class="math notranslate nohighlight">\(1-\tau_d = b\)</span> and <span class="math notranslate nohighlight">\(\mu_d = a/100\)</span>.</p>
-<p>OG-Core’s operational formula is <span class="math notranslate nohighlight">\(r_{gov,t} = \max\!\big(\texttt{r\_gov\_scale}\cdot r_t - \texttt{r\_gov\_shift},\; 0\big)\)</span>, so the JSON stores <code class="docutils literal notranslate"><span class="pre">r_gov_scale</span> <span class="pre">=</span> <span class="pre">1-\tau_d</span> <span class="pre">=</span> <span class="pre">0.24485</span></code> and <code class="docutils literal notranslate"><span class="pre">r_gov_shift</span> <span class="pre">=</span> <span class="pre">-\mu_d</span> <span class="pre">=</span> <span class="pre">-0.03377</span></code>. The negative sign on <code class="docutils literal notranslate"><span class="pre">r_gov_shift</span></code> reflects the subtraction in the OG-Core rule, not a negative level shift in the theoretical equation.</p>
-<p>Because the inputs to this inversion are deterministic and contain no South Africa-specific bond data, the resulting values do not change across calibration runs. The packaged values in <code class="docutils literal notranslate"><span class="pre">ogzaf/ogzaf_default_parameters.json</span></code> and <code class="docutils literal notranslate"><span class="pre">ogzaf/ogzaf_default_parameters_multisector.json</span></code> are the authoritative source. The snippet below reproduces them for transparency:</p>
+<p><strong>Re-anchoring the level to South Africa’s data.</strong> The LMW inversion delivers two numbers: a <em>slope</em> (the pass-through elasticity <span class="math notranslate nohighlight">\(1-\tau_d = 0.24485\)</span>) and an <em>intercept</em> (<span class="math notranslate nohighlight">\(\mu_d = 0.03377\)</span>). The slope is a genuine estimated co-movement, and we keep it. The intercept, however, is a cross-country average that maps a <em>nominal, US-dollar</em> sovereign-yield level onto the model’s <em>real</em> return on capital, and it over-predicts South Africa’s actual borrowing cost — with the steady-state return on capital of 11.0% it implies <span class="math notranslate nohighlight">\(r_{gov}\)</span> of about 6.1% real, whereas South Africa’s effective real rate on the debt stock is about 3.7%. Since <span class="math notranslate nohighlight">\(r_{gov}\)</span> multiplies the <em>entire</em> debt stock in the government budget (<span class="math notranslate nohighlight">\(\texttt{debt\_service} = r_{gov}\cdot D\)</span>), the right target is the effective/average rate: the National Treasury’s effective interest rate on the debt portfolio, <strong>7.1% nominal</strong> (total debt-service cost ÷ gross loan debt, <a class="reference external" href="https://www.treasury.gov.za/documents/National%20Budget/2026/review/Chapter%207.pdf">2026 Budget Review, Chapter 7</a>), deflated by the ~3.4% GDP deflator to <strong>~3.7% real</strong>. We therefore re-anchor <span class="math notranslate nohighlight">\(\mu_d\)</span> so the steady-state <span class="math notranslate nohighlight">\(r_{gov}\)</span> equals this effective rate, giving <span class="math notranslate nohighlight">\(\mu_d \approx 0.0100\)</span> (tuned jointly with the other steady-state targets). (This is <em>not</em> the ~5% real <em>marginal</em> new-issue yield on 10-year bonds, which is the cost of new borrowing, not the average cost of the stock that <span class="math notranslate nohighlight">\(r_{gov}\)</span> multiplies.)</p>
+<p>OG-Core’s operational formula is <span class="math notranslate nohighlight">\(r_{gov,t} = \max\!\big(\texttt{r\_gov\_scale}\cdot r_t - \texttt{r\_gov\_shift} + \texttt{r\_gov\_DY}\cdot\tfrac{D_t}{Y_t} + \texttt{r\_gov\_DY2}\cdot\big(\tfrac{D_t}{Y_t}\big)^2,\; 0\big)\)</span>, so the JSON stores <code class="docutils literal notranslate"><span class="pre">r_gov_scale</span></code> <span class="math notranslate nohighlight">\(= 1-\tau_d = 0.24485\)</span> and folds the re-anchored level <span class="math notranslate nohighlight">\(\mu_d = 0.0100\)</span> together with the centred-premium constant below into <code class="docutils literal notranslate"><span class="pre">r_gov_shift</span></code> <span class="math notranslate nohighlight">\(= -0.0334\)</span>. The negative sign reflects the subtraction in the OG-Core rule, not a negative level shift in the theoretical equation.</p>
+<p>The slope’s inputs are deterministic and contain no South Africa-specific data; the <em>level</em> is re-anchored to South Africa’s effective rate as above. The packaged values in the JSON are authoritative; <code class="docutils literal notranslate"><span class="pre">ogzaf.macro_params.get_macro_params</span></code> does not recompute them on a live update (a recompute would restore the raw LMW intercept and de-centre the premium). The snippet below reproduces the LMW <em>slope</em> derivation for transparency:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">statsmodels.api</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sm</span>
 
@@ -540,18 +561,223 @@
 <span class="p">]</span>  <span class="c1">#  0.24485  (= 1-\tau_d in the theoretical equation)</span>
 </pre></div>
 </div>
-<p>If the LMW estimates are superseded, re-run the inversion above with the new coefficients and update the JSON values.</p>
+<p>If the LMW estimates are superseded, re-run the inversion above with the new coefficients and update the JSON values. Note that <code class="docutils literal notranslate"><span class="pre">ogzaf.macro_params.get_macro_params</span></code> no longer recomputes these values on a live update: the inversion is deterministic, and the packaged <code class="docutils literal notranslate"><span class="pre">r_gov_shift</span></code> includes the premium recentering below, which a recompute would silently undo.</p>
+</section>
+<section id="debt-elastic-sovereign-premium">
+<h4>Debt-elastic sovereign premium<a class="headerlink" href="#debt-elastic-sovereign-premium" title="Link to this heading">#</a></h4>
+<p>We enable a debt-elastic sovereign premium — the crowding-out-via-risk channel that OG-Core’s defaults leave off (<code class="docutils literal notranslate"><span class="pre">r_gov_DY</span> <span class="pre">=</span> <span class="pre">r_gov_DY2</span> <span class="pre">=</span> <span class="pre">0</span></code>). It takes the <em>centered</em> convex form used in OG-PHL:</p>
+<div class="math notranslate nohighlight" id="equation-eqn-centered-premium">
+<span class="eqno">(4)<a class="headerlink" href="#equation-eqn-centered-premium" title="Link to this equation">#</a></span>\[    \text{premium}_t = r_{gov,DY2}\,\Big(\frac{D_t}{Y_t} - \bar{d}\Big)^2\]</div>
+<p>with <span class="math notranslate nohighlight">\(\bar{d} = 0.765\)</span> (the <code class="docutils literal notranslate"><span class="pre">debt_ratio_ss</span></code> target) and <span class="math notranslate nohighlight">\(r_{gov,DY2} = 0.04\)</span>. Expanding the square maps this into OG-Core’s linear-plus-quadratic terms:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">r_gov_DY2</span></code> <span class="math notranslate nohighlight">\(= 0.04\)</span></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">r_gov_DY</span></code> <span class="math notranslate nohighlight">\(= -2 \times 0.04 \times 0.765 = -0.0612\)</span></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">r_gov_shift</span></code> <span class="math notranslate nohighlight">\(= -\mu_d - r_{gov,DY2}\,\bar{d}^2 = -0.0100 - 0.04 \times 0.765^2 = -0.0334\)</span> (the re-anchored level <span class="math notranslate nohighlight">\(\mu_d = 0.0100\)</span> and the recentering constant <span class="math notranslate nohighlight">\(r_{gov,DY2}\,\bar{d}^2\)</span>, both absorbed into the shift)</p></li>
+</ul>
+<p>The premium is exactly zero at the debt target, so the steady state is unchanged; along the transition path, debt above (or below) the target raises the sovereign rate convexly — about 7 basis points at <span class="math notranslate nohighlight">\(D/Y = 0.9\)</span> and 22 basis points at <span class="math notranslate nohighlight">\(D/Y = 1.0\)</span>. This is the <a class="reference external" href="https://www.nber.org/system/files/working_papers/w9270/w9270.pdf">Schmitt-Grohé and Uribe (2003)</a> debt-elastic premium in convex form, following the fiscal-limits literature (<a class="reference external" href="https://www.sciencedirect.com/science/article/abs/pii/S0014292111001085">Bi 2012</a>; <a class="reference external" href="https://www.nber.org/system/files/working_papers/w16782/w16782.pdf">Ghosh et al. 2013</a>) and emerging-market spread-to-debt empirics of roughly 4–8 basis points per percentage point of debt (<a class="reference external" href="https://www.imf.org/external/pubs/ft/wp/2012/wp12198.pdf">Jaramillo and Weber 2012</a>). It also matches South Africa’s own experience: spreads were broadly stable while gross debt climbed through the 60s percent-of-GDP range, then blew out in 2020 when debt jumped toward 70% amid the downgrade to sub-investment grade — and compressed again (2.93 to 2.26 percentage points during 2025) as consolidation took hold. The value of <span class="math notranslate nohighlight">\(r_{gov,DY2} = 0.04\)</span> matches OG-PHL’s calibration of the same channel.</p>
 </section>
 </section>
 <section id="aggregate-transfers">
 <h3>Aggregate transfers<a class="headerlink" href="#aggregate-transfers" title="Link to this heading">#</a></h3>
-<p>Aggregate (non-Social Security) transfers to households are set as a share of GDP with the parameter <span class="math notranslate nohighlight">\(\alpha_T\)</span>. We exclude Social Security from transfers since it is modeled specifically. With this definition, the share of transfers to GDP in 2015 is 0.04 according to <a class="reference external" href="https://data.imf.org/?sk=b052f0f0-c166-43b6-84fa-47cccae3e219&amp;amp;hide_uv=1">IMF data</a>.</p>
+<p>Aggregate transfers to households are set as a share of GDP with the parameter <span class="math notranslate nohighlight">\(\alpha_T = 0.037\)</span>. They are cash transfers only: South Africa’s social grants, including the Social Relief of Distress grant, cost 3.6% of GDP in 2025/26 (<a class="reference external" href="https://www.treasury.gov.za/documents/National%20Budget/2026/review/FullBR.pdf">Budget Review 2026</a>, Table 5.7). The old-age grant (1.5% of GDP) is part of this total; South Africa has no contributory state pension, so the model’s pension system is switched off (all PIA rates zero) and the grant is a transfer.</p>
+</section>
+<section id="public-investment">
+<h3>Public investment<a class="headerlink" href="#public-investment" title="Link to this heading">#</a></h3>
+<p>Government investment is set with <span class="math notranslate nohighlight">\(\alpha_I = 0.0242\)</span>, general government gross fixed capital formation in 2025 (2.42% of GDP, <a class="reference external" href="https://www.resbank.co.za/">SARB Quarterly Bulletin</a>, Table S-127). Public corporations (Eskom, Transnet and others, another 1.56% of GDP) are market producers in the national accounts and their capital is part of the private stock <span class="math notranslate nohighlight">\(K\)</span> below. Public capital does not enter production in this calibration (<span class="math notranslate nohighlight">\(\gamma_g = 0\)</span>).</p>
 </section>
 <section id="government-expenditures">
 <h3>Government expenditures<a class="headerlink" href="#government-expenditures" title="Link to this heading">#</a></h3>
-<p>Government spending on goods and services are also set as a share of GDP with the parameter <span class="math notranslate nohighlight">\(\alpha_G\)</span>. We define government spending as:
-<center>Government Spending = Total Outlays - Transfers - Net Interest on Debt - Social Security</center>
-With this definition, the share of government expenditure to GDP is 0.267 based on <a class="reference external" href="https://data.imf.org/?sk=b052f0f0-c166-43b6-84fa-47cccae3e219&amp;amp;hide_uv=1">data from the IMF</a>.</p>
+<p>Government consumption is set with <span class="math notranslate nohighlight">\(\alpha_G\)</span>. In the steady state OG-Core solves for it from the budget identity below, and it lands at 18.9% of GDP, the same as general government final consumption in 2025 (SARB QB S-116). Along the transition <span class="math notranslate nohighlight">\(\alpha_G\)</span> is a short path, <code class="docutils literal notranslate"><span class="pre">[0.1896,</span> <span class="pre">0.1866,</span> <span class="pre">0.1900]</span></code>. The first two values make the primary balance follow the Treasury’s consolidated plan (+1.3% of GDP in 2025/26, +1.6% in 2026/27). The third holds it at about 1.4% in 2027–2029, close to the level that keeps debt stable at the baseline’s growth. From 2027/28 the Treasury plans larger surpluses (2.0–3.0%) to bring debt down; the baseline does not assume them.</p>
+<p>From 2030, after the MTBPS 2026 window, OG-Core’s budget rule sets government consumption (<code class="docutils literal notranslate"><span class="pre">tG1</span> <span class="pre">=</span> <span class="pre">5</span></code>, <code class="docutils literal notranslate"><span class="pre">rho_G</span> <span class="pre">=</span> <span class="pre">0.1</span></code>): each year it closes a tenth of the gap between debt and the 76.5% target. Spending steps up 0.6% of GDP in 2030, because the faster growth of the 2030s lowers the surplus that holds debt steady.</p>
+</section>
+</section>
+<section id="fiscal-consistency">
+<h2>Fiscal consistency<a class="headerlink" href="#fiscal-consistency" title="Link to this heading">#</a></h2>
+<p>The spending shares, the revenue the tax system raises and the debt target <code class="docutils literal notranslate"><span class="pre">debt_ratio_ss</span></code> are not free of one another. For debt to hold at <span class="math notranslate nohighlight">\(\bar{d} = 0.765\)</span> in the steady state, the government must run a primary surplus <span class="math notranslate nohighlight">\(pb^\* = \tfrac{r_{gov}-g}{1+g}\,\bar{d}\)</span>, so primary spending, including public investment and transfers, must equal revenue minus <span class="math notranslate nohighlight">\(pb^\*\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\alpha_G + \alpha_T + \alpha_I = \text{revenue}/Y - pb^\*\]</div>
+<p>With <span class="math notranslate nohighlight">\(r_{gov} = 3.7\%\)</span> and <span class="math notranslate nohighlight">\(g = 1.38\%\)</span>, <span class="math notranslate nohighlight">\(pb^\* = 1.75\%\)</span> of GDP. Steady-state revenue is 26.8% of GDP, so primary spending is 25.0%: 18.9% government consumption, 3.7% transfers and 2.4% public investment. The Treasury’s consolidated primary surplus is 1.3% in 2025/26 and is planned to rise above 1.75% from 2027/28, so the steady state’s fiscal stance is one the Treasury plans to pass within three years.</p>
+<p>South Africa’s debt is not a solvency or default question for this purpose — it is ~90% rand-denominated, long-maturity and domestically financed, rated sub-investment-grade-but-<em>stabilising</em> (BB/Ba2, all three agencies on positive outlook in 2025–26), and the IMF assesses debt-distress risk as moderate with no restructuring risk. The stable-debt steady state is therefore a modelling device for the sustainable long run, consistent with the National Treasury’s own plan, which has debt at 76.6% of GDP in 2029/30, not a claim that default is off the table or that current policy already stabilises debt (the IMF’s more cautious baseline has debt still rising absent a sustained ~3% primary surplus).</p>
+<section id="first-year-validation">
+<h3>First-year validation<a class="headerlink" href="#first-year-validation" title="Link to this heading">#</a></h3>
+<p>The tax settings and initial household wealth are tuned to 2025, the year South Africa’s data measure, in the baseline transition solved by <code class="docutils literal notranslate"><span class="pre">examples/run_og_zaf.py</span></code> (ogcore 0.22.0, offline). <code class="docutils literal notranslate"><span class="pre">examples/validate_fiscal_path.py</span></code> prints this table; targets and sources are in <code class="docutils literal notranslate"><span class="pre">ogzaf/targets.py</span></code>. The <a class="reference internal" href="scorecard.html"><span class="std std-doc">calibration scorecard</span></a> collects every table and figure on how well the calibration fits.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Moment, 2025</p></th>
+<th class="head"><p>Model</p></th>
+<th class="head"><p>Data</p></th>
+<th class="head"><p>Source</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Personal income tax / GDP</p></td>
+<td><p>10.16%</p></td>
+<td><p>10.15%</p></td>
+<td><p>MTBPS 2026, 2025/26</p></td>
+</tr>
+<tr class="row-odd"><td><p>Company tax + dividends tax / GDP</p></td>
+<td><p>5.02%</p></td>
+<td><p>5.02%</p></td>
+<td><p>MTBPS 2026</p></td>
+</tr>
+<tr class="row-even"><td><p>Consumption taxes, net of SACU / GDP</p></td>
+<td><p>8.92%</p></td>
+<td><p>8.92%</p></td>
+<td><p>MTBPS 2026, BR 2026</p></td>
+</tr>
+<tr class="row-odd"><td><p>Payroll levies (SDL + UIF) / GDP</p></td>
+<td><p>0.67%</p></td>
+<td><p>0.67%</p></td>
+<td><p>MTBPS 2026, UIF</p></td>
+</tr>
+<tr class="row-even"><td><p>Property taxes / GDP</p></td>
+<td><p>1.61%</p></td>
+<td><p>1.61%</p></td>
+<td><p>Stats SA P9114, BR 2026</p></td>
+</tr>
+<tr class="row-odd"><td><p>Estate duty + donations tax / GDP</p></td>
+<td><p>0.08%</p></td>
+<td><p>0.08%</p></td>
+<td><p>BR 2026</p></td>
+</tr>
+<tr class="row-even"><td><p>Private capital / GDP</p></td>
+<td><p>2.80</p></td>
+<td><p>2.80</p></td>
+<td><p>PWT 11.0, SARB</p></td>
+</tr>
+<tr class="row-odd"><td><p>Real rate on government debt</p></td>
+<td><p>3.69%</p></td>
+<td><p>3.7%</p></td>
+<td><p>MTBPS 2026, deflated</p></td>
+</tr>
+<tr class="row-even"><td><p>Primary balance / GDP</p></td>
+<td><p>1.34%</p></td>
+<td><p>1.3%</p></td>
+<td><p>MTBPS 2026</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Household wealth starts at 2.79 times GDP (<code class="docutils literal notranslate"><span class="pre">initial_wealth_ratio</span></code>), the level that makes private capital 2.80 times GDP. The SARB household balance sheet shows 2.97 (QB S-142), but that also counts foreign assets held through pension funds and unit trusts, which the model’s households cannot hold.</p>
+</section>
+<section id="steady-state-validation">
+<h3>Steady-state validation<a class="headerlink" href="#steady-state-validation" title="Link to this heading">#</a></h3>
+<p>The long run is an outcome, not a target. It uses the same settings, with productivity back on trend.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Moment</p></th>
+<th class="head"><p>Model</p></th>
+<th class="head"><p>Data (today)</p></th>
+<th class="head"><p>Source</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Personal income tax / GDP</p></td>
+<td><p>10.30%</p></td>
+<td><p>10.15%</p></td>
+<td><p>MTBPS 2026, 2025/26</p></td>
+</tr>
+<tr class="row-odd"><td><p>Company tax + dividends tax / GDP</p></td>
+<td><p>5.03%</p></td>
+<td><p>5.02%</p></td>
+<td><p>MTBPS 2026</p></td>
+</tr>
+<tr class="row-even"><td><p>Consumption taxes, net of SACU / GDP</p></td>
+<td><p>9.19%</p></td>
+<td><p>8.92%</p></td>
+<td><p>MTBPS 2026, BR 2026</p></td>
+</tr>
+<tr class="row-odd"><td><p>Payroll levies (SDL + UIF) / GDP</p></td>
+<td><p>0.67%</p></td>
+<td><p>0.67%</p></td>
+<td><p>MTBPS 2026, UIF</p></td>
+</tr>
+<tr class="row-even"><td><p>Property taxes / GDP</p></td>
+<td><p>1.51%</p></td>
+<td><p>1.61%</p></td>
+<td><p>Stats SA P9114, BR 2026</p></td>
+</tr>
+<tr class="row-odd"><td><p>Estate duty + donations tax / GDP</p></td>
+<td><p>0.10%</p></td>
+<td><p>0.08%</p></td>
+<td><p>BR 2026</p></td>
+</tr>
+<tr class="row-even"><td><p>Real rate on government debt</p></td>
+<td><p>3.71%</p></td>
+<td><p>3.7%</p></td>
+<td><p>MTBPS 2026, deflated</p></td>
+</tr>
+<tr class="row-odd"><td><p>Debt / GDP</p></td>
+<td><p>0.765</p></td>
+<td><p>0.765 (2029/30 path)</p></td>
+<td><p>MTBPS 2026</p></td>
+</tr>
+<tr class="row-even"><td><p>Foreign share of debt</p></td>
+<td><p>0.25</p></td>
+<td><p>0.25</p></td>
+<td><p>BR 2026</p></td>
+</tr>
+<tr class="row-odd"><td><p>Government consumption / GDP</p></td>
+<td><p>18.9%</p></td>
+<td><p>18.9%</p></td>
+<td><p>SARB QB 2025</p></td>
+</tr>
+<tr class="row-even"><td><p>Transfers / GDP</p></td>
+<td><p>3.7%</p></td>
+<td><p>3.6%</p></td>
+<td><p>BR 2026</p></td>
+</tr>
+<tr class="row-odd"><td><p>Public investment / GDP</p></td>
+<td><p>2.42%</p></td>
+<td><p>2.42%</p></td>
+<td><p>SARB QB 2025</p></td>
+</tr>
+<tr class="row-even"><td><p>Private capital / GDP</p></td>
+<td><p>2.79</p></td>
+<td><p>2.80</p></td>
+<td><p>PWT 11.0, SARB</p></td>
+</tr>
+<tr class="row-odd"><td><p>Real return on capital</p></td>
+<td><p>11.0%</p></td>
+<td><p>12.0%</p></td>
+<td><p>PWT 11.0 <code class="docutils literal notranslate"><span class="pre">irr</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>Foreign-owned share of capital</p></td>
+<td><p>21.2%</p></td>
+<td><p>8–20.5% (gross)</p></td>
+<td><p>SARB IIP</p></td>
+</tr>
+<tr class="row-odd"><td><p>Household wealth / GDP</p></td>
+<td><p>2.77</p></td>
+<td><p>2.97</p></td>
+<td><p>SARB QB S-142</p></td>
+</tr>
+<tr class="row-even"><td><p>Private consumption / GDP (purchaser prices)</p></td>
+<td><p>67.1%</p></td>
+<td><p>65.8%</p></td>
+<td><p>SARB QB 2025</p></td>
+</tr>
+<tr class="row-odd"><td><p>Total investment / GDP</p></td>
+<td><p>17.6%</p></td>
+<td><p>13.9% (2025); 18% (2010–2019)</p></td>
+<td><p>SARB QB; PWT 11.0 <code class="docutils literal notranslate"><span class="pre">csh_i</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Consumption taxes are higher in the long run because consumption is a larger share of output: 57.9% at producer prices against 56.2% in 2025. Investment is above 2025’s depressed level and close to the 2010s average. The trade surplus is 5.7% of GDP against 1.9% in 2025: in the model it pays the return on foreign-owned capital, while South Africa also earns income on foreign assets of 135% of GDP, which OG-Core’s single foreign-capital stock cannot hold.</p>
+</section>
+<section id="fiscal-path-validation">
+<h3>Fiscal path validation<a class="headerlink" href="#fiscal-path-validation" title="Link to this heading">#</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">examples/validate_fiscal_path.py</span></code> scores the first years of the baseline transition against the Treasury’s numbers and against the productivity path.</p>
+<figure class="align-default" id="figfiscalpath">
+<a class="reference internal image-reference" href="../../_images/fiscal_path.png"><img alt="../../_images/fiscal_path.png" src="../../_images/fiscal_path.png" style="height: 300px;" />
+</a>
+<figcaption>
+<p><span class="caption-number">Fig. 1 </span><span class="caption-text">Baseline transition against gross loan debt (MTBPS 2026 Tables 1.3 and 3.8), the consolidated primary balance (MTBPS 2026 Tables 1.2, 3.6 and 4.1), tax revenue (MTBPS 2026 Table 3.1, bridged to the model’s concept), public investment (SARB QB S-127) and the baseline path for output per hour (<code class="docutils literal notranslate"><span class="pre">ogzaf/productivity.py</span></code>).</span><a class="headerlink" href="#figfiscalpath" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p>The model starts from the measured debt ratio, 77.0% of GDP, and its primary surplus follows the Treasury’s in the first two years (1.34% and 1.69% against 1.3% and 1.6%). Debt then holds between 77.2% and 77.4% to 2029, against the Treasury’s 77.5–78.4%, and drifts up to 78.3% by 2036 and 78.8% at its peak, in 2048, before it settles at the 76.5% target. The baseline does not fall as fast as the Treasury’s plan after 2027/28, because it does not assume the planned surpluses of 2.0–3.0%. Revenue is 26.5% of GDP against 26.6% in 2025/26, and public investment matches. Output per hour follows its baseline path in every year, and GDP grows 1.6% in 2026, 1.9% in 2029 and about 2.1% a year in the 2030s. Consumption is smooth from the first year.</p>
 </section>
 </section>
 </section>
@@ -624,6 +850,7 @@ With this definition, the share of government expenditure to GDP is 0.267 based 
     <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#economic-assumptions">Economic Assumptions</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#open-economy-parameters">Open Economy Parameters</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#world-interest-rate">World interest rate</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#foreign-holding-of-government-debt-in-the-initial-period">Foreign holding of government debt in the initial period</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#foreign-purchases-of-newly-issued-debt">Foreign purchases of newly issued debt</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#foreign-holdings-of-excess-capital">Foreign holdings of excess capital</a></li>
@@ -632,10 +859,18 @@ With this definition, the share of government expenditure to GDP is 0.267 based 
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#government-debt-spending-and-transfers">Government Debt, Spending and Transfers</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#government-debt">Government Debt</a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#interest-rates-on-government-debt">Interest rates on government debt</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#debt-elastic-sovereign-premium">Debt-elastic sovereign premium</a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#aggregate-transfers">Aggregate transfers</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#public-investment">Public investment</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#government-expenditures">Government expenditures</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fiscal-consistency">Fiscal consistency</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#first-year-validation">First-year validation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#steady-state-validation">Steady-state validation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fiscal-path-validation">Fiscal path validation</a></li>
 </ul>
 </li>
 </ul>

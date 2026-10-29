@@ -228,7 +228,10 @@
 <li class="toctree-l2"><a class="reference internal" href="../../content/api/income.html">Life-cycle productivity profiles</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../content/api/input_output.html">Output-Consumption Bridge</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../content/api/macro_params.html">Macro Parameter Estimation Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../content/api/productivity.html">Baseline Productivity Path</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../content/api/targets.html">Calibration Targets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../content/api/utils.html">Calibration Utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../content/api/warm_start.html">Steady-State Warm Start</a></li>
 </ul>
 </details></li>
 </ul>
@@ -242,6 +245,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../content/calibration/taxes.html">Taxes in OG-ZAF</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../content/calibration/matching_lwi.html">Matching Labor, Wealth, and Income Moments</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../content/calibration/exogenous_parameters.html">Exogenous Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../content/calibration/scorecard.html">Calibration Scorecard</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">UN Tutorial</span></p>
 <ul class="nav bd-sidenav">
@@ -410,6 +414,112 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span>
 
+<span class="c1"># UN M49 code for South Africa, used for every demographic download.</span>
+<span class="n">UN_COUNTRY_CODE</span> <span class="o">=</span> <span class="s2">"710"</span>
+<span class="c1"># Last year of UN data read by the demographics. ogcore freezes fertility,</span>
+<span class="c1"># mortality and immigration at this year forever, so it sets the long-run</span>
+<span class="c1"># population growth rate: a two-year window froze 2026 rates (g_n_ss about</span>
+<span class="c1"># +0.42%/yr), while the UN WPP 2024 projection levels South Africa's population</span>
+<span class="c1"># off this century (g_n_ss about -0.03%/yr with the full window). 2098 is one</span>
+<span class="c1"># year before the last year in the UN data (ogcore reads final_data_year + 1)</span>
+<span class="c1"># and within ogcore's start_year + 74 limit.</span>
+<span class="n">DEMOG_FINAL_DATA_YEAR</span> <span class="o">=</span> <span class="mi">2098</span>
+
+<span class="c1"># Income gradients in demographic rates, from EAPD-DRB/Demographic-Gradients</span>
+<span class="c1"># (docs/countries/south-africa.md). Each tilt is the slope of the log rate on</span>
+<span class="c1"># wealth rank (0 = poorest, 1 = richest); ogcore takes the slope per centered</span>
+<span class="c1"># percentile point, so every tilt is divided by 100. Negative = poorer groups</span>
+<span class="c1"># have higher rates. ogcore keeps the national rate at each age and only</span>
+<span class="c1"># tilts it across lifetime-income groups.</span>
+<span class="c1"># Fertility: total fertility rate by wealth quintile, DHS 2016.</span>
+<span class="n">FERT_TILT</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.5054</span>
+<span class="c1"># Infant mortality: DHS 2016 (IMR, not U5MR).</span>
+<span class="n">INFMORT_TILT</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.5443</span>
+<span class="c1"># Adult mortality by age band: mean of the 2001 and 2007 census household-</span>
+<span class="c1"># deaths tilts (asset-index ranking, all deaths linked; IPUMS International /</span>
+<span class="c1"># Statistics South Africa). The 2011 census agrees on the 15-59 summary</span>
+<span class="c1"># (45q15 tilt -0.80 in all three censuses) but links only 9% of deaths and</span>
+<span class="c1"># has no band-level rows outside 30-44.</span>
+<span class="n">ADULT_MORT_TILTS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">29</span><span class="p">):</span> <span class="p">(</span><span class="o">-</span><span class="mf">0.9155</span> <span class="o">-</span> <span class="mf">1.2085</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">44</span><span class="p">):</span> <span class="p">(</span><span class="o">-</span><span class="mf">1.1703</span> <span class="o">-</span> <span class="mf">1.2545</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="p">(</span><span class="mi">45</span><span class="p">,</span> <span class="mi">59</span><span class="p">):</span> <span class="p">(</span><span class="o">-</span><span class="mf">0.8629</span> <span class="o">-</span> <span class="mf">1.2122</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="p">(</span><span class="mi">60</span><span class="p">,</span> <span class="mi">74</span><span class="p">):</span> <span class="p">(</span><span class="o">-</span><span class="mf">0.3201</span> <span class="o">-</span> <span class="mf">0.5650</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="c1"># Ages 1-14 have no adult-style measure; the DHS 2016 under-five tilt is the</span>
+<span class="c1"># closest measured child gradient.</span>
+<span class="n">CHILD_MORT_TILT</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.7036</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">mortality_gradient</span><span class="p">(</span><span class="n">max_age</span><span class="o">=</span><span class="mi">99</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Age profile of the mortality tilt for ages 0 to ``max_age``, in ogcore</span>
+<span class="sd">    units (per centered percentile point).</span>
+
+<span class="sd">    Age 0 takes the infant tilt, ages 1-14 the under-five tilt, ages 15-74</span>
+<span class="sd">    the census age-band tilts. Above 74 there is no measurement; the gradient</span>
+<span class="sd">    fades with age in every census measured, so it declines linearly from</span>
+<span class="sd">    the 60-74 value to zero at ``max_age``.</span>
+<span class="sd">    """</span>
+    <span class="n">ages</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">max_age</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">tilt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">max_age</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">tilt</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">INFMORT_TILT</span>
+    <span class="n">tilt</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">15</span><span class="p">]</span> <span class="o">=</span> <span class="n">CHILD_MORT_TILT</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">lo</span><span class="p">,</span> <span class="n">hi</span><span class="p">),</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">ADULT_MORT_TILTS</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">tilt</span><span class="p">[</span><span class="n">lo</span> <span class="p">:</span> <span class="n">hi</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+    <span class="n">old</span> <span class="o">=</span> <span class="n">ages</span> <span class="o">&gt;</span> <span class="mi">74</span>
+    <span class="n">tilt</span><span class="p">[</span><span class="n">old</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">ADULT_MORT_TILTS</span><span class="p">[(</span><span class="mi">60</span><span class="p">,</span> <span class="mi">74</span><span class="p">)]</span> <span class="o">*</span> <span class="p">(</span><span class="n">max_age</span> <span class="o">-</span> <span class="n">ages</span><span class="p">[</span><span class="n">old</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="n">max_age</span> <span class="o">-</span> <span class="mi">74</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">tilt</span> <span class="o">/</span> <span class="mi">100</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">get_demographics_and_e</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">demographic_data_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">output_path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Download the demographic objects and build the earnings matrix from</span>
+<span class="sd">    them, so the two always come from the same population weights.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        p (OG-Core Specifications object): model parameters</span>
+<span class="sd">        demographic_data_path (str): path to save demographic data</span>
+<span class="sd">        output_path (str): path to save the earnings-profile plots to</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tuple: (dict of demographic parameters, ``e`` array)</span>
+<span class="sd">    """</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ogcore</span><span class="w"> </span><span class="kn">import</span> <span class="n">demographics</span>
+
+    <span class="n">window</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+        <span class="n">country_id</span><span class="o">=</span><span class="n">UN_COUNTRY_CODE</span><span class="p">,</span>
+        <span class="n">initial_data_year</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">start_year</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">final_data_year</span><span class="o">=</span><span class="n">DEMOG_FINAL_DATA_YEAR</span><span class="p">,</span>
+        <span class="n">income_percentiles</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">lambdas</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span>
+        <span class="n">fert_gradient</span><span class="o">=</span><span class="n">FERT_TILT</span> <span class="o">/</span> <span class="mi">100</span><span class="p">,</span>
+        <span class="n">mort_gradient</span><span class="o">=</span><span class="n">mortality_gradient</span><span class="p">(),</span>
+        <span class="n">infmort_gradient</span><span class="o">=</span><span class="n">INFMORT_TILT</span> <span class="o">/</span> <span class="mi">100</span><span class="p">,</span>
+        <span class="n">GraphDiag</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">demog</span> <span class="o">=</span> <span class="n">demographics</span><span class="o">.</span><span class="n">get_pop_objs</span><span class="p">(</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">E</span><span class="p">,</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">S</span><span class="p">,</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">T</span><span class="p">,</span>
+        <span class="mi">0</span><span class="p">,</span>
+        <span class="mi">99</span><span class="p">,</span>
+        <span class="n">download_path</span><span class="o">=</span><span class="n">demographic_data_path</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">window</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="c1"># demographics for 80 period lives (needed for getting e below)</span>
+    <span class="n">demog80</span> <span class="o">=</span> <span class="n">demographics</span><span class="o">.</span><span class="n">get_pop_objs</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">99</span><span class="p">,</span> <span class="o">**</span><span class="n">window</span><span class="p">)</span>
+    <span class="n">e</span> <span class="o">=</span> <span class="n">income</span><span class="o">.</span><span class="n">get_e_interp</span><span class="p">(</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">E</span><span class="p">,</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">S</span><span class="p">,</span>
+        <span class="n">demog</span><span class="p">[</span><span class="s2">"omega_SS"</span><span class="p">],</span>
+        <span class="n">demog80</span><span class="p">[</span><span class="s2">"omega_SS"</span><span class="p">],</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">lambdas</span><span class="p">,</span>
+        <span class="n">plot_path</span><span class="o">=</span><span class="n">output_path</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">demog</span><span class="p">,</span> <span class="n">e</span>
+
 
 <div class="viewcode-block" id="Calibration">
 <a class="viewcode-back" href="../../content/api/calibrate.html#ogzaf.calibrate.Calibration">[docs]</a>
@@ -485,44 +595,8 @@
 
         <span class="c1"># Demographics + income (atomic — e depends on demographic output)</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="kn">from</span><span class="w"> </span><span class="nn">ogcore</span><span class="w"> </span><span class="kn">import</span> <span class="n">demographics</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">demographic_params</span> <span class="o">=</span> <span class="n">demographics</span><span class="o">.</span><span class="n">get_pop_objs</span><span class="p">(</span>
-                <span class="n">p</span><span class="o">.</span><span class="n">E</span><span class="p">,</span>
-                <span class="n">p</span><span class="o">.</span><span class="n">S</span><span class="p">,</span>
-                <span class="n">p</span><span class="o">.</span><span class="n">T</span><span class="p">,</span>
-                <span class="mi">0</span><span class="p">,</span>
-                <span class="mi">99</span><span class="p">,</span>
-                <span class="n">country_id</span><span class="o">=</span><span class="s2">"710"</span><span class="p">,</span>
-                <span class="n">initial_data_year</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">start_year</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span>
-                <span class="n">final_data_year</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">start_year</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
-                <span class="n">income_percentiles</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">lambdas</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span>
-                <span class="n">GraphDiag</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                <span class="n">download_path</span><span class="o">=</span><span class="n">demographic_data_path</span><span class="p">,</span>
-            <span class="p">)</span>
-
-            <span class="c1"># demographics for 80 period lives (needed for getting e below)</span>
-            <span class="n">demog80</span> <span class="o">=</span> <span class="n">demographics</span><span class="o">.</span><span class="n">get_pop_objs</span><span class="p">(</span>
-                <span class="mi">20</span><span class="p">,</span>
-                <span class="mi">80</span><span class="p">,</span>
-                <span class="n">p</span><span class="o">.</span><span class="n">T</span><span class="p">,</span>
-                <span class="mi">0</span><span class="p">,</span>
-                <span class="mi">99</span><span class="p">,</span>
-                <span class="n">country_id</span><span class="o">=</span><span class="s2">"710"</span><span class="p">,</span>
-                <span class="n">initial_data_year</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">start_year</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span>
-                <span class="n">final_data_year</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">start_year</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
-                <span class="n">income_percentiles</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">lambdas</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span>
-                <span class="n">GraphDiag</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-            <span class="p">)</span>
-
-            <span class="c1"># earnings profiles</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">e</span> <span class="o">=</span> <span class="n">income</span><span class="o">.</span><span class="n">get_e_interp</span><span class="p">(</span>
-                <span class="n">p</span><span class="o">.</span><span class="n">E</span><span class="p">,</span>
-                <span class="n">p</span><span class="o">.</span><span class="n">S</span><span class="p">,</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">demographic_params</span><span class="p">[</span><span class="s2">"omega_SS"</span><span class="p">],</span>
-                <span class="n">demog80</span><span class="p">[</span><span class="s2">"omega_SS"</span><span class="p">],</span>
-                <span class="n">p</span><span class="o">.</span><span class="n">lambdas</span><span class="p">,</span>
-                <span class="n">plot_path</span><span class="o">=</span><span class="n">output_path</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">demographic_params</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">e</span> <span class="o">=</span> <span class="n">get_demographics_and_e</span><span class="p">(</span>
+                <span class="n">p</span><span class="p">,</span> <span class="n">demographic_data_path</span><span class="p">,</span> <span class="n">output_path</span>
             <span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
             <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>

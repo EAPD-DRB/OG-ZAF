@@ -1,0 +1,1314 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Calibration Scorecard &#8212; OG-ZAF</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../../_static/exercise.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/proof.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../_static/scripts/fontawesome.js?digest=55c26ed414f5f8a31ebb"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb" />
+
+    <script src="../../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'content/calibration/scorecard';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Getting Started" href="../UNtutorial/getting_started.html" />
+    <link rel="prev" title="Exogenous Parameters" href="exogenous_parameters.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../../_static/searchtools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro/intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/OG-ZAF_logo.png" class="logo__image only-light" alt="OG-ZAF - Home"/>
+    <img src="../../_static/OG-ZAF_logo.png" class="logo__image only-dark pst-js-only" alt="OG-ZAF - Home"/>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro/intro.html">
+                    OG-ZAF
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contributing to OG-ZAF</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../contributing/contributor_guide.html">Contributor Guide</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">OG-ZAF API</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../api/public_api.html">API</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../api/calibrate.html">Main Calibration Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/income.html">Life-cycle productivity profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/input_output.html">Output-Consumption Bridge</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/macro_params.html">Macro Parameter Estimation Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/productivity.html">Baseline Productivity Path</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/targets.html">Calibration Targets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/utils.html">Calibration Utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/warm_start.html">Steady-State Warm Start</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Calibration</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="households.html">Calibration of Household Preference Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="firms.html">Calibration of Firms Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="macro.html">Calibration of Macroeconomic Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demographics.html">Demographics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="earnings.html">Lifetime Earnings Profiles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="taxes.html">Taxes in OG-ZAF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="matching_lwi.html">Matching Labor, Wealth, and Income Moments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="exogenous_parameters.html">Exogenous Parameters</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Calibration Scorecard</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">UN Tutorial</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../UNtutorial/getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../UNtutorial/3perOG.html">A “Simple” 3-period-lived agent OG model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../UNtutorial/projects.html">Research Projects</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">References</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../OGZAF_references.html">References</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Citations of OG-ZAF</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../citations.html">Citations and use cases of OG-ZAF</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/EAPD-DRB/OG-ZAF" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/EAPD-DRB/OG-ZAF/issues/new?title=Issue%20on%20page%20%2Fcontent/calibration/scorecard.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/content/calibration/scorecard.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Calibration Scorecard</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-starting-year">2025: the starting year</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#public-finances-to-2036">Public finances to 2036</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-long-run">The long run</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#productivity-and-growth">Productivity and growth</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-the-baseline-does-not-use-the-imf-forecast">Why the baseline does not use the IMF forecast</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-path-to-the-long-run">The path to the long run</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#accuracy-of-the-solution">Accuracy of the solution</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-policy-a-higher-company-tax-rate">Example policy: a higher company tax rate</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-this-calibration-changed">What this calibration changed</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#known-gaps-and-choices">Known gaps and choices</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="calibration-scorecard">
+<h1>Calibration Scorecard<a class="headerlink" href="#calibration-scorecard" title="Link to this heading">#</a></h1>
+<p>This chapter shows how closely the baseline matches South African data: tax collections and debt in 2025, the National Treasury’s fiscal plan, the long-run ratios, and productivity growth. Every figure and generated table comes from the model’s standard example run, <code class="docutils literal notranslate"><span class="pre">examples/run_og_zaf.py</span></code>, with the packaged default parameters. <code class="docutils literal notranslate"><span class="pre">examples/calibration_scorecard.py</span></code> rebuilds them from that run’s output; the text around them is written by hand.</p>
+<section id="the-starting-year">
+<h2>2025: the starting year<a class="headerlink" href="#the-starting-year" title="Link to this heading">#</a></h2>
+<p>Tax collections, debt and capital in the model’s first year, compared with published 2025 figures. Tax rates are set to reproduce collections. Debt, its interest rate and public investment are set from the data. The primary balance is a result of the model. Differences are in percentage points of GDP, except for private capital.</p>
+<!-- scorecard:first_year -->
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Measure</p></th>
+<th class="head text-right"><p>Model</p></th>
+<th class="head text-right"><p>Published</p></th>
+<th class="head text-right"><p>Difference</p></th>
+<th class="head"><p>Source</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Personal income tax / GDP</p></td>
+<td class="text-right"><p>10.16%</p></td>
+<td class="text-right"><p>10.15%</p></td>
+<td class="text-right"><p>+0.01</p></td>
+<td><p>PIT R790.6bn, MTBPS 2026 Table 3.1</p></td>
+</tr>
+<tr class="row-odd"><td><p>Company tax (incl. dividends tax) / GDP</p></td>
+<td class="text-right"><p>5.02%</p></td>
+<td class="text-right"><p>5.02%</p></td>
+<td class="text-right"><p>+0.00</p></td>
+<td><p>CIT R345.4bn + dividends tax R45.9bn, MTBPS 2026 Table 3.1</p></td>
+</tr>
+<tr class="row-even"><td><p>Payroll taxes (SDL and UIF) / GDP</p></td>
+<td class="text-right"><p>0.67%</p></td>
+<td class="text-right"><p>0.67%</p></td>
+<td class="text-right"><p>+0.00</p></td>
+<td><p>Skills Development Levy R26.0bn (MTBPS 2026) + UIF contributions R26.7bn (UIF Annual Report 2025/26)</p></td>
+</tr>
+<tr class="row-odd"><td><p>Consumption taxes, net of SACU / GDP</p></td>
+<td class="text-right"><p>8.92%</p></td>
+<td class="text-right"><p>8.92%</p></td>
+<td class="text-right"><p>+0.00</p></td>
+<td><p>VAT + fuel levy + excise + customs + other indirect taxes (9.87%) less SACU payments (0.95%), MTBPS 2026 / BR 2026</p></td>
+</tr>
+<tr class="row-even"><td><p>Property and transfer taxes / GDP</p></td>
+<td class="text-right"><p>1.61%</p></td>
+<td class="text-right"><p>1.61%</p></td>
+<td class="text-right"><p>+0.00</p></td>
+<td><p>municipal property rates R101.5bn (Stats SA P9114, 2024/25) + transfer duty and securities transfer tax (BR 2026)</p></td>
+</tr>
+<tr class="row-odd"><td><p>Estate and donations tax / GDP</p></td>
+<td class="text-right"><p>0.08%</p></td>
+<td class="text-right"><p>0.08%</p></td>
+<td class="text-right"><p>+0.00</p></td>
+<td><p>estate duty R4.8bn + donations tax R1.2bn, BR 2026 annexure</p></td>
+</tr>
+<tr class="row-even"><td><p>Total tax revenue / GDP</p></td>
+<td class="text-right"><p>26.46%</p></td>
+<td class="text-right"><p>26.57%</p></td>
+<td class="text-right"><p>-0.11</p></td>
+<td><p>MTBPS 2026 gross tax, less SACU payments, plus UIF and municipal rates; includes 0.12 points of minor taxes the model does not carry</p></td>
+</tr>
+<tr class="row-odd"><td><p>Private capital / GDP</p></td>
+<td class="text-right"><p>2.80</p></td>
+<td class="text-right"><p>2.80</p></td>
+<td class="text-right"><p>+0.00</p></td>
+<td><p>private capital: PWT 11.0 cn/cgdpo 3.82 (2023) less the general government share 26.7% (SARB QB E-5)</p></td>
+</tr>
+<tr class="row-even"><td><p>Public investment / GDP</p></td>
+<td class="text-right"><p>2.42%</p></td>
+<td class="text-right"><p>2.42%</p></td>
+<td class="text-right"><p>+0.00</p></td>
+<td><p>general government GFCF 2025, SARB QB S-127</p></td>
+</tr>
+<tr class="row-odd"><td><p>Real interest rate on government debt</p></td>
+<td class="text-right"><p>3.69%</p></td>
+<td class="text-right"><p>3.70%</p></td>
+<td class="text-right"><p>-0.01</p></td>
+<td><p>debt service / average gross loan debt 7.08% nominal (MTBPS 2026) less ~3.4% expected inflation</p></td>
+</tr>
+<tr class="row-even"><td><p>Primary balance / GDP</p></td>
+<td class="text-right"><p>1.34%</p></td>
+<td class="text-right"><p>1.30%</p></td>
+<td class="text-right"><p>+0.04</p></td>
+<td><p>MTBPS 2026, 2025/26</p></td>
+</tr>
+<tr class="row-odd"><td><p>Gross loan debt / GDP</p></td>
+<td class="text-right"><p>77.00%</p></td>
+<td class="text-right"><p>77.00%</p></td>
+<td class="text-right"><p>+0.00</p></td>
+<td><p>Gross loan debt at the end of 2024/25, MTBPS 2026</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- /scorecard:first_year -->
+</section>
+<section id="public-finances-to-2036">
+<h2>Public finances to 2036<a class="headerlink" href="#public-finances-to-2036" title="Link to this heading">#</a></h2>
+<p>The model’s fiscal path against the National Treasury’s 2026 Medium-Term Budget Policy Statement (MTBPS). Debt holds roughly flat, while the Treasury plans a small decline by 2030: the model keeps today’s primary surplus, and the Treasury plans to raise it every year to 2029. The baseline does not assume that consolidation. Government consumption steps up in 2030, when spending starts to follow the long-run budget rule. The rate on government debt stays at the Treasury’s effective real rate.</p>
+<p><img alt="Fiscal path: model and Treasury plan, 2025–2036" src="../../_images/scorecard_fiscal_path.png" /></p>
+<p><em>Fiscal path: model and Treasury plan, 2025–2036</em></p>
+<p>Model debt is the stock at the start of each year, compared with the Treasury’s figure for the end of the previous fiscal year. Values are % of GDP; the real rate on debt is in %.</p>
+<!-- scorecard:fiscal_path -->
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Year</p></th>
+<th class="head text-right"><p>Debt, model</p></th>
+<th class="head text-right"><p>Debt, Treasury</p></th>
+<th class="head text-right"><p>Primary balance, model</p></th>
+<th class="head text-right"><p>Primary balance, Treasury</p></th>
+<th class="head text-right"><p>Tax revenue</p></th>
+<th class="head text-right"><p>Government consumption</p></th>
+<th class="head text-right"><p>Social transfers</p></th>
+<th class="head text-right"><p>Public investment</p></th>
+<th class="head text-right"><p>Real rate on debt</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>2025</p></td>
+<td class="text-right"><p>77.0</p></td>
+<td class="text-right"><p>77.0</p></td>
+<td class="text-right"><p>1.3</p></td>
+<td class="text-right"><p>1.3</p></td>
+<td class="text-right"><p>26.5</p></td>
+<td class="text-right"><p>19.0</p></td>
+<td class="text-right"><p>3.7</p></td>
+<td class="text-right"><p>2.4</p></td>
+<td class="text-right"><p>3.69</p></td>
+</tr>
+<tr class="row-odd"><td><p>2026</p></td>
+<td class="text-right"><p>77.3</p></td>
+<td class="text-right"><p>78.4</p></td>
+<td class="text-right"><p>1.7</p></td>
+<td class="text-right"><p>1.6</p></td>
+<td class="text-right"><p>26.5</p></td>
+<td class="text-right"><p>18.7</p></td>
+<td class="text-right"><p>3.7</p></td>
+<td class="text-right"><p>2.4</p></td>
+<td class="text-right"><p>3.68</p></td>
+</tr>
+<tr class="row-even"><td><p>2027</p></td>
+<td class="text-right"><p>77.2</p></td>
+<td class="text-right"><p>78.2</p></td>
+<td class="text-right"><p>1.4</p></td>
+<td class="text-right"><p>2.0</p></td>
+<td class="text-right"><p>26.5</p></td>
+<td class="text-right"><p>19.0</p></td>
+<td class="text-right"><p>3.7</p></td>
+<td class="text-right"><p>2.4</p></td>
+<td class="text-right"><p>3.68</p></td>
+</tr>
+<tr class="row-odd"><td><p>2028</p></td>
+<td class="text-right"><p>77.4</p></td>
+<td class="text-right"><p>77.9</p></td>
+<td class="text-right"><p>1.4</p></td>
+<td class="text-right"><p>2.5</p></td>
+<td class="text-right"><p>26.6</p></td>
+<td class="text-right"><p>19.0</p></td>
+<td class="text-right"><p>3.7</p></td>
+<td class="text-right"><p>2.4</p></td>
+<td class="text-right"><p>3.67</p></td>
+</tr>
+<tr class="row-even"><td><p>2029</p></td>
+<td class="text-right"><p>77.4</p></td>
+<td class="text-right"><p>77.5</p></td>
+<td class="text-right"><p>1.4</p></td>
+<td class="text-right"><p>3.0</p></td>
+<td class="text-right"><p>26.6</p></td>
+<td class="text-right"><p>19.0</p></td>
+<td class="text-right"><p>3.7</p></td>
+<td class="text-right"><p>2.4</p></td>
+<td class="text-right"><p>3.68</p></td>
+</tr>
+<tr class="row-odd"><td><p>2030</p></td>
+<td class="text-right"><p>77.2</p></td>
+<td class="text-right"><p>76.6</p></td>
+<td class="text-right"><p>0.8</p></td>
+<td class="text-right"><p></p></td>
+<td class="text-right"><p>26.6</p></td>
+<td class="text-right"><p>19.6</p></td>
+<td class="text-right"><p>3.7</p></td>
+<td class="text-right"><p>2.4</p></td>
+<td class="text-right"><p>3.68</p></td>
+</tr>
+<tr class="row-even"><td><p>2031</p></td>
+<td class="text-right"><p>77.6</p></td>
+<td class="text-right"><p></p></td>
+<td class="text-right"><p>0.9</p></td>
+<td class="text-right"><p></p></td>
+<td class="text-right"><p>26.5</p></td>
+<td class="text-right"><p>19.5</p></td>
+<td class="text-right"><p>3.7</p></td>
+<td class="text-right"><p>2.4</p></td>
+<td class="text-right"><p>3.69</p></td>
+</tr>
+<tr class="row-odd"><td><p>2032</p></td>
+<td class="text-right"><p>77.9</p></td>
+<td class="text-right"><p></p></td>
+<td class="text-right"><p>1.0</p></td>
+<td class="text-right"><p></p></td>
+<td class="text-right"><p>26.5</p></td>
+<td class="text-right"><p>19.4</p></td>
+<td class="text-right"><p>3.7</p></td>
+<td class="text-right"><p>2.4</p></td>
+<td class="text-right"><p>3.70</p></td>
+</tr>
+<tr class="row-even"><td><p>2033</p></td>
+<td class="text-right"><p>78.0</p></td>
+<td class="text-right"><p></p></td>
+<td class="text-right"><p>1.1</p></td>
+<td class="text-right"><p></p></td>
+<td class="text-right"><p>26.5</p></td>
+<td class="text-right"><p>19.3</p></td>
+<td class="text-right"><p>3.7</p></td>
+<td class="text-right"><p>2.4</p></td>
+<td class="text-right"><p>3.71</p></td>
+</tr>
+<tr class="row-odd"><td><p>2034</p></td>
+<td class="text-right"><p>78.1</p></td>
+<td class="text-right"><p></p></td>
+<td class="text-right"><p>1.1</p></td>
+<td class="text-right"><p></p></td>
+<td class="text-right"><p>26.5</p></td>
+<td class="text-right"><p>19.2</p></td>
+<td class="text-right"><p>3.7</p></td>
+<td class="text-right"><p>2.4</p></td>
+<td class="text-right"><p>3.71</p></td>
+</tr>
+<tr class="row-even"><td><p>2035</p></td>
+<td class="text-right"><p>78.2</p></td>
+<td class="text-right"><p></p></td>
+<td class="text-right"><p>1.2</p></td>
+<td class="text-right"><p></p></td>
+<td class="text-right"><p>26.5</p></td>
+<td class="text-right"><p>19.2</p></td>
+<td class="text-right"><p>3.7</p></td>
+<td class="text-right"><p>2.4</p></td>
+<td class="text-right"><p>3.72</p></td>
+</tr>
+<tr class="row-odd"><td><p>2036</p></td>
+<td class="text-right"><p>78.3</p></td>
+<td class="text-right"><p></p></td>
+<td class="text-right"><p>1.2</p></td>
+<td class="text-right"><p></p></td>
+<td class="text-right"><p>26.5</p></td>
+<td class="text-right"><p>19.1</p></td>
+<td class="text-right"><p>3.7</p></td>
+<td class="text-right"><p>2.4</p></td>
+<td class="text-right"><p>3.72</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- /scorecard:fiscal_path -->
+</section>
+<section id="the-long-run">
+<h2>The long run<a class="headerlink" href="#the-long-run" title="Link to this heading">#</a></h2>
+<p>Ratios in the steady state, which the economy reaches after the transition, compared with South African targets. Eleven of the fourteen targets are within 5%. Three are further away. The real return on private capital is 11.0% against 12.0% in the Penn World Table; a higher return would push private capital below its target of 2.80 times GDP. Property and transfer taxes are 1.51% of GDP against 1.61%, and estate and donations tax is 0.10% against 0.08%: both were set to match 2025 collections, and their bases change relative to GDP over the transition.</p>
+<p><img alt="Steady state: model relative to target" src="../../_images/scorecard_steady_state.png" /></p>
+<p><em>Steady state: model relative to target</em></p>
+<p>Ratios without a target are shown for reference.</p>
+<!-- scorecard:steady_state -->
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Measure</p></th>
+<th class="head text-right"><p>Model</p></th>
+<th class="head text-right"><p>Target</p></th>
+<th class="head"><p>Source</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Personal income tax / GDP</p></td>
+<td class="text-right"><p>10.30%</p></td>
+<td class="text-right"><p>10.15%</p></td>
+<td><p>PIT R790.6bn, MTBPS 2026 Table 3.1</p></td>
+</tr>
+<tr class="row-odd"><td><p>Company tax (incl. dividends tax) / GDP</p></td>
+<td class="text-right"><p>5.03%</p></td>
+<td class="text-right"><p>5.02%</p></td>
+<td><p>CIT R345.4bn + dividends tax R45.9bn, MTBPS 2026 Table 3.1</p></td>
+</tr>
+<tr class="row-even"><td><p>Payroll taxes (SDL and UIF) / GDP</p></td>
+<td class="text-right"><p>0.67%</p></td>
+<td class="text-right"><p>0.67%</p></td>
+<td><p>Skills Development Levy R26.0bn (MTBPS 2026) + UIF contributions R26.7bn (UIF Annual Report 2025/26)</p></td>
+</tr>
+<tr class="row-odd"><td><p>Consumption taxes, net of SACU / GDP</p></td>
+<td class="text-right"><p>9.19%</p></td>
+<td class="text-right"><p>8.92%</p></td>
+<td><p>VAT + fuel levy + excise + customs + other indirect taxes (9.87%) less SACU payments (0.95%), MTBPS 2026 / BR 2026</p></td>
+</tr>
+<tr class="row-even"><td><p>Property and transfer taxes / GDP</p></td>
+<td class="text-right"><p>1.51%</p></td>
+<td class="text-right"><p>1.61%</p></td>
+<td><p>municipal property rates R101.5bn (Stats SA P9114, 2024/25) + transfer duty and securities transfer tax (BR 2026)</p></td>
+</tr>
+<tr class="row-odd"><td><p>Estate and donations tax / GDP</p></td>
+<td class="text-right"><p>0.10%</p></td>
+<td class="text-right"><p>0.08%</p></td>
+<td><p>estate duty R4.8bn + donations tax R1.2bn, BR 2026 annexure</p></td>
+</tr>
+<tr class="row-even"><td><p>Real interest rate on government debt</p></td>
+<td class="text-right"><p>3.71%</p></td>
+<td class="text-right"><p>3.70%</p></td>
+<td><p>debt service / average gross loan debt 7.08% nominal (MTBPS 2026) less ~3.4% expected inflation</p></td>
+</tr>
+<tr class="row-odd"><td><p>Gross loan debt / GDP</p></td>
+<td class="text-right"><p>76.50%</p></td>
+<td class="text-right"><p>76.50%</p></td>
+<td><p>MTBPS 2026 gross loan debt 2029/30</p></td>
+</tr>
+<tr class="row-even"><td><p>Foreign-held share of government debt</p></td>
+<td class="text-right"><p>25.00%</p></td>
+<td class="text-right"><p>25.00%</p></td>
+<td><p>non-resident share of domestic bonds, BR 2026</p></td>
+</tr>
+<tr class="row-odd"><td><p>Social transfers / GDP</p></td>
+<td class="text-right"><p>3.74%</p></td>
+<td class="text-right"><p>3.60%</p></td>
+<td><p>social grants incl. SRD, BR 2026 Table 5.7</p></td>
+</tr>
+<tr class="row-even"><td><p>Public investment / GDP</p></td>
+<td class="text-right"><p>2.42%</p></td>
+<td class="text-right"><p>2.42%</p></td>
+<td><p>general government GFCF 2025, SARB QB S-127</p></td>
+</tr>
+<tr class="row-odd"><td><p>Foreign-owned share of private capital</p></td>
+<td class="text-right"><p>21.24%</p></td>
+<td class="text-right"><p>20.50%</p></td>
+<td><p>upper bound: inward DI equity 22.7% + portfolio equity 34.8% of GDP (SARB IIP end-2025) / private K/Y; DI equity alone 0.08</p></td>
+</tr>
+<tr class="row-even"><td><p>Private capital / GDP</p></td>
+<td class="text-right"><p>2.79</p></td>
+<td class="text-right"><p>2.80</p></td>
+<td><p>private capital: PWT 11.0 cn/cgdpo 3.82 (2023) less the general government share 26.7% (SARB QB E-5)</p></td>
+</tr>
+<tr class="row-odd"><td><p>Real return on private capital</p></td>
+<td class="text-right"><p>11.05%</p></td>
+<td class="text-right"><p>12.00%</p></td>
+<td><p>PWT 11.0 real internal rate of return, 2023</p></td>
+</tr>
+<tr class="row-even"><td><p>Government consumption / GDP</p></td>
+<td class="text-right"><p>18.86%</p></td>
+<td class="text-right"><p></p></td>
+<td><p>not targeted</p></td>
+</tr>
+<tr class="row-odd"><td><p>Net exports / GDP</p></td>
+<td class="text-right"><p>5.66%</p></td>
+<td class="text-right"><p></p></td>
+<td><p>not targeted</p></td>
+</tr>
+<tr class="row-even"><td><p>Total investment / GDP</p></td>
+<td class="text-right"><p>17.58%</p></td>
+<td class="text-right"><p></p></td>
+<td><p>not targeted</p></td>
+</tr>
+<tr class="row-odd"><td><p>Household consumption / GDP</p></td>
+<td class="text-right"><p>67.09%</p></td>
+<td class="text-right"><p></p></td>
+<td><p>not targeted</p></td>
+</tr>
+<tr class="row-even"><td><p>Household wealth / GDP</p></td>
+<td class="text-right"><p>2.77</p></td>
+<td class="text-right"><p></p></td>
+<td><p>not targeted</p></td>
+</tr>
+<tr class="row-odd"><td><p>Total tax revenue / GDP</p></td>
+<td class="text-right"><p>26.79%</p></td>
+<td class="text-right"><p></p></td>
+<td><p>not targeted</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- /scorecard:steady_state -->
+</section>
+<section id="productivity-and-growth">
+<h2>Productivity and growth<a class="headerlink" href="#productivity-and-growth" title="Link to this heading">#</a></h2>
+<p>South Africa’s productivity growth has been weak since 2008. In the baseline it recovers gradually: growth in output per hour follows the average of two estimates, a rule based on recent growth and the OECD’s long-term baseline (the <a class="reference internal" href="firms.html"><span class="std std-doc">firms chapter</span></a> sets out both). The long-run rate, 1.4% a year, is South Africa’s growth in output per worker over 1994–2019 in the Penn World Table (see the <a class="reference internal" href="macro.html"><span class="std std-doc">macro chapter</span></a>).</p>
+<p><img alt="Growth in output per hour: model, baseline path and the two estimates" src="../../_images/scorecard_productivity.png" /></p>
+<p><em>Growth in output per hour: model, baseline path and the two estimates</em></p>
+<p>GDP grows faster than productivity because hours worked rise with the working-age population, at today’s employment rates by age. Total factor productivity starts above its long-run trend and declines to it, which holds productivity growth below the long-run rate.</p>
+<p><img alt="GDP growth by source, and total factor productivity relative to trend" src="../../_images/scorecard_growth_sources.png" /></p>
+<p><em>GDP growth by source, and total factor productivity relative to trend</em></p>
+<p>Average growth by period, % a year:</p>
+<!-- scorecard:growth -->
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Period</p></th>
+<th class="head text-right"><p>GDP</p></th>
+<th class="head text-right"><p>Output per hour, model</p></th>
+<th class="head text-right"><p>Baseline path</p></th>
+<th class="head text-right"><p>Estimate 1: recent growth</p></th>
+<th class="head text-right"><p>Estimate 2: OECD</p></th>
+<th class="head text-right"><p>Hours worked</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>2026–2030</p></td>
+<td class="text-right"><p>1.75%</p></td>
+<td class="text-right"><p>0.53%</p></td>
+<td class="text-right"><p>0.54%</p></td>
+<td class="text-right"><p>0.28%</p></td>
+<td class="text-right"><p>0.80%</p></td>
+<td class="text-right"><p>1.21%</p></td>
+</tr>
+<tr class="row-odd"><td><p>2031–2040</p></td>
+<td class="text-right"><p>2.16%</p></td>
+<td class="text-right"><p>1.10%</p></td>
+<td class="text-right"><p>1.10%</p></td>
+<td class="text-right"><p>0.80%</p></td>
+<td class="text-right"><p>1.40%</p></td>
+<td class="text-right"><p>1.04%</p></td>
+</tr>
+<tr class="row-even"><td><p>2041–2050</p></td>
+<td class="text-right"><p>2.09%</p></td>
+<td class="text-right"><p>1.18%</p></td>
+<td class="text-right"><p>1.18%</p></td>
+<td class="text-right"><p>0.93%</p></td>
+<td class="text-right"><p>1.44%</p></td>
+<td class="text-right"><p>0.90%</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- /scorecard:growth -->
+</section>
+<section id="why-the-baseline-does-not-use-the-imf-forecast">
+<h2>Why the baseline does not use the IMF forecast<a class="headerlink" href="#why-the-baseline-does-not-use-the-imf-forecast" title="Link to this heading">#</a></h2>
+<p>Since the 2009 recession, the IMF’s medium-term growth forecasts for South Africa have been too high every year. Leaving out the Covid years 2020 and 2021, every forecast made five years ahead for 2009–2024 was above the outturn; for 2013–2024 the gap averaged 2.1 percentage points a year. Before 2009 the errors went both ways. The IMF, SARB and Treasury paths assume that energy and logistics reforms succeed, so we treat them as reform scenarios rather than the baseline. The data are in <code class="docutils literal notranslate"><span class="pre">data/imf_weo_growth_forecasts.csv</span></code>, from the <a class="reference external" href="https://www.imf.org/en/Publications/WEO/weo-database">WEO historical forecasts database</a> and the current WEO.</p>
+<p><img alt="IMF five-year-ahead growth forecasts for South Africa and actual growth" src="../../_images/scorecard_imf.png" /></p>
+<p><em>IMF five-year-ahead growth forecasts for South Africa and actual growth</em></p>
+</section>
+<section id="the-path-to-the-long-run">
+<h2>The path to the long run<a class="headerlink" href="#the-path-to-the-long-run" title="Link to this heading">#</a></h2>
+<p>The main ratios move smoothly from today’s values to the steady state, with no instability.</p>
+<p><img alt="Main ratios on the baseline path, 2025–2084" src="../../_images/scorecard_long_paths.png" /></p>
+<p><em>Main ratios on the baseline path, 2025–2084</em></p>
+</section>
+<section id="accuracy-of-the-solution">
+<h2>Accuracy of the solution<a class="headerlink" href="#accuracy-of-the-solution" title="Link to this heading">#</a></h2>
+<p>How closely the solution satisfies the model’s equations in each year. Output not accounted for by spending is below 0.0000006 of output in every year to 2100, and household decisions are accurate to about 0.00000000001. The one spike, 0.0001 of output in 2145, is listed under known gaps.</p>
+<p><img alt="Errors in the solution by year, log scale" src="../../_images/scorecard_solver.png" /></p>
+<p><em>Errors in the solution by year, log scale</em></p>
+</section>
+<section id="example-policy-a-higher-company-tax-rate">
+<h2>Example policy: a higher company tax rate<a class="headerlink" href="#example-policy-a-higher-company-tax-rate" title="Link to this heading">#</a></h2>
+<p>The standard example raises the company tax rate to 30%. Capital, wages and GDP fall, as expected; hours worked rise slightly as households make up lost income. Changes are % from the baseline.</p>
+<p><img alt="Higher company tax rate: change from the baseline" src="../../_images/scorecard_reform.png" /></p>
+<p><em>Higher company tax rate: change from the baseline</em></p>
+<!-- scorecard:reform -->
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Variable</p></th>
+<th class="head text-right"><p>2025</p></th>
+<th class="head text-right"><p>2030</p></th>
+<th class="head text-right"><p>Average 2025–2034</p></th>
+<th class="head text-right"><p>Long run</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>GDP</p></td>
+<td class="text-right"><p>-0.36</p></td>
+<td class="text-right"><p>-0.14</p></td>
+<td class="text-right"><p>-0.24</p></td>
+<td class="text-right"><p>-0.62</p></td>
+</tr>
+<tr class="row-odd"><td><p>Consumption</p></td>
+<td class="text-right"><p>-0.18</p></td>
+<td class="text-right"><p>-0.37</p></td>
+<td class="text-right"><p>-0.35</p></td>
+<td class="text-right"><p>-0.94</p></td>
+</tr>
+<tr class="row-even"><td><p>Capital</p></td>
+<td class="text-right"><p>-0.75</p></td>
+<td class="text-right"><p>-0.45</p></td>
+<td class="text-right"><p>-0.63</p></td>
+<td class="text-right"><p>-1.57</p></td>
+</tr>
+<tr class="row-odd"><td><p>Labour</p></td>
+<td class="text-right"><p>-0.01</p></td>
+<td class="text-right"><p>+0.14</p></td>
+<td class="text-right"><p>+0.10</p></td>
+<td class="text-right"><p>+0.23</p></td>
+</tr>
+<tr class="row-even"><td><p>Real interest rate</p></td>
+<td class="text-right"><p>-1.30</p></td>
+<td class="text-right"><p>-1.41</p></td>
+<td class="text-right"><p>-1.31</p></td>
+<td class="text-right"><p>-0.57</p></td>
+</tr>
+<tr class="row-odd"><td><p>Wage rate</p></td>
+<td class="text-right"><p>-0.35</p></td>
+<td class="text-right"><p>-0.28</p></td>
+<td class="text-right"><p>-0.34</p></td>
+<td class="text-right"><p>-0.85</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- /scorecard:reform -->
+</section>
+<section id="what-this-calibration-changed">
+<h2>What this calibration changed<a class="headerlink" href="#what-this-calibration-changed" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Setting</p></th>
+<th class="head"><p>Area</p></th>
+<th class="head"><p>Before</p></th>
+<th class="head"><p>After</p></th>
+<th class="head"><p>Reason</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Personal income tax schedule</p></td>
+<td><p>Taxes</p></td>
+<td><p>A flat 22% rate</p></td>
+<td><p>A progressive schedule; brackets rise with average income over time</p></td>
+<td><p>Collects 10.15% of GDP in 2025, as SARS did. The two lowest-income groups pay no income tax.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Consumption tax rate</p></td>
+<td><p>Taxes</p></td>
+<td><p>15%</p></td>
+<td><p>15.9%</p></td>
+<td><p>VAT, fuel levy, excise and customs, less payments to SACU partners: 8.92% of GDP</p></td>
+</tr>
+<tr class="row-even"><td><p>Company tax collections</p></td>
+<td><p>Taxes</p></td>
+<td><p>30% of the statutory rate collected</p></td>
+<td><p>74% of the statutory rate collected</p></td>
+<td><p>Company tax plus dividends tax: 5.02% of GDP</p></td>
+</tr>
+<tr class="row-odd"><td><p>Payroll taxes</p></td>
+<td><p>Taxes</p></td>
+<td><p>None</p></td>
+<td><p>1.27% of wages</p></td>
+<td><p>Skills Development Levy and UIF contributions: 0.67% of GDP</p></td>
+</tr>
+<tr class="row-even"><td><p>Property and transfer taxes</p></td>
+<td><p>Taxes</p></td>
+<td><p>None</p></td>
+<td><p>Up to 0.73% of household wealth a year</p></td>
+<td><p>Municipal rates, transfer duty and securities transfer tax: 1.61% of GDP</p></td>
+</tr>
+<tr class="row-odd"><td><p>Estate and donations tax</p></td>
+<td><p>Taxes</p></td>
+<td><p>20% of bequests</p></td>
+<td><p>1.0% of bequests</p></td>
+<td><p>Estate duty and donations tax: 0.08% of GDP</p></td>
+</tr>
+<tr class="row-even"><td><p>Depreciation rate</p></td>
+<td><p>Production</p></td>
+<td><p>5% a year</p></td>
+<td><p>4.05% a year</p></td>
+<td><p>Depreciation of private capital divided by the private capital stock</p></td>
+</tr>
+<tr class="row-odd"><td><p>Household patience (discount factor)</p></td>
+<td><p>Households</p></td>
+<td><p>0.96</p></td>
+<td><p>0.871</p></td>
+<td><p>Sets private capital at 2.80 times GDP, the Penn World Table figure net of government capital</p></td>
+</tr>
+<tr class="row-even"><td><p>Long-run productivity growth</p></td>
+<td><p>Growth</p></td>
+<td><p>0.59% a year</p></td>
+<td><p>1.4% a year</p></td>
+<td><p>Growth in output per worker, 1994–2019 (Penn World Table 11.0: 1.44%)</p></td>
+</tr>
+<tr class="row-odd"><td><p>Productivity path to the long run</p></td>
+<td><p>Growth</p></td>
+<td><p>At its long-run level from the start</p></td>
+<td><p>Starts 8.3% above trend in 2025 and falls to it</p></td>
+<td><p>Output per hour grows 0.4% in 2026 and about 1.1% in the 2030s, the average of two estimates</p></td>
+</tr>
+<tr class="row-even"><td><p>World interest rate</p></td>
+<td><p>Open economy</p></td>
+<td><p>4%</p></td>
+<td><p>6.3%</p></td>
+<td><p>4% plus South Africa’s sovereign premium of 2.26 points (Treasury)</p></td>
+</tr>
+<tr class="row-odd"><td><p>Share of extra capital demand met from abroad</p></td>
+<td><p>Open economy</p></td>
+<td><p>90%</p></td>
+<td><p>16%</p></td>
+<td><p>Foreign-owned share of capital matches the balance of payments position (21%)</p></td>
+</tr>
+<tr class="row-even"><td><p>Foreign share of government debt</p></td>
+<td><p>Open economy</p></td>
+<td><p>16.2%</p></td>
+<td><p>25%</p></td>
+<td><p>Non-resident holdings of domestic government bonds</p></td>
+</tr>
+<tr class="row-odd"><td><p>Government debt at the start</p></td>
+<td><p>Debt</p></td>
+<td><p>84.2% of GDP</p></td>
+<td><p>77.0% of GDP</p></td>
+<td><p>Gross loan debt at the end of 2024/25 (MTBPS 2026)</p></td>
+</tr>
+<tr class="row-even"><td><p>Long-run government debt</p></td>
+<td><p>Debt</p></td>
+<td><p>120% of GDP</p></td>
+<td><p>76.5% of GDP</p></td>
+<td><p>The Treasury’s projection for 2029/30</p></td>
+</tr>
+<tr class="row-odd"><td><p>Real interest rate on government debt</p></td>
+<td><p>Debt</p></td>
+<td><p>Cross-country formula</p></td>
+<td><p>3.7%, rising when debt is above its long-run level</p></td>
+<td><p>The Treasury’s effective real rate on its debt</p></td>
+</tr>
+<tr class="row-even"><td><p>Public investment</p></td>
+<td><p>Spending</p></td>
+<td><p>0.03% of GDP</p></td>
+<td><p>2.42% of GDP</p></td>
+<td><p>General government fixed investment (SARB)</p></td>
+</tr>
+<tr class="row-odd"><td><p>Government consumption</p></td>
+<td><p>Spending</p></td>
+<td><p>23.3% of GDP</p></td>
+<td><p>19.0%, 18.7% then 19.0% of GDP</p></td>
+<td><p>The first two years follow the Treasury’s primary balance plan; then the level that keeps debt stable</p></td>
+</tr>
+<tr class="row-even"><td><p>Start of the long-run budget rule</p></td>
+<td><p>Spending</p></td>
+<td><p>2045</p></td>
+<td><p>2030</p></td>
+<td><p>After the Treasury’s medium-term plan ends</p></td>
+</tr>
+<tr class="row-odd"><td><p>Household wealth at the start</p></td>
+<td><p>Households</p></td>
+<td><p>Not set</p></td>
+<td><p>Set from the capital stock</p></td>
+<td><p>So that private capital is 2.80 times GDP in 2025</p></td>
+</tr>
+<tr class="row-even"><td><p>Population data</p></td>
+<td><p>Population</p></td>
+<td><p>UN data to the latest year</p></td>
+<td><p>UN projections to 2098; death and birth rates differ by income group</p></td>
+<td><p>Long-run population growth falls from 0.42% to −0.03% a year</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The parameter names and exact values are in <code class="docutils literal notranslate"><span class="pre">CHANGELOG.md</span></code>.</p>
+</section>
+<section id="known-gaps-and-choices">
+<h2>Known gaps and choices<a class="headerlink" href="#known-gaps-and-choices" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Item</p></th>
+<th class="head"><p>Status</p></th>
+<th class="head"><p>Detail</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Primary surplus 2027–2029</p></td>
+<td><p>By design</p></td>
+<td><p>The model keeps a surplus of about 1.4% of GDP. The Treasury plans 2.0–3.0%. The baseline does not assume the planned consolidation, so debt stays near 77% of GDP instead of falling to 76.6%.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Spending step in 2030</p></td>
+<td><p>Known</p></td>
+<td><p>When the long-run budget rule starts, government consumption rises by about 0.6% of GDP in one year and the primary surplus falls to 0.8%.</p></td>
+</tr>
+<tr class="row-even"><td><p>Return on capital</p></td>
+<td><p>Close</p></td>
+<td><p>11.0% in the long run, against 12.0% in the Penn World Table (11–13% over 2015–2023). A higher return would push private capital below its 2.80 times GDP target.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Consumption taxes in the long run</p></td>
+<td><p>Close</p></td>
+<td><p>Set to match 2025 (8.92% of GDP); rise to 9.19% in the long run as consumption’s share of GDP grows.</p></td>
+</tr>
+<tr class="row-even"><td><p>Social transfers</p></td>
+<td><p>Close</p></td>
+<td><p>3.74% of GDP in the long run against 3.6% in the budget.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Long-run growth rate</p></td>
+<td><p>Close</p></td>
+<td><p>The model’s long-run productivity growth is 1.4% a year (1.41% compounded). The OECD estimate is capped at the measured 1.44%. The difference moves the baseline path by at most 0.02 points a year.</p></td>
+</tr>
+<tr class="row-even"><td><p>Error in 2145</p></td>
+<td><p>Open</p></td>
+<td><p>The accounting error is 0.0001 of output in 2145 alone, and below 0.0000006 in every year to 2100. 2145 is the last year of the listed income tax schedule; listing it to the end of the horizon should remove the error. No reported year is affected.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Growth above the IMF</p></td>
+<td><p>By design</p></td>
+<td><p>GDP grows about 2.1% a year in the 2030s, above the IMF’s 1.8%, because hours worked rise with the working-age population. Productivity growth is below the IMF, SARB and Treasury scenarios.</p></td>
+</tr>
+<tr class="row-even"><td><p>Unemployment</p></td>
+<td><p>Covered</p></td>
+<td><p>Built into earnings by age and income group: the earnings data are per person, the jobless included (see the <a class="reference internal" href="earnings.html"><span class="std std-doc">earnings chapter</span></a>). Labour supply settings are unchanged.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Informal sector</p></td>
+<td><p>Covered</p></td>
+<td><p>34% of jobs (ILO). Reflected in tax rates, which are set from actual collections rather than statutory rates (see the <a class="reference internal" href="taxes.html"><span class="std std-doc">taxes chapter</span></a>).</p></td>
+</tr>
+<tr class="row-even"><td><p>Earnings distribution</p></td>
+<td><p>Not re-checked</p></td>
+<td><p>This calibration does not change earnings by age and income group or the labour supply settings; their fit was not re-checked here.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./content/calibration"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="exogenous_parameters.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Exogenous Parameters</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../UNtutorial/getting_started.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Getting Started</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-starting-year">2025: the starting year</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#public-finances-to-2036">Public finances to 2036</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-long-run">The long run</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#productivity-and-growth">Productivity and growth</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-the-baseline-does-not-use-the-imf-forecast">Why the baseline does not use the IMF forecast</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-path-to-the-long-run">The path to the long run</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#accuracy-of-the-solution">Accuracy of the solution</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-policy-a-higher-company-tax-rate">Example policy: a higher company tax rate</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-this-calibration-changed">What this calibration changed</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#known-gaps-and-choices">Known gaps and choices</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Marcelo LaFleur, Richard W. Evans, and Jason DeBacker
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

@@ -228,7 +228,10 @@
 <li class="toctree-l2"><a class="reference internal" href="../../content/api/income.html">Life-cycle productivity profiles</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../content/api/input_output.html">Output-Consumption Bridge</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../content/api/macro_params.html">Macro Parameter Estimation Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../content/api/productivity.html">Baseline Productivity Path</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../content/api/targets.html">Calibration Targets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../content/api/utils.html">Calibration Utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../content/api/warm_start.html">Steady-State Warm Start</a></li>
 </ul>
 </details></li>
 </ul>
@@ -242,6 +245,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../content/calibration/taxes.html">Taxes in OG-ZAF</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../content/calibration/matching_lwi.html">Matching Labor, Wealth, and Income Moments</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../content/calibration/exogenous_parameters.html">Exogenous Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../content/calibration/scorecard.html">Calibration Scorecard</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">UN Tutorial</span></p>
 <ul class="nav bd-sidenav">
@@ -411,7 +415,6 @@
 
 <span class="c1"># imports</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">io</span><span class="w"> </span><span class="kn">import</span> <span class="n">StringIO</span>
@@ -643,153 +646,36 @@
 
 <span class="sd">    Returns:</span>
 <span class="sd">        macro_parameters (dict): dictionary of parameter values</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        Only parameters whose documented source is a live API AND which</span>
+<span class="sd">        are not curated for internal consistency are refreshed here:</span>
+<span class="sd">        gamma (ILOSTAT labour share) and alpha_T (IMF GFS non-interest</span>
+<span class="sd">        transfers). Everything else is a curated packaged value and is</span>
+<span class="sd">        deliberately NOT updated here, because a refresh would clobber a</span>
+<span class="sd">        deliberately-chosen value: g_y_annual (a forward-looking long-run</span>
+<span class="sd">        productivity growth, not the stagnant realized series), alpha_G</span>
+<span class="sd">        (pinned to fiscal-consistency with the debt target, not the raw</span>
+<span class="sd">        GFS figure), the debt block (initial_debt_ratio,</span>
+<span class="sd">        initial_foreign_debt_ratio, zeta_D — National Treasury figures,</span>
+<span class="sd">        not the wider-perimeter World Bank QPSD), and the r_gov wedge</span>
+<span class="sd">        (r_gov_scale from LMWW, r_gov_shift re-anchored to SA's effective</span>
+<span class="sd">        rate and holding the debt-elastic premium's recentering). Those</span>
+<span class="sd">        values live in ogzaf_default_parameters.json and are documented</span>
+<span class="sd">        in docs/book/content/calibration/macro.md.</span>
 <span class="sd">    """</span>
     <span class="c1"># initialize a dictionary of parameters</span>
     <span class="n">macro_parameters</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="c1"># baseline date formatted for World Bank data</span>
-    <span class="n">baseline_YYYYQ</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="nb">str</span><span class="p">(</span><span class="n">data_end_date</span><span class="o">.</span><span class="n">year</span><span class="p">)</span>
-        <span class="o">+</span> <span class="s2">"Q"</span>
-        <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="p">(</span><span class="n">data_end_date</span><span class="p">)</span><span class="o">.</span><span class="n">quarter</span><span class="p">)</span>
-    <span class="p">)</span>
 
-<span class="w">    </span><span class="sd">"""</span>
-<span class="sd">    Retrieve data from the World Bank World Development Indicators.</span>
-<span class="sd">    """</span>
-    <span class="c1"># Dictionaries of variables and their corresponding World Bank codes</span>
-    <span class="c1"># Annual data</span>
-    <span class="n">wb_a_variable_dict</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">"GDP per capita (constant 2015 US$)"</span><span class="p">:</span> <span class="s2">"NY.GDP.PCAP.KD"</span><span class="p">,</span>
-        <span class="s2">"Real GDP (constant 2015 US$)"</span><span class="p">:</span> <span class="s2">"NY.GDP.MKTP.KD"</span><span class="p">,</span>
-        <span class="s2">"Nominal GDP (current US$)"</span><span class="p">:</span> <span class="s2">"NY.GDP.MKTP.CD"</span><span class="p">,</span>
-        <span class="s2">"General government final consumption expenditure (current US$)"</span><span class="p">:</span> <span class="s2">"NE.CON.GOVT.CD"</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
-    <span class="p">}</span>
-    <span class="c1"># Quarterly data</span>
-    <span class="n">wb_q_variable_dict</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">"Gross PSD USD - domestic creditors"</span><span class="p">:</span> <span class="s2">"DP.DOD.DECD.CR.PS.CD"</span><span class="p">,</span>
-        <span class="s2">"Gross PSD USD - external creditors"</span><span class="p">:</span> <span class="s2">"DP.DOD.DECX.CR.PS.CD"</span><span class="p">,</span>
-        <span class="s2">"Gross PSD Gen Gov - percentage of GDP"</span><span class="p">:</span> <span class="s2">"DP.DOD.DECT.CR.GG.Z1"</span><span class="p">,</span>
-    <span class="p">}</span>
-    <span class="k">if</span> <span class="n">update_from_api</span><span class="p">:</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">wb_data_a</span> <span class="o">=</span> <span class="n">_fetch_wb_data</span><span class="p">(</span>
-                <span class="n">wb_a_variable_dict</span><span class="p">,</span>
-                <span class="n">country_iso</span><span class="p">,</span>
-                <span class="n">data_start_date</span><span class="o">.</span><span class="n">year</span><span class="p">,</span>
-                <span class="n">data_end_date</span><span class="o">.</span><span class="n">year</span><span class="p">,</span>
-                <span class="n">source</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
-            <span class="p">)</span>
-            <span class="n">wb_data_q</span> <span class="o">=</span> <span class="n">_fetch_wb_data</span><span class="p">(</span>
-                <span class="n">wb_q_variable_dict</span><span class="p">,</span>
-                <span class="n">country_iso</span><span class="p">,</span>
-                <span class="n">data_start_date</span><span class="o">.</span><span class="n">year</span><span class="p">,</span>
-                <span class="n">data_end_date</span><span class="o">.</span><span class="n">year</span><span class="p">,</span>
-                <span class="n">source</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
-            <span class="p">)</span>
-
-            <span class="c1"># Function to get the latest valid data if baseline_YYYYQ</span>
-            <span class="c1"># is missing or NaN</span>
-            <span class="k">def</span><span class="w"> </span><span class="nf">get_valid_data</span><span class="p">(</span><span class="n">series</span><span class="p">,</span> <span class="n">baseline_YYYYQ</span><span class="p">):</span>
-                <span class="n">value</span> <span class="o">=</span> <span class="n">series</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">baseline_YYYYQ</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-
-                <span class="k">if</span> <span class="n">pd</span><span class="o">.</span><span class="n">isna</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
-                    <span class="n">latest_non_nan</span> <span class="o">=</span> <span class="n">series</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">last_valid_index</span><span class="p">()</span>
-
-                    <span class="k">if</span> <span class="n">latest_non_nan</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                        <span class="nb">print</span><span class="p">(</span>
-                            <span class="sa">f</span><span class="s2">"Warning: No data for </span><span class="si">{</span><span class="n">baseline_YYYYQ</span><span class="si">}</span><span class="s2">. "</span>
-                            <span class="sa">f</span><span class="s2">"Using last available quarter: </span><span class="si">{</span><span class="n">latest_non_nan</span><span class="si">}</span><span class="s2">"</span>
-                        <span class="p">)</span>
-                        <span class="n">value</span> <span class="o">=</span> <span class="n">series</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">latest_non_nan</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-                    <span class="k">else</span><span class="p">:</span>
-                        <span class="nb">print</span><span class="p">(</span>
-                            <span class="s2">"Warning: No historical data available. "</span>
-                            <span class="s2">"Skipping update."</span>
-                        <span class="p">)</span>
-                        <span class="n">value</span> <span class="o">=</span> <span class="kc">None</span>
-
-                <span class="k">return</span> <span class="n">value</span>
-
-            <span class="c1"># Compute macro parameters from WB data</span>
-            <span class="n">macro_parameters</span><span class="p">[</span><span class="s2">"initial_debt_ratio"</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_valid_data</span><span class="p">(</span>
-                <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">wb_data_q</span><span class="p">[</span><span class="s2">"Gross PSD Gen Gov - percentage of GDP"</span><span class="p">])</span>
-                <span class="o">/</span> <span class="mi">100</span><span class="p">,</span>
-                <span class="n">baseline_YYYYQ</span><span class="p">,</span>
-            <span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span>
-                <span class="s2">"initial_debt_ratio updated from World Bank API: "</span>
-                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">macro_parameters</span><span class="p">[</span><span class="s1">'initial_debt_ratio'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span>
-            <span class="p">)</span>
-
-            <span class="c1"># Compute initial_foreign_debt_ratio safely</span>
-            <span class="k">if</span> <span class="p">(</span>
-                <span class="s2">"Gross PSD USD - external creditors"</span> <span class="ow">in</span> <span class="n">wb_data_q</span><span class="o">.</span><span class="n">columns</span>
-                <span class="ow">and</span> <span class="s2">"Gross PSD USD - domestic creditors"</span> <span class="ow">in</span> <span class="n">wb_data_q</span><span class="o">.</span><span class="n">columns</span>
-            <span class="p">):</span>
-                <span class="n">total_debt</span> <span class="o">=</span> <span class="p">(</span>
-                    <span class="n">wb_data_q</span><span class="p">[</span><span class="s2">"Gross PSD USD - domestic creditors"</span><span class="p">]</span>
-                    <span class="o">+</span> <span class="n">wb_data_q</span><span class="p">[</span><span class="s2">"Gross PSD USD - external creditors"</span><span class="p">]</span>
-                <span class="p">)</span>
-
-                <span class="c1"># Avoid division by zero</span>
-                <span class="n">wb_data_q</span><span class="p">[</span><span class="s2">"foreign_debt_ratio"</span><span class="p">]</span> <span class="o">=</span> <span class="n">wb_data_q</span><span class="p">[</span>
-                    <span class="s2">"Gross PSD USD - external creditors"</span>
-                <span class="p">]</span> <span class="o">/</span> <span class="n">total_debt</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
-
-                <span class="n">macro_parameters</span><span class="p">[</span><span class="s2">"initial_foreign_debt_ratio"</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
-                    <span class="n">get_valid_data</span><span class="p">(</span>
-                        <span class="n">wb_data_q</span><span class="p">[</span><span class="s2">"foreign_debt_ratio"</span><span class="p">],</span> <span class="n">baseline_YYYYQ</span>
-                    <span class="p">)</span>
-                <span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span>
-                    <span class="s2">"Warning: Missing debt variables in World Bank data."</span>
-                    <span class="s2">" Skipping update for initial_foreign_debt_ratio."</span>
-                <span class="p">)</span>
-
-            <span class="nb">print</span><span class="p">(</span>
-                <span class="s2">"initial_foreign_debt_ratio updated from World Bank "</span>
-                <span class="sa">f</span><span class="s2">"API: </span><span class="si">{</span><span class="n">macro_parameters</span><span class="p">[</span><span class="s1">'initial_foreign_debt_ratio'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span>
-            <span class="p">)</span>
-
-            <span class="c1"># Compute zeta_D safely</span>
-            <span class="n">macro_parameters</span><span class="p">[</span><span class="s2">"zeta_D"</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
-                <span class="n">macro_parameters</span><span class="p">[</span><span class="s2">"initial_foreign_debt_ratio"</span><span class="p">]</span>
-            <span class="p">]</span>  <span class="c1"># Since it's the same formula, we use the same calculated value</span>
-
-            <span class="nb">print</span><span class="p">(</span>
-                <span class="s2">"zeta_D updated from World Bank API: "</span>
-                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">macro_parameters</span><span class="p">[</span><span class="s1">'zeta_D'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span>
-            <span class="p">)</span>
-
-            <span class="c1"># Compute annual GDP growth safely</span>
-            <span class="k">if</span> <span class="s2">"GDP per capita (constant 2015 US$)"</span> <span class="ow">in</span> <span class="n">wb_data_a</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-                <span class="n">g_y_series</span> <span class="o">=</span> <span class="n">wb_data_a</span><span class="p">[</span>
-                    <span class="s2">"GDP per capita (constant 2015 US$)"</span>
-                <span class="p">]</span><span class="o">.</span><span class="n">pct_change</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
-
-                <span class="c1"># If all values are NaN, return None</span>
-                <span class="n">macro_parameters</span><span class="p">[</span><span class="s2">"g_y_annual"</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
-                    <span class="n">g_y_series</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">g_y_series</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">all</span><span class="p">()</span> <span class="k">else</span> <span class="kc">None</span>
-                <span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span>
-                    <span class="s2">"Warning: Missing GDP per capita data in World Bank "</span>
-                    <span class="s2">"data. Skipping update for g_y_annual."</span>
-                <span class="p">)</span>
-
-            <span class="nb">print</span><span class="p">(</span>
-                <span class="s2">"g_y_annual updated from World Bank API: "</span>
-                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">macro_parameters</span><span class="p">[</span><span class="s1">'g_y_annual'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span>
-            <span class="p">)</span>
-        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">"Failed to retrieve data from World Bank"</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">"Will not update the following parameters:"</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span>
-                <span class="s2">"[initial_debt_ratio, initial_foreign_debt_ratio, zeta_D, g_y]"</span>
-            <span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">"Not updating from World Bank API"</span><span class="p">)</span>
+    <span class="c1"># NOTE: g_y_annual is no longer pulled from the World Bank. It is a</span>
+    <span class="c1"># curated long-run productivity growth (0.014, PWT GDP per person engaged</span>
+    <span class="c1"># 1994-2019); the stagnant recent years enter through the Z path in</span>
+    <span class="c1"># ogzaf/productivity.py, not through g_y. Likewise the debt block</span>
+    <span class="c1"># (initial_debt_ratio, initial_foreign_debt_ratio, zeta_D) is not pulled:</span>
+    <span class="c1"># the World Bank QPSD measures a wider (general-government) perimeter</span>
+    <span class="c1"># than the National Treasury national-government figure the model</span>
+    <span class="c1"># tracks. Both live in the packaged ogzaf_default_parameters.json; see</span>
+    <span class="c1"># docs/book/content/calibration/macro.md.</span>
 
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Retrieve labour share data from the United Nations ILOSTAT Data API</span>
@@ -859,64 +745,39 @@
             <span class="n">imf_year</span> <span class="o">=</span> <span class="p">(</span>
                 <span class="n">data_end_date</span><span class="o">.</span><span class="n">year</span> <span class="k">if</span> <span class="n">imf_data_year</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">imf_data_year</span>
             <span class="p">)</span>
-            <span class="n">macro_parameters</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
-                <span class="n">_get_imf_macro_params</span><span class="p">(</span>
-                    <span class="n">country_iso</span><span class="p">,</span>
-                    <span class="n">imf_year</span><span class="p">,</span>
-                    <span class="n">data_path</span><span class="o">=</span><span class="n">imf_data_path</span><span class="p">,</span>
-                <span class="p">)</span>
+            <span class="n">imf_params</span> <span class="o">=</span> <span class="n">_get_imf_macro_params</span><span class="p">(</span>
+                <span class="n">country_iso</span><span class="p">,</span>
+                <span class="n">imf_year</span><span class="p">,</span>
+                <span class="n">data_path</span><span class="o">=</span><span class="n">imf_data_path</span><span class="p">,</span>
             <span class="p">)</span>
+            <span class="c1"># alpha_T (non-interest transfers) keeps its documented GFS value.</span>
+            <span class="c1"># alpha_G is NOT taken from GFS: it is curated (~0.19), pinned to</span>
+            <span class="c1"># the level that makes the government budget consistent with the</span>
+            <span class="c1"># steady-state debt target (see the fiscal-consistency section of</span>
+            <span class="c1"># docs/book/content/calibration/macro.md). Refreshing it from GFS</span>
+            <span class="c1"># would restore the raw ~0.23-0.27 figure and break that</span>
+            <span class="c1"># consistency, so we drop it here.</span>
+            <span class="n">macro_parameters</span><span class="p">[</span><span class="s2">"alpha_T"</span><span class="p">]</span> <span class="o">=</span> <span class="n">imf_params</span><span class="p">[</span><span class="s2">"alpha_T"</span><span class="p">]</span>
             <span class="nb">print</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s2">"alpha_T updated from IMF data: </span><span class="si">{</span><span class="n">macro_parameters</span><span class="p">[</span><span class="s1">'alpha_T'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span>
             <span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">"alpha_G updated from IMF data: </span><span class="si">{</span><span class="n">macro_parameters</span><span class="p">[</span><span class="s1">'alpha_G'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span>
-            <span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">"Failed to retrieve data from IMF"</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">"Will not update alpha_T, alpha_G"</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">"Will not update alpha_T"</span><span class="p">)</span>
 
-<span class="w">        </span><span class="sd">""""</span>
-<span class="sd">        Estimate the discount on sovereign yields relative to private debt</span>
-<span class="sd">        Follow the methodology in Li, Magud, Werner, Witte (2021)</span>
-<span class="sd">        available at:</span>
-<span class="sd">        https://www.imf.org/en/Publications/WP/Issues/2021/06/04/The-Long-Run-Impact-of-Sovereign-Yields-on-Corporate-Yields-in-Emerging-Markets-50224</span>
-<span class="sd">        discussion is here: https://github.com/EAPD-DRB/OG-ZAF/issues/22</span>
-<span class="sd">        Steps:</span>
-<span class="sd">        1) Generate modelled corporate yields (corp_yhat) for a range of</span>
-<span class="sd">        sovereign yields (sov_y)  using the estimated equation in col 2 of</span>
-<span class="sd">        table 8 (and figure 3). 2) Estimate the OLS using sovereign yields</span>
-<span class="sd">        as the dependent variable</span>
-<span class="sd">        """</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="kn">import</span><span class="w"> </span><span class="nn">statsmodels.api</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sm</span>
-
-            <span class="c1"># # estimate r_gov_shift and r_gov_scale</span>
-            <span class="n">sov_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">120</span><span class="p">)</span> <span class="o">/</span> <span class="mi">10</span>
-            <span class="n">corp_yhat</span> <span class="o">=</span> <span class="mf">8.199</span> <span class="o">-</span> <span class="p">(</span><span class="mf">2.975</span> <span class="o">*</span> <span class="n">sov_y</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="mf">0.478</span> <span class="o">*</span> <span class="n">sov_y</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
-            <span class="n">corp_yhat</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">add_constant</span><span class="p">(</span><span class="n">corp_yhat</span><span class="p">)</span>
-            <span class="n">mod</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">OLS</span><span class="p">(</span>
-                <span class="n">sov_y</span><span class="p">,</span>
-                <span class="n">corp_yhat</span><span class="p">,</span>
-            <span class="p">)</span>
-            <span class="n">res</span> <span class="o">=</span> <span class="n">mod</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
-            <span class="c1"># First term is the constant and needs to be divided by 100 to have</span>
-            <span class="c1"># the correct unit. Second term is the coefficient</span>
-            <span class="n">macro_parameters</span><span class="p">[</span><span class="s2">"r_gov_shift"</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="n">res</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mi">100</span><span class="p">]</span>
-            <span class="n">macro_parameters</span><span class="p">[</span><span class="s2">"r_gov_scale"</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">res</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
-            <span class="nb">print</span><span class="p">(</span>
-                <span class="s2">"r_gov_shift updated from IMF data: "</span>
-                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">macro_parameters</span><span class="p">[</span><span class="s1">'r_gov_shift'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span>
-            <span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span>
-                <span class="s2">"r_gov_scale updated from IMF data: "</span>
-                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">macro_parameters</span><span class="p">[</span><span class="s1">'r_gov_scale'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span>
-            <span class="p">)</span>
-        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">"Failed to compute r_gov_shift, r_gov_scale"</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">"Will not update r_gov_shift, r_gov_scale"</span><span class="p">)</span>
+        <span class="c1"># NOTE: the r_gov wedge (r_gov_scale, r_gov_shift) is</span>
+        <span class="c1"># intentionally no longer recomputed here. The Li, Magud,</span>
+        <span class="c1"># Werner, Witte (2021) inversion (see</span>
+        <span class="c1"># https://github.com/EAPD-DRB/OG-ZAF/issues/22 and the macro</span>
+        <span class="c1"># calibration chapter) is deterministic — it contains no live</span>
+        <span class="c1"># South African data — and the packaged r_gov_shift is now</span>
+        <span class="c1"># recentered so the debt-elastic sovereign premium</span>
+        <span class="c1"># (r_gov_DY, r_gov_DY2) is exactly zero at the steady-state</span>
+        <span class="c1"># debt target. Recomputing the LMWW values here would silently</span>
+        <span class="c1"># undo that recentering. The packaged values live in</span>
+        <span class="c1"># ogzaf_default_parameters.json.</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">"Not updating alpha_T, alpha_G, r_gov_shift, r_gov_scale"</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"Not updating alpha_T"</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">macro_parameters</span></div>
 

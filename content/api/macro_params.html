@@ -67,7 +67,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Calibration Utilities" href="utils.html" />
+    <link rel="next" title="Baseline Productivity Path" href="productivity.html" />
     <link rel="prev" title="Output-Consumption Bridge" href="input_output.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -233,7 +233,10 @@
 <li class="toctree-l2"><a class="reference internal" href="income.html">Life-cycle productivity profiles</a></li>
 <li class="toctree-l2"><a class="reference internal" href="input_output.html">Output-Consumption Bridge</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">Macro Parameter Estimation Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="productivity.html">Baseline Productivity Path</a></li>
+<li class="toctree-l2"><a class="reference internal" href="targets.html">Calibration Targets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="utils.html">Calibration Utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="warm_start.html">Steady-State Warm Start</a></li>
 </ul>
 </details></li>
 </ul>
@@ -247,6 +250,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../calibration/taxes.html">Taxes in OG-ZAF</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../calibration/matching_lwi.html">Matching Labor, Wealth, and Income Moments</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../calibration/exogenous_parameters.html">Exogenous Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../calibration/scorecard.html">Calibration Scorecard</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">UN Tutorial</span></p>
 <ul class="nav bd-sidenav">
@@ -544,6 +548,24 @@ data_end_date.year when None.</p></li>
 <dd class="field-odd"><p>macro_parameters (dict)</p>
 </dd>
 </dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Only parameters whose documented source is a live API AND which
+are not curated for internal consistency are refreshed here:
+gamma (ILOSTAT labour share) and alpha_T (IMF GFS non-interest
+transfers). Everything else is a curated packaged value and is
+deliberately NOT updated here, because a refresh would clobber a
+deliberately-chosen value: g_y_annual (a forward-looking long-run
+productivity growth, not the stagnant realized series), alpha_G
+(pinned to fiscal-consistency with the debt target, not the raw
+GFS figure), the debt block (initial_debt_ratio,
+initial_foreign_debt_ratio, zeta_D — National Treasury figures,
+not the wider-perimeter World Bank QPSD), and the r_gov wedge
+(r_gov_scale from LMWW, r_gov_shift re-anchored to SA’s effective
+rate and holding the debt-elastic premium’s recentering). Those
+values live in ogzaf_default_parameters.json and are documented
+in docs/book/content/calibration/macro.md.</p>
+</div>
 </dd></dl>
 
 </section>
@@ -589,11 +611,11 @@ data_end_date.year when None.</p></li>
       </div>
     </a>
     <a class="right-next"
-       href="utils.html"
+       href="productivity.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Calibration Utilities</p>
+        <p class="prev-next-title">Baseline Productivity Path</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
