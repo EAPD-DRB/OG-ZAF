@@ -82,6 +82,7 @@ include = ["ogzaf*"]
 ogzaf = [
     "ogzaf_default_parameters.json",
     "ogzaf_default_parameters_multisector.json",
+    "data/ss_warm_start.pkl",
 ]
 
 [tool.ruff]
