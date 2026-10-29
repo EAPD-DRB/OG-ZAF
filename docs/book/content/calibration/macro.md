@@ -5,9 +5,9 @@
 
 As the default rate of labour-augmenting technological change, $g_y$, we use 1.4% per year (`g_y_annual = 0.014`), South Africa's measured long-run productivity growth. In PWT 11.0, real GDP per person engaged (`rgdpna`/`emp`) grew 1.44% a year over 1994–2019 and over 2000–2019, both windows ending before the Covid shock. Hours per worker are available only from 2008; they fell about 0.3% a year over 2008–2019, so growth per hour, the measure the model needs, is if anything a little higher. The interest-growth differential is consistent with the Treasury's: with the steady-state real rate on debt of 3.7% and steady-state growth of $g_y + g_n \approx 1.4\%$ (long-run population growth is about zero, see the demographics chapter), $r_{gov} - g \approx 2.3$ percentage points, against about 2.1 points in the Treasury's medium-term numbers (a 7.1% nominal effective rate, a 3% inflation target and 2.0% real growth; [MTBPS 2026](https://www.treasury.gov.za/MediumTermBudget/Medium%20Term%20Budget%20Policy%20Statement%20Full%20document.pdf), Tables 1.1 and 3.5).
 
-Near-term growth in the model is higher than the forecasts, for a reason $g_y$ cannot fix. The model's adult population grows about 1.4% a year in the first decade (UN WPP 2024) and every adult supplies labour, so effective labour grows about 2.2% a year and GDP about 3.3%. South Africa's employment grew 1.2% a year over 1994–2019 (PWT) and unemployment is a third of the labour force; the Treasury forecasts 1.2–2.0% growth for 2026–2029. OG-Core has no unemployment, so the model turns the youth bulge into output that South Africa does not produce. See the fiscal path below for what this does to debt.
+South Africa is well below that trend today: real GDP per person engaged grew 0.25% a year over 2008–2019 and TFP fell 1.0% a year (PWT 11.0). The baseline holds productivity below trend at first and lets the gap close over the transition through a path for total factor productivity. The path is the average of our own rule and the OECD's long-term baseline, not a forecaster's reform scenario; the firms chapter sets it out. Output per hour grows 0.4% a year in 2026, about 1.1% a year in the 2030s and 1.44% in the long run. Labour input grows with the working-age population at today's employment rates by age (the earnings chapter explains how unemployment enters), so GDP grows 1.6% in 2026 and about 2.1% a year in the 2030s.
 
-We deliberately do **not** use South Africa's *realized* productivity growth, which has been dismal — near zero, even negative, over the 2010s state-capture/load-shedding decade, when potential growth collapsed from ~4% to near zero and TFP subtracted about 1.3 percentage points from growth. The steady state is a long-run object, and pairing that stagnation with a *stabilising* debt target would be internally inconsistent: it is precisely the IMF's more pessimistic scenario, in which debt does **not** stabilise but drifts toward 84% of GDP. The ~1.8% recovery is reform-contingent (Operation Vulindlela — energy and logistics), and we adopt it as the sustainable long-run assumption that is consistent with the debt anchor. Because $g_y$ is now a curated forward-looking assumption rather than a realized-data series, it is held in the packaged parameters and no longer refreshed from the live World Bank pull.
+$g_y$ itself is a long-run object and stays at 1.4%. Because it is curated, it is held in the packaged parameters and no longer refreshed from the live World Bank pull.
 
 ## Open Economy Parameters
 
@@ -112,7 +112,9 @@ Government investment is set with $\alpha_I = 0.0242$, general government gross 
 
 ### Government expenditures
 
-Government consumption is set with $\alpha_G$. In the steady state OG-Core solves for it from the budget identity below, and it lands at 18.5% of GDP, against general government final consumption of 18.9% in 2025 (SARB QB S-116). Along the transition $\alpha_G$ is a short path, `[0.1896, 0.1866, 0.1851]`, so the primary balance follows the Treasury's consolidated plan in the first two years (+1.3% of GDP in 2025/26, +1.6% in 2026/27) and then holds at the debt-stabilising level. From 2027/28 the Treasury plans surpluses (2.0–3.0%) above the stabilising one, to bring debt down; the model does not chase them, because the steady state holds debt at the target rather than below it.
+Government consumption is set with $\alpha_G$. In the steady state OG-Core solves for it from the budget identity below, and it lands at 18.9% of GDP, the same as general government final consumption in 2025 (SARB QB S-116). Along the transition $\alpha_G$ is a short path, `[0.1896, 0.1866, 0.1900]`. The first two values make the primary balance follow the Treasury's consolidated plan (+1.3% of GDP in 2025/26, +1.6% in 2026/27). The third holds it at about 1.4% in 2027–2029, close to the level that keeps debt stable at the baseline's growth. From 2027/28 the Treasury plans larger surpluses (2.0–3.0%) to bring debt down; the baseline does not assume them.
+
+From 2030, after the MTBPS 2026 window, OG-Core's budget rule sets government consumption (`tG1 = 5`, `rho_G = 0.1`): each year it closes a tenth of the gap between debt and the 76.5% target. Spending steps up 0.6% of GDP in 2030, because the faster growth of the 2030s lowers the surplus that holds debt steady.
 
 ## Fiscal consistency
 
@@ -122,49 +124,65 @@ The spending shares, the revenue the tax system raises and the debt target `debt
 \alpha_G + \alpha_T + \alpha_I = \text{revenue}/Y - pb^\*
 ```
 
-With $r_{gov} = 3.7\%$ and $g = 1.38\%$, $pb^\* = 1.75\%$ of GDP. Revenue is 26.4% of GDP, so primary spending is 24.7%: 18.5% government consumption, 3.7% transfers and 2.4% public investment. The Treasury's consolidated primary surplus is 1.3% in 2025/26 and is planned to rise above 1.75% from 2027/28, so the steady state's fiscal stance is one the Treasury plans to pass within three years.
+With $r_{gov} = 3.7\%$ and $g = 1.38\%$, $pb^\* = 1.75\%$ of GDP. Steady-state revenue is 26.8% of GDP, so primary spending is 25.0%: 18.9% government consumption, 3.7% transfers and 2.4% public investment. The Treasury's consolidated primary surplus is 1.3% in 2025/26 and is planned to rise above 1.75% from 2027/28, so the steady state's fiscal stance is one the Treasury plans to pass within three years.
 
 South Africa's debt is not a solvency or default question for this purpose — it is ~90% rand-denominated, long-maturity and domestically financed, rated sub-investment-grade-but-*stabilising* (BB/Ba2, all three agencies on positive outlook in 2025–26), and the IMF assesses debt-distress risk as moderate with no restructuring risk. The stable-debt steady state is therefore a modelling device for the sustainable long run, consistent with the National Treasury's own plan, which has debt at 76.6% of GDP in 2029/30, not a claim that default is off the table or that current policy already stabilises debt (the IMF's more cautious baseline has debt still rising absent a sustained ~3% primary surplus).
 
+### First-year validation
+
+The tax settings and initial household wealth are tuned to 2025, the year South Africa's data measure, in the baseline transition solved by `examples/run_og_zaf.py` (ogcore 0.22.0, offline). `examples/validate_fiscal_path.py` prints this table; targets and sources are in `ogzaf/targets.py`.
+
+| Moment, 2025 | Model | Data | Source |
+|---|---|---|---|
+| Personal income tax / GDP | 10.16% | 10.15% | MTBPS 2026, 2025/26 |
+| Company tax + dividends tax / GDP | 5.02% | 5.02% | MTBPS 2026 |
+| Consumption taxes, net of SACU / GDP | 8.92% | 8.92% | MTBPS 2026, BR 2026 |
+| Payroll levies (SDL + UIF) / GDP | 0.67% | 0.67% | MTBPS 2026, UIF |
+| Property taxes / GDP | 1.61% | 1.61% | Stats SA P9114, BR 2026 |
+| Estate duty + donations tax / GDP | 0.08% | 0.08% | BR 2026 |
+| Private capital / GDP | 2.80 | 2.80 | PWT 11.0, SARB |
+| Real rate on government debt | 3.69% | 3.7% | MTBPS 2026, deflated |
+| Primary balance / GDP | 1.34% | 1.3% | MTBPS 2026 |
+
+Household wealth starts at 2.79 times GDP (`initial_wealth_ratio`), the level that makes private capital 2.80 times GDP. The SARB household balance sheet shows 2.97 (QB S-142), but that also counts foreign assets held through pension funds and unit trusts, which the model's households cannot hold.
+
 ### Steady-state validation
 
-The steady state of the packaged parameters, solved by `examples/run_og_zaf.py` (ogcore 0.22.0, offline), against South African data. Targets and sources are in `ogzaf/targets.py`; `examples/tune_ss.py` prints the same table.
+The long run is an outcome, not a target. It uses the same settings, with productivity back on trend.
 
-| Moment | Model | Data | Source |
+| Moment | Model | Data (today) | Source |
 |---|---|---|---|
-| Personal income tax / GDP | 10.13% | 10.15% | MTBPS 2026, 2025/26 |
-| Company tax + dividends tax / GDP | 5.02% | 5.02% | MTBPS 2026 |
-| Consumption taxes, net of SACU / GDP | 8.91% | 8.92% | MTBPS 2026, BR 2026 |
+| Personal income tax / GDP | 10.30% | 10.15% | MTBPS 2026, 2025/26 |
+| Company tax + dividends tax / GDP | 5.03% | 5.02% | MTBPS 2026 |
+| Consumption taxes, net of SACU / GDP | 9.19% | 8.92% | MTBPS 2026, BR 2026 |
 | Payroll levies (SDL + UIF) / GDP | 0.67% | 0.67% | MTBPS 2026, UIF |
-| Property taxes / GDP | 1.60% | 1.61% | Stats SA P9114, BR 2026 |
-| Estate duty + donations tax / GDP | 0.08% | 0.08% | BR 2026 |
+| Property taxes / GDP | 1.51% | 1.61% | Stats SA P9114, BR 2026 |
+| Estate duty + donations tax / GDP | 0.10% | 0.08% | BR 2026 |
 | Real rate on government debt | 3.71% | 3.7% | MTBPS 2026, deflated |
 | Debt / GDP | 0.765 | 0.765 (2029/30 path) | MTBPS 2026 |
 | Foreign share of debt | 0.25 | 0.25 | BR 2026 |
-| Government consumption / GDP | 18.5% | 18.9% | SARB QB 2025 |
+| Government consumption / GDP | 18.9% | 18.9% | SARB QB 2025 |
 | Transfers / GDP | 3.7% | 3.6% | BR 2026 |
 | Public investment / GDP | 2.42% | 2.42% | SARB QB 2025 |
 | Private capital / GDP | 2.79 | 2.80 | PWT 11.0, SARB |
 | Real return on capital | 11.0% | 12.0% | PWT 11.0 `irr` |
 | Foreign-owned share of capital | 21.2% | 8–20.5% (gross) | SARB IIP |
 | Household wealth / GDP | 2.77 | 2.97 | SARB QB S-142 |
-| Private consumption / GDP (purchaser prices) | 67.2% | 65.8% | SARB QB 2025 |
+| Private consumption / GDP (purchaser prices) | 67.1% | 65.8% | SARB QB 2025 |
 | Total investment / GDP | 17.6% | 13.9% (2025); 18% (2010–2019) | SARB QB; PWT 11.0 `csh_i` |
 
-Three rows are not targeted. Investment is above 2025's depressed level and close to the 2010s average. The trade surplus is 5.7% of GDP against 1.9% in 2025: in the model it pays the return on foreign-owned capital, while South Africa also earns income on foreign assets of 135% of GDP, which OG-Core's single foreign-capital stock cannot hold. Household wealth is 0.2 times GDP below the SARB balance sheet.
+Consumption taxes are higher in the long run because consumption is a larger share of output: 57.9% at producer prices against 56.2% in 2025. Investment is above 2025's depressed level and close to the 2010s average. The trade surplus is 5.7% of GDP against 1.9% in 2025: in the model it pays the return on foreign-owned capital, while South Africa also earns income on foreign assets of 135% of GDP, which OG-Core's single foreign-capital stock cannot hold.
 
 ### Fiscal path validation
 
-`examples/validate_fiscal_path.py` scores the first years of the baseline transition against the Treasury's numbers.
+`examples/validate_fiscal_path.py` scores the first years of the baseline transition against the Treasury's numbers and against the productivity path.
 
 ```{figure} ./images/fiscal_path.png
 ---
 height: 300px
 name: FigFiscalPath
 ---
-Baseline transition against gross loan debt (MTBPS 2026 Tables 1.3 and 3.8), the consolidated primary balance (MTBPS 2026 Tables 1.2, 3.6 and 4.1), tax revenue (MTBPS 2026 Table 3.1, bridged to the model's concept) and public investment (SARB QB S-127).
+Baseline transition against gross loan debt (MTBPS 2026 Tables 1.3 and 3.8), the consolidated primary balance (MTBPS 2026 Tables 1.2, 3.6 and 4.1), tax revenue (MTBPS 2026 Table 3.1, bridged to the model's concept), public investment (SARB QB S-127) and the baseline path for output per hour (`ogzaf/productivity.py`).
 ```
 
-The model starts from the measured debt ratio, 77.0% of GDP, and its primary surplus follows the Treasury's in the first two years (1.05% and 1.33% against 1.3% and 1.6%). Debt then falls, to 73.7% in 2029 against the Treasury's 77.5%, and to a low of 61% around 2045 before it returns to the 76.5% target. The cause is growth: model GDP grows 3.3% a year in 2026–2029 against the Treasury's 1.2–2.0%, because the model employs the whole growing adult population (see Economic Assumptions above). With growth 1.5 points too high, the debt ratio falls about 1.1 points a year faster. Revenue (26.2% of GDP against 26.6% in 2025/26) and public investment match. Consumption is smooth from the first year; there is no start-up jump.
-
-The model's first-year household wealth is 2.61 times GDP, set by the steady-state wealth profile and the 2025 population. The data are 2.93 (capital side: private capital net of foreign ownership plus domestically held debt) and 2.97 (SARB household balance sheet). ogcore 0.22.0 can target this level (`initial_wealth_ratio`); it is not set in this calibration.
+The model starts from the measured debt ratio, 77.0% of GDP, and its primary surplus follows the Treasury's in the first two years (1.34% and 1.69% against 1.3% and 1.6%). Debt then holds between 77.2% and 77.4% to 2029, against the Treasury's 77.5–78.4%, and drifts up to 78.3% by 2036 and 78.5% at its peak before it settles at the 76.5% target. The baseline does not fall as fast as the Treasury's plan after 2027/28, because it does not assume the planned surpluses of 2.0–3.0%. Revenue is 26.5% of GDP against 26.6% in 2025/26, and public investment matches. Output per hour follows its baseline path in every year, and GDP grows 1.6% in 2026, 1.9% in 2029 and about 2.1% a year in the 2030s. Consumption is smooth from the first year.

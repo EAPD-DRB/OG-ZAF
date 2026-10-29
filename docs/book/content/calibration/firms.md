@@ -42,4 +42,21 @@ The capital measure matters. PWT's ratio at current national prices is lower, 2.
 
 ### Total factor productivity
 
-In the case of the single production sector, we can normalize $Z_{m,t}=1.0$.  In the case of multiple production sectors, we use {cite}`PRS2020` who identify TFP for various sectors in South Africa.
+South Africa's productivity has fallen since 2008. In PWT 11.0, TFP fell 1.0% a year over 2008–2019 and real GDP per person engaged grew 0.25% a year, against 2.4% a year over 1994–2008. The Conference Board's Total Economy Database shows the same: TFP growth of −1.0% a year over 2011–2019. Studies trace the fall to the electricity crisis, the logistics state-owned enterprises and weaker state capacity.
+
+The model's long-run growth of labour productivity is $g_y = 1.44\%$ (see the macro chapter), so today's economy sits below that trend. The path of TFP, `Z`, bridges the two. It starts above its long-run value and falls toward it as the shortfall closes. The steady state normalises $Z = 1$, so the long run does not depend on the path. The values come from `ogzaf/productivity.py`.
+
+We do not take the path from a forecaster. The IMF, SARB and National Treasury growth paths assume that the energy and logistics reforms succeed, so they are reform scenarios rather than baselines. The IMF's own record shows the bias: every five-year-ahead forecast of South African growth it made from 2008 to 2020 was above the outturn, leaving aside the Covid years 2020–2021, by 2.1 percentage points a year on average ([WEO historical forecasts](https://www.imf.org/external/pubs/ft/weo/data/weohistorical.xlsx)). The baseline is instead the average, year by year, of two estimates of output per hour:
+
+| | 2026–2030 | 2031–2040 | Long run |
+|---|---|---|---|
+| Our rule | 0.3% | 0.8% | 1.44% |
+| OECD long-term baseline (interpolated, capped at 1.44%) | 0.8% | 1.4% | 1.44% |
+| Baseline (average) | 0.5% | 1.1% | 1.44% |
+
+- **Our rule** starts from South Africa's recent growth: real GDP grew 1.1% a year over 2022–2025. The shortfall then shrinks at the speed found across countries: about 0.3 of a country's gap to the world's growth rate carries into the next decade ([Pritchett and Summers 2014](https://www.nber.org/papers/w20573), Table 1), so the gap shrinks 11% a year and halves in six years.
+- **The OECD long-term baseline** ([Economic Outlook 117, June 2025](https://sdmx.oecd.org/public/rest/data/OECD.ECO.MAD,DSD_EO_LTB@DF_EO_LTB,1.0/ZAF)) has potential output per worker growing 0.7% a year in 2025–2030 and 1.9% in 2030–2040, rising to 2.2% later. Its later rates rest on catching up with richer economies, which we do not assume, so we cap it at our long-run 1.44%.
+
+TFP is then fitted year by year from 2026 to 2050 so that the baseline's output per hour follows the average path; after 2050 the remaining gap keeps shrinking at the rule's speed. In 2025 TFP stands 8.3% above its long-run level. Output per hour grows 0.4% a year in 2026–2028, 1.1% in the 2030s and 1.44% in the long run. Labour input is set by the demographics at today's employment rates by age, which the earnings matrix carries, so GDP grows faster than output per hour while the working-age population grows: 1.6% in 2026 and about 2.1% a year in the 2030s.
+
+In the case of multiple production sectors, we use {cite}`PRS2020` who identify TFP for various sectors in South Africa.

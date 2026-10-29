@@ -250,13 +250,11 @@ def get_macro_params(
     # initialize a dictionary of parameters
     macro_parameters = {}
 
-    # NOTE: g_y_annual is no longer pulled from the World Bank. It is now a
-    # curated, forward-looking long-run productivity growth (0.014), chosen so
-    # the model's balanced-growth GDP growth (g_y + g_n) matches South Africa's
-    # ~1.8% medium-term assumption, which is consistent with the
-    # debt-stabilisation target — NOT the stagnant realized per-capita series
-    # the WB pull returns. Likewise the debt block (initial_debt_ratio,
-    # initial_foreign_debt_ratio, zeta_D) is not pulled: the World Bank QPSD
+    # NOTE: g_y_annual is no longer pulled from the World Bank. It is a
+    # curated long-run productivity growth (0.014, PWT GDP per person engaged
+    # 1994-2019); the stagnant recent years enter through the Z path in
+    # ogzaf/productivity.py, not through g_y. Likewise the debt block
+    # (initial_debt_ratio, initial_foreign_debt_ratio, zeta_D) is not pulled: the World Bank QPSD
     # measures a wider (general-government) perimeter than the National
     # Treasury national-government figure the model tracks. Both live in the
     # packaged ogzaf_default_parameters.json; see
