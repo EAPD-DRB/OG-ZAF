@@ -741,13 +741,13 @@
     "ending_age": 100,
     "constant_demographics": false,
     "beta_annual": [
-        0.96,
-        0.96,
-        0.96,
-        0.96,
-        0.96,
-        0.96,
-        0.96
+        0.87058,
+        0.87058,
+        0.87058,
+        0.87058,
+        0.87058,
+        0.87058,
+        0.87058
     ],
     "sigma": 1.5,
     "alpha_c": [
@@ -775,7 +775,7 @@
             1.0
         ]
     ],
-    "delta_annual": 0.050000000000000044,
+    "delta_annual": 0.0405,
     "delta_g_annual": 0.020000000000000018,
     "ltilde": 1.0,
     "world_int_rate_annual": [
@@ -1193,10 +1193,12 @@
         0.03737345469877388
     ],
     "alpha_G": [
-        0.19
+        0.1896,
+        0.1866,
+        0.1851
     ],
     "alpha_I": [
-        0.0003
+        0.0242
     ],
     "infra_investment_leakage_rate": 0.0,
     "alpha_bs_T": [
@@ -1218,13 +1220,13 @@
         0.0
     ],
     "debt_ratio_ss": 0.765,
-    "initial_debt_ratio": 0.789,
+    "initial_debt_ratio": 0.77,
     "initial_Kg_ratio": 0.2,
     "r_gov_scale": [
         0.24484763593657788
     ],
     "r_gov_shift": [
-        -0.0488
+        -0.0334195
     ],
     "r_gov_DY": -0.061200000000000004,
     "r_gov_DY2": 0.04,
@@ -1235,7 +1237,7 @@
     ],
     "c_corp_share_of_assets": 0.7,
     "adjustment_factor_for_cit_receipts": [
-        0.8
+        0.738156
     ],
     "inv_tax_credit": [
         [
@@ -1244,7 +1246,7 @@
     ],
     "tau_c": [
         [
-            0.18
+            0.152933
         ]
     ],
     "delta_tau_annual": [
@@ -2450,20 +2452,20 @@
         ]
     ],
     "h_wealth": [
-        0.1
+        1.0
     ],
     "m_wealth": [
         1.0
     ],
     "p_wealth": [
-        0.0
+        0.007756
     ],
     "tau_bq": [
-        0.0
+        0.00779726
     ],
     "tau_payroll": [
         [
-            0.0
+            0.0127
         ]
     ],
     "chi_b": [
@@ -4819,9 +4821,9 @@
     "RC_SS": 1e-09,
     "RC_TPI": 0.001,
     "reform_use_baseline_solution": true,
-    "initial_guess_r_SS": 0.048024,
-    "initial_guess_TR_SS": 0.049042,
-    "initial_guess_factor_SS": 124370.83,
+    "initial_guess_r_SS": 0.11024,
+    "initial_guess_TR_SS": 0.033206,
+    "initial_guess_factor_SS": 178136.73,
     "omega": [
         [
             [
@@ -874525,7 +874527,7 @@
             [
                 0.464,
                 1.39288,
-                1.5314e-08
+                1.65594e-08
             ]
         ]
     ],
@@ -874534,7 +874536,7 @@
             [
                 0.464,
                 1.39288,
-                1.5314e-08
+                1.65594e-08
             ]
         ]
     ],
@@ -874543,7 +874545,7 @@
             [
                 0.464,
                 1.39288,
-                1.5314e-08
+                1.65594e-08
             ]
         ]
     ],

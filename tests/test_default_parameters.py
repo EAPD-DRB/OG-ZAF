@@ -21,11 +21,11 @@ def load_defaults():
 
 def test_pit_gs_params():
     # SARS 2025/26 statutory schedule: phi0 anchored to the 45% top
-    # marginal rate; phi2 tuned so PIT collects 10.1% of GDP from the
-    # filing half of earners (National Treasury Budget Review 2026, Ch. 4)
+    # marginal rate; phi2 tuned so PIT collects 10.15% of GDP from the
+    # filing half of earners (MTBPS 2026, Table 3.1)
     defaults = load_defaults()
     assert defaults["tax_func_type"] == "GS"
-    expected = [0.464, 1.39288, 1.5314e-08]
+    expected = [0.464, 1.39288, 1.65594e-08]
     for key in ["etr_params", "mtrx_params", "mtry_params"]:
         assert defaults[key] == [[expected]]
 
@@ -40,11 +40,36 @@ def test_income_tax_filer():
     ]
 
 
-def test_no_bequest_tax():
-    # South Africa's estate duty is negligible (~0.1% of GDP); the docs
-    # state the model's bequest tax is zero
+def test_bequest_tax_is_effective_rate():
+    # Estate duty + donations tax collect 0.08% of GDP (Budget Review
+    # 2026 annexure). tau_bq is that collection over the model's bequests,
+    # well under 1%, never the 20% statutory estate duty rate
     defaults = load_defaults()
-    assert defaults["tau_bq"] == [0.0]
+    assert 0.0 < defaults["tau_bq"][0] < 0.01
+
+
+def test_initial_debt_is_start_of_year_stock():
+    # start_year 2025 starts from gross loan debt at the end of fiscal
+    # 2024/25: 77.0% of GDP (MTBPS 2026, Table 3.8). 78.9% was the
+    # projection for March 2026, the end of the first model year
+    defaults = load_defaults()
+    assert defaults["start_year"] == 2025
+    assert defaults["initial_debt_ratio"] == 0.770
+
+
+def test_public_investment_and_depreciation_sourced():
+    # alpha_I: general government GFCF 2.42% of GDP (SARB QB S-127, 2025).
+    # delta: private CFC 11.3% of GDP (SARB) over private K/Y 2.80
+    # (PWT 11.0 less the government's 26.7% share)
+    defaults = load_defaults()
+    assert defaults["alpha_I"] == [0.0242]
+    assert defaults["delta_annual"] == 0.0405
+
+
+def test_payroll_tax_is_explicit():
+    # SDL + UIF = 0.67% of GDP over the model's labour share 0.528
+    defaults = load_defaults()
+    assert defaults["tau_payroll"] == [[0.0127]]
 
 
 def test_long_run_population_growth():

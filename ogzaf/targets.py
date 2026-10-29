@@ -11,21 +11,54 @@ import numpy as np
 
 # moment: (target, source)
 TARGETS = {
-    # Fiscal: revenue by instrument
-    "PIT/Y": (0.101, "SARS/National Treasury 2025/26: PIT R786.2bn"),
-    "CIT/Y": (0.045, "SARS/National Treasury 2025/26: CIT R346.5bn"),
-    "cons tax/Y": (
-        0.095,
-        "VAT + fuel levy + excise + customs, Budget Review 2026 Ch. 4",
+    # Fiscal: revenue by instrument (FY2025/26 outcome, GDP R7,787bn)
+    "PIT/Y": (0.1015, "PIT R790.6bn, MTBPS 2026 Table 3.1"),
+    "CIT/Y": (
+        0.0502,
+        "CIT R345.4bn + dividends tax R45.9bn, MTBPS 2026 Table 3.1",
     ),
-    "bequest tax/Y": (0.001, "estate duty + donations tax, SARS"),
+    "payroll/Y": (
+        0.0067,
+        "Skills Development Levy R26.0bn (MTBPS 2026) + UIF "
+        "contributions R26.7bn (UIF Annual Report 2025/26)",
+    ),
+    "cons tax/Y": (
+        0.0892,
+        "VAT + fuel levy + excise + customs + other indirect taxes "
+        "(9.87%) less SACU payments (0.95%), MTBPS 2026 / BR 2026",
+    ),
+    "wealth tax/Y": (
+        0.0161,
+        "municipal property rates R101.5bn (Stats SA P9114, 2024/25) "
+        "+ transfer duty and securities transfer tax (BR 2026)",
+    ),
+    "bequest tax/Y": (
+        0.0008,
+        "estate duty R4.8bn + donations tax R1.2bn, BR 2026 annexure",
+    ),
     "r_gov": (
         0.037,
-        "debt service / gross loan debt 7.1% nominal less ~3.4% "
-        "inflation (Budget Review 2026 Ch. 7)",
+        "debt service / average gross loan debt 7.08% nominal (MTBPS "
+        "2026) less ~3.4% expected inflation",
     ),
-    "D/Y": (0.765, "debt_ratio_ss: Budget Review 2026 Table 7.7, 2028/29"),
-    "D_f/D": (0.25, "non-resident share of domestic bonds (Treasury)"),
+    "D/Y": (0.765, "debt_ratio_ss: MTBPS 2026 gross loan debt 2029/30"),
+    "D_f/D": (0.25, "non-resident share of domestic bonds, BR 2026"),
+    # Spending
+    "TR/Y": (0.036, "social grants incl. SRD, BR 2026 Table 5.7"),
+    "I_g/Y": (0.0242, "general government GFCF 2025, SARB QB S-127"),
+    # External
+    "K_f/K": (
+        0.205,
+        "upper bound: inward DI equity 22.7% + portfolio equity 34.8% "
+        "of GDP (SARB IIP end-2025) / private K/Y; DI equity alone 0.08",
+    ),
+    # Production
+    "K/Y": (
+        2.80,
+        "private capital: PWT 11.0 cn/cgdpo 3.82 (2023) less the "
+        "general government share 26.7% (SARB QB E-5)",
+    ),
+    "r": (0.12, "PWT 11.0 real internal rate of return, 2023"),
 }
 
 
