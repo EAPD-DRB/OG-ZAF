@@ -1,5 +1,5 @@
 version = 1
-revision = 3
+revision = 5
 requires-python = ">=3.12, <3.14"
 resolution-markers = [
     "python_full_version >= '3.13' and sys_platform == 'win32'",
@@ -1638,7 +1638,7 @@ wheels = [
 
 [[package]]
 name = "ogcore"
-version = "0.22.0"
+version = "0.23.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "dask" },
@@ -1653,9 +1653,9 @@ dependencies = [
     { name = "requests" },
     { name = "scipy" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/47/4f/34f025958ddec7edbbc8d6f09a7f514e0ea7ad2dab07d5a3cb0046efe1b3/ogcore-0.22.0.tar.gz", hash = "sha256:7f3e00493c8009ced54f0df8f49e46a10abe8c8432bab5e11c9832c25197979f", size = 1095433, upload-time = "2026-10-27T14:22:48.81Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/56/2e/e3e371f8e4057cea1ce5e882cd5752f92d2536d7e8a2ea1c3ab7593ff960/ogcore-0.23.0.tar.gz", hash = "sha256:6a18e0aaa48d9902038f02badf113f541572b6a9519d361cfffc2b0b437f106d", size = 1110758, upload-time = "2026-10-29T23:04:27.69Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/ad/76/b31840cdedd5f815c8c794e12bf5d620543abaa64f9870843ba34879cfd0/ogcore-0.22.0-py3-none-any.whl", hash = "sha256:0564ac7a85d1ef97a44a0e05dc3d7b279b5f5aa2d3367359a20ce79d0f155474", size = 1139614, upload-time = "2026-10-27T14:22:47.165Z" },
+    { url = "https://files.pythonhosted.org/packages/17/97/722acd6ca1ccbfe5023420f47f5950c9c47d4c3d50bd1294abf8ff0f2a99/ogcore-0.23.0-py3-none-any.whl", hash = "sha256:5e4e1159e92dd3e4113b7962d64deb45d3ebaab727a36a08f5b852d8882bddce", size = 1147171, upload-time = "2026-10-29T23:04:25.887Z" },
 ]
 
 [[package]]
@@ -1861,7 +1861,7 @@ name = "pexpect"
 version = "4.9.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "ptyprocess", marker = "sys_platform != 'emscripten' and sys_platform != 'win32'" },
+    { name = "ptyprocess" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/42/92/cc564bf6381ff43ce1f4d06852fc19a2f11d180f23dc32d9588bee2f149d/pexpect-4.9.0.tar.gz", hash = "sha256:ee7d41123f3c9911050ea2c2dac107568dc43b2d3b0c7557a33212c398ead30f", size = 166450, upload-time = "2023-11-25T09:07:26.339Z" }
 wheels = [
@@ -2056,10 +2056,10 @@ resolution-markers = [
     "python_full_version < '3.13' and sys_platform != 'emscripten' and sys_platform != 'win32'",
 ]
 dependencies = [
-    { name = "future", marker = "python_full_version < '3.13'" },
-    { name = "numpy", marker = "python_full_version < '3.13'" },
-    { name = "progressbar2", marker = "python_full_version < '3.13'" },
-    { name = "scipy", marker = "python_full_version < '3.13'" },
+    { name = "future" },
+    { name = "numpy" },
+    { name = "progressbar2" },
+    { name = "scipy" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/fa/a4/c170504af2f7c71860a0c21d0921d99d2c41a5251877c0daea0ec1d3adc8/pygam-0.8.0.tar.gz", hash = "sha256:5cae01aea8b2fede72a6da0aba1490213af54b3476745666af26bbe700479166", size = 5513536, upload-time = "2018-10-31T17:17:33.128Z" }
 wheels = [
@@ -2076,7 +2076,7 @@ resolution-markers = [
     "python_full_version >= '3.13' and sys_platform != 'emscripten' and sys_platform != 'win32'",
 ]
 dependencies = [
-    { name = "progressbar2", marker = "python_full_version >= '3.13'" },
+    { name = "progressbar2" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/e3/6f/19690723b3c68b81ddbe8badc2c68743c2827a019e87118d576e9b149635/pygam-0.9.1.tar.gz", hash = "sha256:a321a017bf485ed93fc6233e02621f8e7eab3d4f8971371c9ae9e079c55be01d", size = 513848, upload-time = "2024-02-13T11:26:09.451Z" }
 wheels = [
