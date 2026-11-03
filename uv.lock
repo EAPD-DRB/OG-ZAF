@@ -1,5 +1,5 @@
 version = 1
-revision = 3
+revision = 5
 requires-python = ">=3.12, <3.14"
 resolution-markers = [
     "python_full_version >= '3.13' and sys_platform == 'win32'",
@@ -706,7 +706,7 @@ wheels = [
 
 [[package]]
 name = "ipykernel"
-version = "7.3.0"
+version = "7.4.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "appnope", marker = "sys_platform == 'darwin'" },
@@ -718,14 +718,13 @@ dependencies = [
     { name = "matplotlib-inline" },
     { name = "nest-asyncio2" },
     { name = "packaging" },
-    { name = "psutil" },
     { name = "pyzmq" },
     { name = "tornado" },
     { name = "traitlets" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/3d/c4/e4a38f579de4225a561305666f7541cdabb30075def2aa1ac17bd73c1fb5/ipykernel-7.3.0.tar.gz", hash = "sha256:9acaaaf97d16355166e4085afe9d225bfbdf2b7ef520f9df3be8f2b248275e09", size = 184899, upload-time = "2026-06-10T08:41:25.481Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/7a/05/e5499c8b762387d83926bf0389e8fff888c9bf6e7af30566a8527bc12f4a/ipykernel-7.4.0.tar.gz", hash = "sha256:4330114d22b9b33575b2c7c68753fc8faabbbcfbc60b0cdff9f14dd4ce63742f", size = 192731, upload-time = "2026-09-29T16:33:11.468Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/3d/02/77b271f5dc58bfbc0b577c877b2365d1ffea2afe66a80c13f2312820348c/ipykernel-7.3.0-py3-none-any.whl", hash = "sha256:897eb64da762549ef610698fca5e9675195ec6ac8ec7f19d81ce1ca20c876057", size = 120583, upload-time = "2026-06-10T08:41:23.648Z" },
+    { url = "https://files.pythonhosted.org/packages/a5/f8/8b5c10c7f36ab5a3b5c4703669e5b14e44e98782b58e535dd30670e8799a/ipykernel-7.4.0-py3-none-any.whl", hash = "sha256:a6757f790ddc5a6006b813d82da1a9dbb65b3a00f2b6607df776418c6566ec1c", size = 123184, upload-time = "2026-09-29T16:33:09.612Z" },
 ]
 
 [[package]]
@@ -1861,7 +1860,7 @@ name = "pexpect"
 version = "4.9.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "ptyprocess", marker = "sys_platform != 'emscripten' and sys_platform != 'win32'" },
+    { name = "ptyprocess" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/42/92/cc564bf6381ff43ce1f4d06852fc19a2f11d180f23dc32d9588bee2f149d/pexpect-4.9.0.tar.gz", hash = "sha256:ee7d41123f3c9911050ea2c2dac107568dc43b2d3b0c7557a33212c398ead30f", size = 166450, upload-time = "2023-11-25T09:07:26.339Z" }
 wheels = [
@@ -2056,10 +2055,10 @@ resolution-markers = [
     "python_full_version < '3.13' and sys_platform != 'emscripten' and sys_platform != 'win32'",
 ]
 dependencies = [
-    { name = "future", marker = "python_full_version < '3.13'" },
-    { name = "numpy", marker = "python_full_version < '3.13'" },
-    { name = "progressbar2", marker = "python_full_version < '3.13'" },
-    { name = "scipy", marker = "python_full_version < '3.13'" },
+    { name = "future" },
+    { name = "numpy" },
+    { name = "progressbar2" },
+    { name = "scipy" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/fa/a4/c170504af2f7c71860a0c21d0921d99d2c41a5251877c0daea0ec1d3adc8/pygam-0.8.0.tar.gz", hash = "sha256:5cae01aea8b2fede72a6da0aba1490213af54b3476745666af26bbe700479166", size = 5513536, upload-time = "2018-10-31T17:17:33.128Z" }
 wheels = [
@@ -2076,7 +2075,7 @@ resolution-markers = [
     "python_full_version >= '3.13' and sys_platform != 'emscripten' and sys_platform != 'win32'",
 ]
 dependencies = [
-    { name = "progressbar2", marker = "python_full_version >= '3.13'" },
+    { name = "progressbar2" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/e3/6f/19690723b3c68b81ddbe8badc2c68743c2827a019e87118d576e9b149635/pygam-0.9.1.tar.gz", hash = "sha256:a321a017bf485ed93fc6233e02621f8e7eab3d4f8971371c9ae9e079c55be01d", size = 513848, upload-time = "2024-02-13T11:26:09.451Z" }
 wheels = [
